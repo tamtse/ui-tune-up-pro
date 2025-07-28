@@ -5,36 +5,64 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Calendar, Users, CreditCard, DollarSign, TrendingUp, Search, Download, Filter, MoreHorizontal } from "lucide-react";
+import { Calendar, Users, CreditCard, DollarSign, TrendingUp, Search, Download, Filter, MoreHorizontal, UserPlus, Crown, Activity, Target } from "lucide-react";
 
 const stats = [
   {
-    title: "Nombre d'utilisateurs",
-    value: "3120",
-    change: "-3,5%",
-    changeType: "negative" as const,
+    title: "Total Utilisateurs",
+    value: "3,120",
+    change: "+12%",
+    changeType: "positive" as const,
     icon: <Users className="h-5 w-5" />,
   },
   {
-    title: "Souscriptions",
-    value: "2600",
-    change: "-3,5%",
-    changeType: "negative" as const,
-    icon: <CreditCard className="h-5 w-5" />,
+    title: "Nouveaux Utilisateurs",
+    value: "156",
+    change: "Ce mois",
+    changeType: "positive" as const,
+    icon: <UserPlus className="h-5 w-5" />,
   },
   {
-    title: "C.A.",
-    value: "2 500 000",
-    change: "+4,2%",
+    title: "Abonnements Actifs",
+    value: "2,847",
+    change: "+8,3%",
+    changeType: "positive" as const,
+    icon: <Crown className="h-5 w-5" />,
+  },
+  {
+    title: "Revenus (FCFA)",
+    value: "2,500,000",
+    change: "+15,2%",
     changeType: "positive" as const,
     icon: <DollarSign className="h-5 w-5" />,
   },
   {
-    title: "C.A Total",
-    value: "4 800 000",
-    change: "12 / Mois",
+    title: "Transactions",
+    value: "847",
+    change: "Cette semaine",
     changeType: "positive" as const,
-    icon: <TrendingUp className="h-5 w-5" />,
+    icon: <Activity className="h-5 w-5" />,
+  },
+  {
+    title: "Taux de Conversion",
+    value: "68%",
+    change: "+2,1%",
+    changeType: "positive" as const,
+    icon: <Target className="h-5 w-5" />,
+  },
+  {
+    title: "Plans Gratuits",
+    value: "1,245",
+    change: "-5,8%",
+    changeType: "negative" as const,
+    icon: <Users className="h-5 w-5" />,
+  },
+  {
+    title: "Plans Premium",
+    value: "1,602",
+    change: "+18,4%",
+    changeType: "positive" as const,
+    icon: <Crown className="h-5 w-5" />,
   },
 ];
 
@@ -88,12 +116,8 @@ export default function Dashboard() {
         {/* Page Header */}
         <div className="flex items-center justify-between">
           <div>
-            <h1 className="text-3xl font-bold text-foreground">Administration</h1>
-            <div className="flex space-x-1 mt-2">
-              <Button variant="default" size="sm">Tableau de bord</Button>
-              <Button variant="ghost" size="sm">Gestion des dépenses</Button>
-              <Button variant="ghost" size="sm">Gestion des paiements</Button>
-            </div>
+            <h1 className="text-3xl font-bold text-foreground">Tableau de bord</h1>
+            <p className="text-muted-foreground mt-1">Vue d'ensemble des activités de votre CRM</p>
           </div>
         </div>
 
@@ -104,7 +128,7 @@ export default function Dashboard() {
         </div>
 
         {/* Stats Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
           {stats.map((stat, index) => (
             <StatCard key={index} {...stat} />
           ))}
