@@ -10,6 +10,7 @@ import {
   ChevronRight,
   Receipt,
   ChevronDown,
+  BookOpen,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
@@ -22,6 +23,7 @@ const adminMenuItems = [
 ];
 
 const preferenceItems = [
+  { title: "Documentation", url: "/documentation", icon: BookOpen },
   { title: "Paramètres", url: "/settings", icon: Settings },
   { title: "Centre d'aide", url: "/help", icon: HelpCircle },
 ];

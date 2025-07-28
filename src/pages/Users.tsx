@@ -68,6 +68,8 @@ export default function Users() {
     name: "",
     email: "",
     location: "",
+    phone: "",
+    company: "",
     accountType: "",
   });
 
@@ -84,21 +86,33 @@ export default function Users() {
     }
   };
 
-  const handleCreateUser = () => {
-    // Logique de création d'utilisateur
-    console.log("Nouvel utilisateur:", newUser);
+  const handleCreateUser = async () => {
+    // Appel API selon la documentation PicStudio
+    const userData = {
+      name: newUser.name,
+      email: newUser.email,
+      location: newUser.location,
+      phone: newUser.phone,
+      company: newUser.company,
+      accountType: newUser.accountType,
+    };
+    
+    console.log("Création utilisateur via API POST /admin/users:", userData);
+    // TODO: Implémenter l'appel API réel
+    // const response = await fetch('/admin/users', { method: 'POST', body: JSON.stringify(userData) });
+    
     setIsDialogOpen(false);
-    setNewUser({ name: "", email: "", location: "", accountType: "" });
+    setNewUser({ name: "", email: "", location: "", phone: "", company: "", accountType: "" });
   };
 
-  const handleCancelSubscription = (userId: number, userName: string) => {
-    console.log(`Annulation de l'abonnement pour ${userName} (ID: ${userId})`);
-    // Logique d'annulation d'abonnement
+  const handleCancelSubscription = async (userId: number, userName: string) => {
+    console.log(`Annulation via API PUT /v1/settings/subscriptions/${userId}/cancel pour ${userName}`);
+    // TODO: Implémenter l'appel API réel
   };
 
-  const handleRevokeSubscription = (userId: number, userName: string) => {
-    console.log(`Révocation de l'abonnement pour ${userName} (ID: ${userId})`);
-    // Logique de révocation d'abonnement
+  const handleRevokeSubscription = async (userId: number, userName: string) => {
+    console.log(`Révocation via API PUT /admin/users/${userId}/status pour ${userName}`);
+    // TODO: Implémenter l'appel API réel
   };
 
 
@@ -163,7 +177,7 @@ export default function Users() {
                       <div className="grid gap-4 py-4">
                         <div className="grid grid-cols-1 sm:grid-cols-4 items-center gap-4">
                           <Label htmlFor="name" className="sm:text-right">
-                            Nom
+                            Nom complet *
                           </Label>
                           <Input
                             id="name"
@@ -171,11 +185,12 @@ export default function Users() {
                             onChange={(e) => setNewUser({...newUser, name: e.target.value})}
                             className="sm:col-span-3"
                             placeholder="Nom complet"
+                            required
                           />
                         </div>
                         <div className="grid grid-cols-1 sm:grid-cols-4 items-center gap-4">
                           <Label htmlFor="email" className="sm:text-right">
-                            Email
+                            Email *
                           </Label>
                           <Input
                             id="email"
@@ -184,6 +199,20 @@ export default function Users() {
                             onChange={(e) => setNewUser({...newUser, email: e.target.value})}
                             className="sm:col-span-3"
                             placeholder="email@exemple.com"
+                            required
+                          />
+                        </div>
+                        <div className="grid grid-cols-1 sm:grid-cols-4 items-center gap-4">
+                          <Label htmlFor="phone" className="sm:text-right">
+                            Téléphone
+                          </Label>
+                          <Input
+                            id="phone"
+                            type="tel"
+                            value={newUser.phone}
+                            onChange={(e) => setNewUser({...newUser, phone: e.target.value})}
+                            className="sm:col-span-3"
+                            placeholder="+237 6XX XXX XXX"
                           />
                         </div>
                         <div className="grid grid-cols-1 sm:grid-cols-4 items-center gap-4">
@@ -199,17 +228,29 @@ export default function Users() {
                           />
                         </div>
                         <div className="grid grid-cols-1 sm:grid-cols-4 items-center gap-4">
+                          <Label htmlFor="company" className="sm:text-right">
+                            Entreprise
+                          </Label>
+                          <Input
+                            id="company"
+                            value={newUser.company}
+                            onChange={(e) => setNewUser({...newUser, company: e.target.value})}
+                            className="sm:col-span-3"
+                            placeholder="Nom de l'entreprise"
+                          />
+                        </div>
+                        <div className="grid grid-cols-1 sm:grid-cols-4 items-center gap-4">
                           <Label htmlFor="accountType" className="sm:text-right">
-                            Abonnement
+                            Plan d'abonnement *
                           </Label>
                           <Select value={newUser.accountType} onValueChange={(value) => setNewUser({...newUser, accountType: value})}>
                             <SelectTrigger className="sm:col-span-3">
                               <SelectValue placeholder="Sélectionner un plan" />
                             </SelectTrigger>
                             <SelectContent>
-                              <SelectItem value="Gratuit">Gratuit</SelectItem>
-                              <SelectItem value="Mensuel">Mensuel</SelectItem>
-                              <SelectItem value="Annuel">Annuel</SelectItem>
+                              <SelectItem value="Gratuit">Plan Gratuit</SelectItem>
+                              <SelectItem value="Mensuel">Plan Mensuel</SelectItem>
+                              <SelectItem value="Annuel">Plan Annuel</SelectItem>
                             </SelectContent>
                           </Select>
                         </div>
