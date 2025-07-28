@@ -7,7 +7,7 @@ import { Label } from "@/components/ui/label";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Search, Filter, Plus, Edit, Trash2, Users, Settings, CreditCard } from "lucide-react";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
 
@@ -44,6 +44,14 @@ const subscriptionPlans = [
   },
 ];
 
+// Données utilisateurs mockées
+const users = [
+  { id: 1, name: "Michael Hun", currentPlan: "Gratuit", endDate: null },
+  { id: 2, name: "Courtney Henry", currentPlan: "Mensuel", endDate: "2024-12-15" },
+  { id: 3, name: "Annette Black", currentPlan: "Annuel", endDate: "2025-06-30" },
+  { id: 4, name: "Jenny Wilson", currentPlan: "Mensuel", endDate: "2024-11-20" },
+];
+
 export default function Subscriptions() {
   const [isCreateDialogOpen, setIsCreateDialogOpen] = useState(false);
   const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
@@ -51,6 +59,14 @@ export default function Subscriptions() {
   const [selectedPlan, setSelectedPlan] = useState<any>(null);
   const [features, setFeatures] = useState("");
   const [editFeatures, setEditFeatures] = useState("");
+  
+  // États pour la transaction
+  const [selectedUser, setSelectedUser] = useState<any>(null);
+  const [selectedNewPlan, setSelectedNewPlan] = useState("");
+  const [startDate, setStartDate] = useState("");
+  const [endDate, setEndDate] = useState("");
+  const [extensionMonths, setExtensionMonths] = useState("1");
+  const [showPeriodInfo, setShowPeriodInfo] = useState(false);
 
   const getStatusColor = (status: string) => {
     switch (status) {
@@ -68,6 +84,46 @@ export default function Subscriptions() {
     setEditFeatures(plan.features);
     setIsEditDialogOpen(true);
   };
+
+  const handleUserSelect = (userId: string) => {
+    const user = users.find(u => u.id.toString() === userId);
+    setSelectedUser(user);
+    setShowPeriodInfo(true);
+    
+    // Calculer les dates selon le plan actuel
+    const today = new Date();
+    if (user?.currentPlan === "Gratuit") {
+      // Pour le gratuit, on commence aujourd'hui
+      setStartDate(today.toISOString().split('T')[0]);
+    } else if (user?.endDate) {
+      // Pour les plans payants, on commence après la fin de l'abonnement actuel
+      const endOfCurrent = new Date(user.endDate);
+      setStartDate(endOfCurrent.toISOString().split('T')[0]);
+    }
+  };
+
+  const calculateEndDate = (planType: string, startDateStr: string, months: string) => {
+    if (!startDateStr || !months) return "";
+    
+    const start = new Date(startDateStr);
+    const monthsNum = parseInt(months);
+    
+    if (planType === "Mensuel") {
+      start.setMonth(start.getMonth() + monthsNum);
+    } else if (planType === "Annuel") {
+      start.setFullYear(start.getFullYear() + Math.floor(monthsNum / 12));
+      start.setMonth(start.getMonth() + (monthsNum % 12));
+    }
+    
+    return start.toISOString().split('T')[0];
+  };
+
+  useEffect(() => {
+    if (selectedNewPlan && startDate && extensionMonths) {
+      const endDateCalculated = calculateEndDate(selectedNewPlan, startDate, extensionMonths);
+      setEndDate(endDateCalculated);
+    }
+  }, [selectedNewPlan, startDate, extensionMonths]);
 
   return (
     <AdminLayout>
@@ -247,37 +303,128 @@ export default function Subscriptions() {
                       Nouvelle transaction
                     </Button>
                   </DialogTrigger>
-                  <DialogContent className="max-w-md">
+                  <DialogContent className="max-w-lg">
                     <DialogHeader>
                       <DialogTitle>Assigner un abonnement</DialogTitle>
                     </DialogHeader>
                     <div className="space-y-4">
                       <div>
-                        <Label htmlFor="user-search">Utilisateur</Label>
-                        <Input id="user-search" placeholder="Rechercher un utilisateur..." />
+                        <Label htmlFor="user-select">Utilisateur</Label>
+                        <Select onValueChange={handleUserSelect}>
+                          <SelectTrigger>
+                            <SelectValue placeholder="Sélectionner un utilisateur" />
+                          </SelectTrigger>
+                          <SelectContent>
+                            {users.map((user) => (
+                              <SelectItem key={user.id} value={user.id.toString()}>
+                                {user.name} - Plan actuel: {user.currentPlan}
+                              </SelectItem>
+                            ))}
+                          </SelectContent>
+                        </Select>
                       </div>
+
+                      {selectedUser && showPeriodInfo && (
+                        <div className="p-3 bg-muted/50 rounded-lg">
+                          <p className="text-sm font-medium">Informations utilisateur:</p>
+                          <p className="text-sm text-muted-foreground">Plan actuel: {selectedUser.currentPlan}</p>
+                          {selectedUser.endDate && (
+                            <p className="text-sm text-muted-foreground">Fin d'abonnement: {selectedUser.endDate}</p>
+                          )}
+                          {selectedUser.currentPlan === "Gratuit" && (
+                            <p className="text-sm text-warning">L'utilisateur est actuellement sur le plan gratuit. La nouvelle période commencera immédiatement.</p>
+                          )}
+                          {selectedUser.currentPlan !== "Gratuit" && selectedUser.endDate && (
+                            <p className="text-sm text-info">La nouvelle période commencera après la fin de l'abonnement actuel.</p>
+                          )}
+                        </div>
+                      )}
+
                       <div>
-                        <Label htmlFor="plan-select">Plan d'abonnement</Label>
-                        <Select>
+                        <Label htmlFor="plan-select">Nouveau plan d'abonnement</Label>
+                        <Select value={selectedNewPlan} onValueChange={setSelectedNewPlan}>
                           <SelectTrigger>
                             <SelectValue placeholder="Sélectionner un plan" />
                           </SelectTrigger>
                           <SelectContent>
                             {subscriptionPlans.map((plan) => (
-                              <SelectItem key={plan.id} value={plan.id.toString()}>
+                              <SelectItem key={plan.id} value={plan.name}>
                                 {plan.name} - {plan.price} FCFA/{plan.duration}
                               </SelectItem>
                             ))}
                           </SelectContent>
                         </Select>
                       </div>
-                      <div>
-                        <Label htmlFor="duration-extend">Étendre la période (mois)</Label>
-                        <Input id="duration-extend" placeholder="1" type="number" min="1" />
+
+                      <div className="grid grid-cols-2 gap-2">
+                        <div>
+                          <Label htmlFor="start-date">Date de début</Label>
+                          <Input 
+                            id="start-date" 
+                            type="date" 
+                            value={startDate}
+                            onChange={(e) => setStartDate(e.target.value)}
+                          />
+                        </div>
+                        <div>
+                          <Label htmlFor="end-date">Date de fin</Label>
+                          <Input 
+                            id="end-date" 
+                            type="date" 
+                            value={endDate}
+                            readOnly
+                            className="bg-muted"
+                          />
+                        </div>
                       </div>
+
+                      <div>
+                        <Label htmlFor="duration-extend">
+                          Durée ({selectedNewPlan === "Gratuit" ? "N/A" : selectedNewPlan === "Mensuel" ? "mois" : "années"})
+                        </Label>
+                        {selectedNewPlan === "Gratuit" ? (
+                          <Input 
+                            value="Permanente" 
+                            readOnly 
+                            className="bg-muted"
+                          />
+                        ) : (
+                          <Select value={extensionMonths} onValueChange={setExtensionMonths}>
+                            <SelectTrigger>
+                              <SelectValue />
+                            </SelectTrigger>
+                            <SelectContent>
+                              {selectedNewPlan === "Mensuel" ? (
+                                <>
+                                  <SelectItem value="1">1 mois</SelectItem>
+                                  <SelectItem value="2">2 mois</SelectItem>
+                                  <SelectItem value="3">3 mois</SelectItem>
+                                  <SelectItem value="6">6 mois</SelectItem>
+                                  <SelectItem value="12">12 mois</SelectItem>
+                                </>
+                              ) : (
+                                <>
+                                  <SelectItem value="12">1 année</SelectItem>
+                                  <SelectItem value="24">2 années</SelectItem>
+                                  <SelectItem value="36">3 années</SelectItem>
+                                </>
+                              )}
+                            </SelectContent>
+                          </Select>
+                        )}
+                      </div>
+
                       <div className="flex space-x-2 pt-4">
                         <Button className="flex-1">Créer la transaction</Button>
-                        <Button variant="outline" onClick={() => setIsTransactionDialogOpen(false)}>
+                        <Button variant="outline" onClick={() => {
+                          setIsTransactionDialogOpen(false);
+                          setSelectedUser(null);
+                          setShowPeriodInfo(false);
+                          setSelectedNewPlan("");
+                          setStartDate("");
+                          setEndDate("");
+                          setExtensionMonths("1");
+                        }}>
                           Annuler
                         </Button>
                       </div>
