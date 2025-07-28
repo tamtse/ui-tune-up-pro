@@ -9,11 +9,12 @@ import {
   ChevronLeft,
   ChevronRight,
   Receipt,
+  ChevronDown,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 
-const menuItems = [
+const adminMenuItems = [
   { title: "Tableau de bord", url: "/", icon: BarChart3 },
   { title: "Utilisateurs", url: "/users", icon: Users },
   { title: "Transactions", url: "/transactions", icon: Receipt },
@@ -27,6 +28,7 @@ const preferenceItems = [
 
 export function AdminSidebar() {
   const [collapsed, setCollapsed] = useState(false);
+  const [isAdminOpen, setIsAdminOpen] = useState(true);
   const location = useLocation();
 
   const isActive = (path: string) => {
@@ -46,9 +48,9 @@ export function AdminSidebar() {
         {!collapsed && (
           <div className="flex items-center space-x-3">
             <div className="w-8 h-8 bg-primary rounded-lg flex items-center justify-center">
-              <span className="text-primary-foreground font-bold text-sm">P</span>
+              <span className="text-primary-foreground font-bold text-sm">C</span>
             </div>
-            <span className="font-semibold text-foreground">PicStudio</span>
+            <span className="font-semibold text-foreground">CRM Admin</span>
           </div>
         )}
         <Button
@@ -63,27 +65,42 @@ export function AdminSidebar() {
 
       {/* Menu Items */}
       <div className="flex-1 px-3 py-4">
-        {!collapsed && (
-          <div className="text-xs font-semibold text-muted-foreground uppercase tracking-wider mb-3 px-3">
-            Menu
-          </div>
-        )}
-        <div className="space-y-1">
-          {menuItems.map((item) => (
-            <NavLink
-              key={item.title}
-              to={item.url}
-              className={cn(
-                "flex items-center rounded-lg px-3 py-2 text-sm font-medium transition-colors",
-                isActive(item.url)
-                  ? "bg-primary text-primary-foreground shadow-sm"
-                  : "text-muted-foreground hover:text-foreground hover:bg-accent"
-              )}
+        {/* Groupe Administrateur */}
+        <div className="mb-4">
+          {!collapsed && (
+            <button
+              onClick={() => setIsAdminOpen(!isAdminOpen)}
+              className="w-full flex items-center justify-between p-2 text-xs font-semibold text-muted-foreground uppercase tracking-wider hover:text-foreground transition-colors"
             >
-              <item.icon className={cn("h-4 w-4", !collapsed && "mr-3")} />
-              {!collapsed && <span>{item.title}</span>}
-            </NavLink>
-          ))}
+              <span>Administrateur</span>
+              <ChevronDown
+                className={cn(
+                  "h-4 w-4 transition-transform duration-200",
+                  isAdminOpen ? "rotate-180" : ""
+                )}
+              />
+            </button>
+          )}
+          
+          {(isAdminOpen || collapsed) && (
+            <div className={cn("space-y-1", !collapsed && "mt-2")}>
+              {adminMenuItems.map((item) => (
+                <NavLink
+                  key={item.title}
+                  to={item.url}
+                  className={cn(
+                    "flex items-center rounded-lg px-3 py-2 text-sm font-medium transition-colors",
+                    isActive(item.url)
+                      ? "bg-primary text-primary-foreground shadow-sm"
+                      : "text-muted-foreground hover:text-foreground hover:bg-accent"
+                  )}
+                >
+                  <item.icon className={cn("h-4 w-4", !collapsed && "mr-3")} />
+                  {!collapsed && <span>{item.title}</span>}
+                </NavLink>
+              ))}
+            </div>
+          )}
         </div>
 
         {/* Preferences */}

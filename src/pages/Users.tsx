@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { AdminLayout } from "@/components/AdminLayout";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -5,6 +6,9 @@ import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Checkbox } from "@/components/ui/checkbox";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
+import { Label } from "@/components/ui/label";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Search, Filter, Plus, Eye, MoreHorizontal, Users as UsersIcon, UserPlus, Calendar } from "lucide-react";
 import { Link } from "react-router-dom";
 import { StatCard } from "@/components/StatCard";
@@ -58,6 +62,13 @@ const users = [
 ];
 
 export default function Users() {
+  const [isDialogOpen, setIsDialogOpen] = useState(false);
+  const [newUser, setNewUser] = useState({
+    name: "",
+    email: "",
+    location: "",
+    accountType: "",
+  });
 
   const getAccountTypeColor = (type: string) => {
     switch (type) {
@@ -70,6 +81,13 @@ export default function Users() {
       default:
         return "bg-muted text-muted-foreground";
     }
+  };
+
+  const handleCreateUser = () => {
+    // Logique de création d'utilisateur
+    console.log("Nouvel utilisateur:", newUser);
+    setIsDialogOpen(false);
+    setNewUser({ name: "", email: "", location: "", accountType: "" });
   };
 
 
@@ -118,10 +136,81 @@ export default function Users() {
                     <Filter className="h-4 w-4 mr-2" />
                     Filter
                   </Button>
-                  <Button size="sm">
-                    <Plus className="h-4 w-4 mr-2" />
-                    Ajouter un utilisateur
-                  </Button>
+                  <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
+                    <DialogTrigger asChild>
+                      <Button size="sm">
+                        <Plus className="h-4 w-4 mr-2" />
+                        Ajouter un utilisateur
+                      </Button>
+                    </DialogTrigger>
+                    <DialogContent className="sm:max-w-[425px]">
+                      <DialogHeader>
+                        <DialogTitle>Créer un nouvel utilisateur</DialogTitle>
+                      </DialogHeader>
+                      <div className="grid gap-4 py-4">
+                        <div className="grid grid-cols-4 items-center gap-4">
+                          <Label htmlFor="name" className="text-right">
+                            Nom
+                          </Label>
+                          <Input
+                            id="name"
+                            value={newUser.name}
+                            onChange={(e) => setNewUser({...newUser, name: e.target.value})}
+                            className="col-span-3"
+                            placeholder="Nom complet"
+                          />
+                        </div>
+                        <div className="grid grid-cols-4 items-center gap-4">
+                          <Label htmlFor="email" className="text-right">
+                            Email
+                          </Label>
+                          <Input
+                            id="email"
+                            type="email"
+                            value={newUser.email}
+                            onChange={(e) => setNewUser({...newUser, email: e.target.value})}
+                            className="col-span-3"
+                            placeholder="email@exemple.com"
+                          />
+                        </div>
+                        <div className="grid grid-cols-4 items-center gap-4">
+                          <Label htmlFor="location" className="text-right">
+                            Localisation
+                          </Label>
+                          <Input
+                            id="location"
+                            value={newUser.location}
+                            onChange={(e) => setNewUser({...newUser, location: e.target.value})}
+                            className="col-span-3"
+                            placeholder="Ville, Pays"
+                          />
+                        </div>
+                        <div className="grid grid-cols-4 items-center gap-4">
+                          <Label htmlFor="accountType" className="text-right">
+                            Abonnement
+                          </Label>
+                          <Select value={newUser.accountType} onValueChange={(value) => setNewUser({...newUser, accountType: value})}>
+                            <SelectTrigger className="col-span-3">
+                              <SelectValue placeholder="Sélectionner un plan" />
+                            </SelectTrigger>
+                            <SelectContent>
+                              <SelectItem value="Gratuit">Gratuit</SelectItem>
+                              <SelectItem value="Mensuel">Mensuel</SelectItem>
+                              <SelectItem value="Annuel">Annuel</SelectItem>
+                            </SelectContent>
+                          </Select>
+                        </div>
+                      </div>
+                      <div className="flex justify-end space-x-2">
+                        <Button variant="outline" onClick={() => setIsDialogOpen(false)}>
+                          Annuler
+                        </Button>
+                        <Button onClick={handleCreateUser}>
+                          Créer l'utilisateur
+                        </Button>
+                      </div>
+                    </DialogContent>
+                  </Dialog>
                 </div>
               </div>
             </CardHeader>
