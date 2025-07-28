@@ -98,18 +98,17 @@ const transactions = [
 export default function Dashboard() {
   return (
     <AdminLayout>
-      <div className="space-y-6">
+      <div className="space-y-4 sm:space-y-6">
         {/* Page Header */}
-        <div className="flex items-center justify-between">
+        <div className="flex flex-col space-y-2 sm:flex-row sm:items-center sm:justify-between sm:space-y-0">
           <div>
-            <h1 className="text-3xl font-bold text-foreground">Tableau de bord</h1>
-            <p className="text-muted-foreground mt-1">Vue d'ensemble des activités de votre CRM</p>
+            <h1 className="text-xl sm:text-2xl lg:text-3xl font-bold text-foreground">Tableau de bord</h1>
+            <p className="text-sm sm:text-base text-muted-foreground mt-1">Vue d'ensemble des activités de votre CRM</p>
           </div>
         </div>
 
-
         {/* Stats Grid */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6 gap-4">
+        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3 sm:gap-4 lg:gap-6">
           {stats.map((stat, index) => (
             <StatCard key={index} {...stat} />
           ))}

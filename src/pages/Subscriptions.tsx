@@ -127,17 +127,17 @@ export default function Subscriptions() {
 
   return (
     <AdminLayout>
-      <div className="space-y-6">
+      <div className="space-y-4 sm:space-y-6">
         {/* Page Header */}
-        <div className="flex items-center justify-between">
+        <div className="flex flex-col space-y-2 sm:flex-row sm:items-center sm:justify-between sm:space-y-0">
           <div>
-            <h1 className="text-2xl font-bold text-foreground">Gestion des Abonnements</h1>
-            <p className="text-muted-foreground">Gérez les plans d'abonnement de votre application</p>
+            <h1 className="text-xl sm:text-2xl font-bold text-foreground">Gestion des Abonnements</h1>
+            <p className="text-sm sm:text-base text-muted-foreground">Gérez les plans d'abonnement de votre application</p>
           </div>
         </div>
 
         {/* Stats Cards */}
-        <div className="grid grid-cols-1 md:grid-cols-5 gap-6">
+        <div className="grid grid-cols-2 lg:grid-cols-5 gap-3 sm:gap-4 lg:gap-6">
           <Card>
             <CardContent className="p-6">
               <div className="flex items-center space-x-2">
@@ -212,28 +212,30 @@ export default function Subscriptions() {
         {/* Subscription Plans Table */}
         <Card>
           <CardHeader>
-            <div className="flex items-center justify-between">
-              <CardTitle>Plans d'Abonnement</CardTitle>
-              <div className="flex items-center space-x-2">
-                <div className="relative">
+            <div className="flex flex-col space-y-4 lg:flex-row lg:items-center lg:justify-between lg:space-y-0">
+              <CardTitle className="text-lg lg:text-xl">Plans d'Abonnement</CardTitle>
+              <div className="flex flex-col space-y-2 sm:flex-row sm:items-center sm:space-y-0 sm:space-x-2">
+                <div className="relative flex-1 sm:flex-none">
                   <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
                   <Input
                     placeholder="Rechercher un plan..."
-                    className="pl-10 w-64"
+                    className="pl-10 w-full sm:w-64"
                   />
                 </div>
-                <Button variant="outline" size="sm">
-                  <Filter className="h-4 w-4 mr-2" />
-                  Filter
-                </Button>
-                <Dialog open={isCreateDialogOpen} onOpenChange={setIsCreateDialogOpen}>
-                  <DialogTrigger asChild>
-                    <Button size="sm">
-                      <Plus className="h-4 w-4 mr-2" />
-                      Créer un plan
-                    </Button>
-                  </DialogTrigger>
-                  <DialogContent className="max-w-2xl max-h-[80vh] overflow-y-auto">
+                <div className="flex space-x-2">
+                  <Button variant="outline" size="sm" className="flex-1 sm:flex-none">
+                    <Filter className="h-4 w-4 mr-2" />
+                    <span className="hidden sm:inline">Filter</span>
+                  </Button>
+                  <Dialog open={isCreateDialogOpen} onOpenChange={setIsCreateDialogOpen}>
+                    <DialogTrigger asChild>
+                      <Button size="sm" className="flex-1 sm:flex-none">
+                        <Plus className="h-4 w-4 mr-2" />
+                        <span className="hidden sm:inline">Créer</span>
+                        <span className="sm:hidden">Nouveau plan</span>
+                      </Button>
+                    </DialogTrigger>
+                  <DialogContent className="max-w-2xl max-h-[80vh] overflow-y-auto m-4">
                     <DialogHeader>
                       <DialogTitle>Créer un nouveau plan</DialogTitle>
                     </DialogHeader>
@@ -298,12 +300,13 @@ export default function Subscriptions() {
                 
                 <Dialog open={isTransactionDialogOpen} onOpenChange={setIsTransactionDialogOpen}>
                   <DialogTrigger asChild>
-                    <Button size="sm" variant="outline">
+                    <Button size="sm" variant="outline" className="flex-1 sm:flex-none">
                       <CreditCard className="h-4 w-4 mr-2" />
-                      Nouvelle transaction
+                      <span className="hidden sm:inline">Nouvelle transaction</span>
+                      <span className="sm:hidden">Transaction</span>
                     </Button>
                   </DialogTrigger>
-                  <DialogContent className="max-w-lg">
+                  <DialogContent className="max-w-lg m-4">
                     <DialogHeader>
                       <DialogTitle>Assigner un abonnement</DialogTitle>
                     </DialogHeader>
@@ -431,63 +434,73 @@ export default function Subscriptions() {
                     </div>
                   </DialogContent>
                 </Dialog>
+                </div>
               </div>
             </div>
           </CardHeader>
           <CardContent>
             <div className="overflow-x-auto">
-              <table className="w-full">
+              <table className="w-full min-w-[800px]">
                 <thead>
                   <tr className="border-b border-border">
-                    <th className="text-left font-medium text-muted-foreground py-3 px-4">Plan</th>
-                    <th className="text-left font-medium text-muted-foreground py-3 px-4">Prix</th>
-                    <th className="text-left font-medium text-muted-foreground py-3 px-4">Fonctionnalités</th>
-                    <th className="text-left font-medium text-muted-foreground py-3 px-4">Utilisateurs</th>
-                    <th className="text-left font-medium text-muted-foreground py-3 px-4">Status</th>
-                    <th className="text-left font-medium text-muted-foreground py-3 px-4">Actions</th>
+                    <th className="text-left font-medium text-muted-foreground py-3 px-2 sm:px-4">Plan</th>
+                    <th className="text-left font-medium text-muted-foreground py-3 px-2 sm:px-4 hidden md:table-cell">Prix</th>
+                    <th className="text-left font-medium text-muted-foreground py-3 px-2 sm:px-4 hidden lg:table-cell">Fonctionnalités</th>
+                    <th className="text-left font-medium text-muted-foreground py-3 px-2 sm:px-4">Utilisateurs</th>
+                    <th className="text-left font-medium text-muted-foreground py-3 px-2 sm:px-4">Status</th>
+                    <th className="text-left font-medium text-muted-foreground py-3 px-2 sm:px-4 w-24">Actions</th>
                   </tr>
                 </thead>
                 <tbody>
                   {subscriptionPlans.map((plan) => (
                     <tr key={plan.id} className="border-b border-border hover:bg-muted/50 transition-colors">
-                      <td className="py-4 px-4">
+                      <td className="py-3 px-2 sm:py-4 sm:px-4">
                         <div>
-                          <span className="font-medium">{plan.name}</span>
-                          <p className="text-sm text-muted-foreground">ID: {plan.id}</p>
+                          <span className="font-medium text-sm sm:text-base">{plan.name}</span>
+                          <p className="text-xs sm:text-sm text-muted-foreground">ID: {plan.id}</p>
+                          <div className="md:hidden mt-1">
+                            <span className="text-xs font-medium text-primary">{plan.price} {plan.currency}/{plan.duration}</span>
+                          </div>
+                          <div className="lg:hidden mt-1">
+                            <div 
+                              className="text-xs text-muted-foreground truncate max-w-[200px]"
+                              dangerouslySetInnerHTML={{ __html: plan.features }}
+                            />
+                          </div>
                         </div>
                       </td>
-                      <td className="py-4 px-4">
+                      <td className="py-3 px-2 sm:py-4 sm:px-4 hidden md:table-cell">
                         <div>
                           <span className="font-medium">{plan.price} {plan.currency}</span>
                           <p className="text-sm text-muted-foreground">/ {plan.duration}</p>
                         </div>
                       </td>
-                      <td className="py-4 px-4">
+                      <td className="py-3 px-2 sm:py-4 sm:px-4 hidden lg:table-cell">
                         <div 
                           className="text-sm text-muted-foreground max-w-xs truncate"
                           dangerouslySetInnerHTML={{ __html: plan.features }}
                         />
                       </td>
-                      <td className="py-4 px-4">
-                        <div className="flex items-center space-x-2">
-                          <Users className="h-4 w-4 text-muted-foreground" />
-                          <span className="font-medium">{plan.userCount}</span>
+                      <td className="py-3 px-2 sm:py-4 sm:px-4">
+                        <div className="flex items-center space-x-1 sm:space-x-2">
+                          <Users className="h-3 w-3 sm:h-4 sm:w-4 text-muted-foreground" />
+                          <span className="font-medium text-sm sm:text-base">{plan.userCount}</span>
                         </div>
                       </td>
-                      <td className="py-4 px-4">
-                        <Badge className={getStatusColor(plan.status)}>
+                      <td className="py-3 px-2 sm:py-4 sm:px-4">
+                        <Badge className={`${getStatusColor(plan.status)} text-xs`}>
                           {plan.status}
                         </Badge>
                       </td>
-                      <td className="py-4 px-4">
+                      <td className="py-3 px-2 sm:py-4 sm:px-4">
                         <div className="flex items-center space-x-1">
                           <Dialog open={isEditDialogOpen} onOpenChange={setIsEditDialogOpen}>
                             <DialogTrigger asChild>
-                              <Button variant="ghost" size="sm" onClick={() => handleEdit(plan)}>
+                              <Button variant="ghost" size="sm" onClick={() => handleEdit(plan)} className="h-8 w-8 p-0">
                                 <Edit className="h-4 w-4" />
                               </Button>
                             </DialogTrigger>
-                            <DialogContent className="max-w-2xl max-h-[80vh] overflow-y-auto">
+                            <DialogContent className="max-w-2xl max-h-[80vh] overflow-y-auto m-4">
                               <DialogHeader>
                                 <DialogTitle>Modifier le plan</DialogTitle>
                               </DialogHeader>
@@ -549,7 +562,7 @@ export default function Subscriptions() {
                               </div>
                             </DialogContent>
                           </Dialog>
-                          <Button variant="ghost" size="sm">
+                          <Button variant="ghost" size="sm" className="h-8 w-8 p-0">
                             <Trash2 className="h-4 w-4 text-destructive" />
                           </Button>
                         </div>
@@ -561,16 +574,16 @@ export default function Subscriptions() {
             </div>
             
             {/* Pagination */}
-            <div className="flex items-center justify-between mt-6">
+            <div className="flex flex-col sm:flex-row items-center justify-between mt-6 space-y-2 sm:space-y-0">
               <div className="text-sm text-muted-foreground">
                 Page 1 of 1
               </div>
               <div className="flex items-center space-x-2">
-                <Button variant="outline" size="sm" disabled>
-                  Previous
+                <Button variant="outline" size="sm" disabled className="w-20">
+                  Précédent
                 </Button>
-                <Button variant="outline" size="sm" disabled>
-                  Next
+                <Button variant="outline" size="sm" disabled className="w-20">
+                  Suivant
                 </Button>
               </div>
             </div>
