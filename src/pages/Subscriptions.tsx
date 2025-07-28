@@ -3,12 +3,13 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
-import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Search, Filter, Plus, Edit, Trash2, Users, Settings } from "lucide-react";
+import { Search, Filter, Plus, Edit, Trash2, Users, Settings, CreditCard } from "lucide-react";
 import { useState } from "react";
+import ReactQuill from 'react-quill';
+import 'react-quill/dist/quill.snow.css';
 
 const subscriptionPlans = [
   {
@@ -17,46 +18,39 @@ const subscriptionPlans = [
     price: "0",
     currency: "FCFA",
     duration: "Mois",
-    features: ["5 photos par mois", "Support basique", "Watermark"],
+    features: "<p>• 5 photos par mois</p><p>• Support basique</p><p>• Watermark sur les images</p>",
     userCount: 45,
     status: "Actif",
   },
   {
     id: 2,
-    name: "Supérieur",
+    name: "Mensuel",
     price: "8000",
     currency: "FCFA",
     duration: "Mois",
-    features: ["50 photos par mois", "Support prioritaire", "Sans watermark", "Filtres avancés"],
+    features: "<p>• 50 photos par mois</p><p>• Support prioritaire</p><p>• Sans watermark</p><p>• Filtres avancés</p><p>• Retouche automatique</p>",
     userCount: 12,
     status: "Actif",
   },
   {
     id: 3,
-    name: "Supérieur +",
-    price: "8000",
+    name: "Annuel",
+    price: "80000",
     currency: "FCFA",
     duration: "An",
-    features: ["Photos illimitées", "Support 24/7", "Sans watermark", "Tous les filtres", "API access"],
+    features: "<p>• Photos illimitées</p><p>• Support 24/7</p><p>• Sans watermark</p><p>• Tous les filtres premium</p><p>• API access</p><p>• Stockage cloud 100GB</p>",
     userCount: 8,
     status: "Actif",
-  },
-  {
-    id: 4,
-    name: "Entreprise",
-    price: "25000",
-    currency: "FCFA",
-    duration: "Mois",
-    features: ["Multi-utilisateurs", "Dashboard admin", "Branding personnalisé", "Support dédié"],
-    userCount: 3,
-    status: "Inactif",
   },
 ];
 
 export default function Subscriptions() {
   const [isCreateDialogOpen, setIsCreateDialogOpen] = useState(false);
   const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
+  const [isTransactionDialogOpen, setIsTransactionDialogOpen] = useState(false);
   const [selectedPlan, setSelectedPlan] = useState<any>(null);
+  const [features, setFeatures] = useState("");
+  const [editFeatures, setEditFeatures] = useState("");
 
   const getStatusColor = (status: string) => {
     switch (status) {
@@ -71,6 +65,7 @@ export default function Subscriptions() {
 
   const handleEdit = (plan: any) => {
     setSelectedPlan(plan);
+    setEditFeatures(plan.features);
     setIsEditDialogOpen(true);
   };
 
@@ -86,7 +81,7 @@ export default function Subscriptions() {
         </div>
 
         {/* Stats Cards */}
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
+        <div className="grid grid-cols-1 md:grid-cols-5 gap-6">
           <Card>
             <CardContent className="p-6">
               <div className="flex items-center space-x-2">
@@ -142,6 +137,20 @@ export default function Subscriptions() {
               </div>
             </CardContent>
           </Card>
+
+          <Card>
+            <CardContent className="p-6">
+              <div className="flex items-center space-x-2">
+                <div className="h-12 w-12 bg-accent/10 rounded-lg flex items-center justify-center">
+                  <CreditCard className="h-6 w-6 text-accent" />
+                </div>
+                <div>
+                  <p className="text-sm text-muted-foreground">Transactions</p>
+                  <p className="text-2xl font-bold">156</p>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
         </div>
 
         {/* Subscription Plans Table */}
@@ -168,18 +177,27 @@ export default function Subscriptions() {
                       Créer un plan
                     </Button>
                   </DialogTrigger>
-                  <DialogContent className="max-w-md">
+                  <DialogContent className="max-w-2xl max-h-[80vh] overflow-y-auto">
                     <DialogHeader>
                       <DialogTitle>Créer un nouveau plan</DialogTitle>
                     </DialogHeader>
                     <div className="space-y-4">
                       <div>
                         <Label htmlFor="name">Nom du plan</Label>
-                        <Input id="name" placeholder="Ex: Premium" />
+                        <Select>
+                          <SelectTrigger>
+                            <SelectValue placeholder="Sélectionner le type de plan" />
+                          </SelectTrigger>
+                          <SelectContent>
+                            <SelectItem value="Gratuit">Gratuit</SelectItem>
+                            <SelectItem value="Mensuel">Mensuel</SelectItem>
+                            <SelectItem value="Annuel">Annuel</SelectItem>
+                          </SelectContent>
+                        </Select>
                       </div>
                       <div className="grid grid-cols-2 gap-2">
                         <div>
-                          <Label htmlFor="price">Prix</Label>
+                          <Label htmlFor="price">Prix (FCFA)</Label>
                           <Input id="price" placeholder="8000" type="number" />
                         </div>
                         <div>
@@ -189,23 +207,77 @@ export default function Subscriptions() {
                               <SelectValue placeholder="Sélectionner" />
                             </SelectTrigger>
                             <SelectContent>
-                              <SelectItem value="month">Mois</SelectItem>
-                              <SelectItem value="year">An</SelectItem>
+                              <SelectItem value="Mois">Mois</SelectItem>
+                              <SelectItem value="An">An</SelectItem>
                             </SelectContent>
                           </Select>
                         </div>
                       </div>
                       <div>
-                        <Label htmlFor="features">Fonctionnalités (une par ligne)</Label>
-                        <Textarea 
-                          id="features" 
-                          placeholder="50 photos par mois&#10;Support prioritaire&#10;Sans watermark"
-                          rows={4}
-                        />
+                        <Label htmlFor="features">Fonctionnalités</Label>
+                        <div className="mt-2" style={{ height: '200px' }}>
+                          <ReactQuill
+                            value={features}
+                            onChange={setFeatures}
+                            modules={{
+                              toolbar: [
+                                ['bold', 'italic', 'underline'],
+                                [{ 'list': 'ordered'}, { 'list': 'bullet' }],
+                                ['clean']
+                              ],
+                            }}
+                            placeholder="Décrivez les fonctionnalités de ce plan..."
+                          />
+                        </div>
                       </div>
                       <div className="flex space-x-2 pt-4">
                         <Button className="flex-1">Créer le plan</Button>
                         <Button variant="outline" onClick={() => setIsCreateDialogOpen(false)}>
+                          Annuler
+                        </Button>
+                      </div>
+                    </div>
+                  </DialogContent>
+                </Dialog>
+                
+                <Dialog open={isTransactionDialogOpen} onOpenChange={setIsTransactionDialogOpen}>
+                  <DialogTrigger asChild>
+                    <Button size="sm" variant="outline">
+                      <CreditCard className="h-4 w-4 mr-2" />
+                      Nouvelle transaction
+                    </Button>
+                  </DialogTrigger>
+                  <DialogContent className="max-w-md">
+                    <DialogHeader>
+                      <DialogTitle>Assigner un abonnement</DialogTitle>
+                    </DialogHeader>
+                    <div className="space-y-4">
+                      <div>
+                        <Label htmlFor="user-search">Utilisateur</Label>
+                        <Input id="user-search" placeholder="Rechercher un utilisateur..." />
+                      </div>
+                      <div>
+                        <Label htmlFor="plan-select">Plan d'abonnement</Label>
+                        <Select>
+                          <SelectTrigger>
+                            <SelectValue placeholder="Sélectionner un plan" />
+                          </SelectTrigger>
+                          <SelectContent>
+                            {subscriptionPlans.map((plan) => (
+                              <SelectItem key={plan.id} value={plan.id.toString()}>
+                                {plan.name} - {plan.price} FCFA/{plan.duration}
+                              </SelectItem>
+                            ))}
+                          </SelectContent>
+                        </Select>
+                      </div>
+                      <div>
+                        <Label htmlFor="duration-extend">Étendre la période (mois)</Label>
+                        <Input id="duration-extend" placeholder="1" type="number" min="1" />
+                      </div>
+                      <div className="flex space-x-2 pt-4">
+                        <Button className="flex-1">Créer la transaction</Button>
+                        <Button variant="outline" onClick={() => setIsTransactionDialogOpen(false)}>
                           Annuler
                         </Button>
                       </div>
@@ -244,14 +316,10 @@ export default function Subscriptions() {
                         </div>
                       </td>
                       <td className="py-4 px-4">
-                        <div className="space-y-1">
-                          {plan.features.slice(0, 2).map((feature, index) => (
-                            <p key={index} className="text-sm text-muted-foreground">• {feature}</p>
-                          ))}
-                          {plan.features.length > 2 && (
-                            <p className="text-xs text-muted-foreground">+{plan.features.length - 2} autres</p>
-                          )}
-                        </div>
+                        <div 
+                          className="text-sm text-muted-foreground max-w-xs truncate"
+                          dangerouslySetInnerHTML={{ __html: plan.features }}
+                        />
                       </td>
                       <td className="py-4 px-4">
                         <div className="flex items-center space-x-2">
@@ -272,40 +340,58 @@ export default function Subscriptions() {
                                 <Edit className="h-4 w-4" />
                               </Button>
                             </DialogTrigger>
-                            <DialogContent className="max-w-md">
+                            <DialogContent className="max-w-2xl max-h-[80vh] overflow-y-auto">
                               <DialogHeader>
                                 <DialogTitle>Modifier le plan</DialogTitle>
                               </DialogHeader>
                               <div className="space-y-4">
                                 <div>
                                   <Label htmlFor="edit-name">Nom du plan</Label>
-                                  <Input id="edit-name" defaultValue={selectedPlan?.name} />
+                                  <Select defaultValue={selectedPlan?.name}>
+                                    <SelectTrigger>
+                                      <SelectValue />
+                                    </SelectTrigger>
+                                    <SelectContent>
+                                      <SelectItem value="Gratuit">Gratuit</SelectItem>
+                                      <SelectItem value="Mensuel">Mensuel</SelectItem>
+                                      <SelectItem value="Annuel">Annuel</SelectItem>
+                                    </SelectContent>
+                                  </Select>
                                 </div>
                                 <div className="grid grid-cols-2 gap-2">
                                   <div>
-                                    <Label htmlFor="edit-price">Prix</Label>
+                                    <Label htmlFor="edit-price">Prix (FCFA)</Label>
                                     <Input id="edit-price" defaultValue={selectedPlan?.price} type="number" />
                                   </div>
                                   <div>
                                     <Label htmlFor="edit-duration">Durée</Label>
-                                    <Select defaultValue={selectedPlan?.duration === "Mois" ? "month" : "year"}>
+                                    <Select defaultValue={selectedPlan?.duration === "Mois" ? "Mois" : "An"}>
                                       <SelectTrigger>
                                         <SelectValue />
                                       </SelectTrigger>
                                       <SelectContent>
-                                        <SelectItem value="month">Mois</SelectItem>
-                                        <SelectItem value="year">An</SelectItem>
+                                        <SelectItem value="Mois">Mois</SelectItem>
+                                        <SelectItem value="An">An</SelectItem>
                                       </SelectContent>
                                     </Select>
                                   </div>
                                 </div>
                                 <div>
                                   <Label htmlFor="edit-features">Fonctionnalités</Label>
-                                  <Textarea 
-                                    id="edit-features" 
-                                    defaultValue={selectedPlan?.features.join('\n')}
-                                    rows={4}
-                                  />
+                                  <div className="mt-2" style={{ height: '200px' }}>
+                                    <ReactQuill
+                                      value={editFeatures}
+                                      onChange={setEditFeatures}
+                                      modules={{
+                                        toolbar: [
+                                          ['bold', 'italic', 'underline'],
+                                          [{ 'list': 'ordered'}, { 'list': 'bullet' }],
+                                          ['clean']
+                                        ],
+                                      }}
+                                      placeholder="Décrivez les fonctionnalités de ce plan..."
+                                    />
+                                  </div>
                                 </div>
                                 <div className="flex space-x-2 pt-4">
                                   <Button className="flex-1">Sauvegarder</Button>
