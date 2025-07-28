@@ -8,6 +8,7 @@ import {
   HelpCircle,
   ChevronLeft,
   ChevronRight,
+  Receipt,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
@@ -15,6 +16,7 @@ import { Button } from "@/components/ui/button";
 const menuItems = [
   { title: "Tableau de bord", url: "/", icon: BarChart3 },
   { title: "Utilisateurs", url: "/users", icon: Users },
+  { title: "Transactions", url: "/transactions", icon: Receipt },
   { title: "Gestion des abo", url: "/subscriptions", icon: CreditCard },
 ];
 
