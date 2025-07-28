@@ -23,13 +23,6 @@ const stats = [
     icon: <UserPlus className="h-5 w-5" />,
   },
   {
-    title: "Abonnements Actifs",
-    value: "2,847",
-    change: "+8,3%",
-    changeType: "positive" as const,
-    icon: <Crown className="h-5 w-5" />,
-  },
-  {
     title: "Revenus (FCFA)",
     value: "2,500,000",
     change: "+15,2%",
@@ -42,13 +35,6 @@ const stats = [
     change: "Cette semaine",
     changeType: "positive" as const,
     icon: <Activity className="h-5 w-5" />,
-  },
-  {
-    title: "Taux de Conversion",
-    value: "68%",
-    change: "+2,1%",
-    changeType: "positive" as const,
-    icon: <Target className="h-5 w-5" />,
   },
   {
     title: "Plans Gratuits",
@@ -121,14 +107,9 @@ export default function Dashboard() {
           </div>
         </div>
 
-        {/* Date Filter */}
-        <div className="flex items-center space-x-2">
-          <Calendar className="h-4 w-4 text-muted-foreground" />
-          <span className="text-sm font-medium">Jul 09-July 16 2024</span>
-        </div>
 
         {/* Stats Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6 gap-4">
           {stats.map((stat, index) => (
             <StatCard key={index} {...stat} />
           ))}
@@ -137,57 +118,62 @@ export default function Dashboard() {
         {/* Transactions Table */}
         <Card>
           <CardHeader>
-            <div className="flex items-center justify-between">
-              <CardTitle>Transactions</CardTitle>
-              <div className="flex items-center space-x-2">
-                <div className="relative">
+            <div className="flex flex-col space-y-4 lg:flex-row lg:items-center lg:justify-between lg:space-y-0">
+              <CardTitle className="text-lg lg:text-xl">Transactions</CardTitle>
+              <div className="flex flex-col space-y-2 sm:flex-row sm:items-center sm:space-y-0 sm:space-x-2">
+                <div className="relative flex-1 sm:flex-none">
                   <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
                   <Input
-                    placeholder="Search transaction..."
-                    className="pl-10 w-64"
+                    placeholder="Rechercher..."
+                    className="pl-10 w-full sm:w-64"
                   />
                 </div>
-                <Button variant="outline" size="sm">
-                  <Download className="h-4 w-4 mr-2" />
-                  Download
-                </Button>
-                <Button variant="outline" size="sm">
-                  <Filter className="h-4 w-4 mr-2" />
-                  Filter
-                </Button>
+                <div className="flex space-x-2">
+                  <Button variant="outline" size="sm" className="flex-1 sm:flex-none">
+                    <Download className="h-4 w-4 mr-2" />
+                    <span className="hidden sm:inline">Download</span>
+                  </Button>
+                  <Button variant="outline" size="sm" className="flex-1 sm:flex-none">
+                    <Filter className="h-4 w-4 mr-2" />
+                    <span className="hidden sm:inline">Filter</span>
+                  </Button>
+                </div>
               </div>
             </div>
           </CardHeader>
           <CardContent>
             <div className="overflow-x-auto">
-              <table className="w-full">
+              <table className="w-full min-w-[600px]">
                 <thead>
                   <tr className="border-b border-border">
-                    <th className="text-left font-medium text-muted-foreground py-3 px-4">Nom</th>
-                    <th className="text-left font-medium text-muted-foreground py-3 px-4">Date</th>
-                    <th className="text-left font-medium text-muted-foreground py-3 px-4">Souscription</th>
-                    <th className="text-left font-medium text-muted-foreground py-3 px-4">Montant</th>
-                    <th className="text-left font-medium text-muted-foreground py-3 px-4"></th>
+                    <th className="text-left font-medium text-muted-foreground py-3 px-2 sm:px-4">Nom</th>
+                    <th className="text-left font-medium text-muted-foreground py-3 px-2 sm:px-4 hidden sm:table-cell">Date</th>
+                    <th className="text-left font-medium text-muted-foreground py-3 px-2 sm:px-4">Souscription</th>
+                    <th className="text-left font-medium text-muted-foreground py-3 px-2 sm:px-4">Montant</th>
+                    <th className="text-left font-medium text-muted-foreground py-3 px-2 sm:px-4 w-12"></th>
                   </tr>
                 </thead>
                 <tbody>
                   {transactions.map((transaction) => (
                     <tr key={transaction.id} className="border-b border-border hover:bg-muted/50 transition-colors">
-                      <td className="py-4 px-4">
-                        <div className="flex items-center space-x-3">
-                          <Avatar className="h-8 w-8">
+                      <td className="py-3 px-2 sm:py-4 sm:px-4">
+                        <div className="flex items-center space-x-2 sm:space-x-3">
+                          <Avatar className="h-6 w-6 sm:h-8 sm:w-8">
                             <AvatarFallback className="text-xs">{transaction.avatar}</AvatarFallback>
                           </Avatar>
-                          <span className="font-medium">{transaction.name}</span>
+                          <div className="min-w-0 flex-1">
+                            <span className="font-medium text-sm sm:text-base truncate block">{transaction.name}</span>
+                            <span className="text-xs text-muted-foreground sm:hidden">{transaction.date}</span>
+                          </div>
                         </div>
                       </td>
-                      <td className="py-4 px-4 text-muted-foreground">{transaction.date}</td>
-                      <td className="py-4 px-4">
-                        <Badge variant="secondary">{transaction.subscription}</Badge>
+                      <td className="py-3 px-2 sm:py-4 sm:px-4 text-muted-foreground text-sm hidden sm:table-cell">{transaction.date}</td>
+                      <td className="py-3 px-2 sm:py-4 sm:px-4">
+                        <Badge variant="secondary" className="text-xs">{transaction.subscription}</Badge>
                       </td>
-                      <td className="py-4 px-4 font-medium">{transaction.amount}</td>
-                      <td className="py-4 px-4">
-                        <Button variant="ghost" size="sm">
+                      <td className="py-3 px-2 sm:py-4 sm:px-4 font-medium text-sm sm:text-base">{transaction.amount}</td>
+                      <td className="py-3 px-2 sm:py-4 sm:px-4">
+                        <Button variant="ghost" size="sm" className="h-8 w-8 p-0">
                           <MoreHorizontal className="h-4 w-4" />
                         </Button>
                       </td>
