@@ -15,6 +15,9 @@ import {
   UserCheck,
   FileImage,
   FileText,
+  Camera,
+  Calendar,
+  DollarSign,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
@@ -24,6 +27,14 @@ const adminMenuItems = [
   { title: "Utilisateurs", url: "/users", icon: Users },
   { title: "Transactions", url: "/transactions", icon: Receipt },
   { title: "Gestion des abo", url: "/subscriptions", icon: CreditCard },
+];
+
+const userMenuItems = [
+  { title: "Tableau de bord", url: "/user-dashboard", icon: BarChart3 },
+  { title: "Prestations", url: "/prestations", icon: Camera },
+  { title: "Contacts", url: "/contacts", icon: Users },
+  { title: "Calendrier", url: "/calendar", icon: Calendar },
+  { title: "Finances", url: "/finances", icon: DollarSign },
 ];
 
 const clientMenuItems = [
@@ -45,6 +56,7 @@ interface AdminSidebarProps {
 export function AdminSidebar({ isOpen, setIsOpen, isMobile }: AdminSidebarProps) {
   const [collapsed, setCollapsed] = useState(false);
   const [isAdminOpen, setIsAdminOpen] = useState(true);
+  const [isUserOpen, setIsUserOpen] = useState(true);
   const [isClientOpen, setIsClientOpen] = useState(true);
   const location = useLocation();
 
@@ -101,11 +113,14 @@ export function AdminSidebar({ isOpen, setIsOpen, isMobile }: AdminSidebarProps)
           <div className="flex-1 px-3 py-4">
             <MobileMenuContent 
               adminMenuItems={adminMenuItems}
+              userMenuItems={userMenuItems}
               clientMenuItems={clientMenuItems}
               preferenceItems={preferenceItems}
               isActive={isActive}
               isAdminOpen={isAdminOpen}
               setIsAdminOpen={setIsAdminOpen}
+              isUserOpen={isUserOpen}
+              setIsUserOpen={setIsUserOpen}
               isClientOpen={isClientOpen}
               setIsClientOpen={setIsClientOpen}
             />
@@ -146,11 +161,14 @@ export function AdminSidebar({ isOpen, setIsOpen, isMobile }: AdminSidebarProps)
       <div className="flex-1 px-3 py-4">
         <DesktopMenuContent 
           adminMenuItems={adminMenuItems}
+          userMenuItems={userMenuItems}
           clientMenuItems={clientMenuItems}
           preferenceItems={preferenceItems}
           isActive={isActive}
           isAdminOpen={isAdminOpen}
           setIsAdminOpen={setIsAdminOpen}
+          isUserOpen={isUserOpen}
+          setIsUserOpen={setIsUserOpen}
           isClientOpen={isClientOpen}
           setIsClientOpen={setIsClientOpen}
           collapsed={collapsed}
@@ -163,11 +181,14 @@ export function AdminSidebar({ isOpen, setIsOpen, isMobile }: AdminSidebarProps)
 // Desktop menu component
 function DesktopMenuContent({ 
   adminMenuItems, 
+  userMenuItems,
   clientMenuItems,
   preferenceItems, 
   isActive, 
   isAdminOpen, 
   setIsAdminOpen,
+  isUserOpen,
+  setIsUserOpen,
   isClientOpen,
   setIsClientOpen, 
   collapsed 
@@ -194,6 +215,44 @@ function DesktopMenuContent({
         {(isAdminOpen || collapsed) && (
           <div className={cn("space-y-1", !collapsed && "mt-2")}>
             {adminMenuItems.map((item: any) => (
+              <NavLink
+                key={item.title}
+                to={item.url}
+                className={cn(
+                  "flex items-center rounded-lg px-3 py-2 text-sm font-medium transition-colors",
+                  isActive(item.url)
+                    ? "bg-primary text-primary-foreground shadow-sm"
+                    : "text-muted-foreground hover:text-foreground hover:bg-accent"
+                )}
+              >
+                <item.icon className={cn("h-4 w-4", !collapsed && "mr-3")} />
+                {!collapsed && <span>{item.title}</span>}
+              </NavLink>
+            ))}
+          </div>
+        )}
+      </div>
+
+      {/* Groupe Utilisateur */}
+      <div className="mb-4">
+        {!collapsed && (
+          <button
+            onClick={() => setIsUserOpen(!isUserOpen)}
+            className="w-full flex items-center justify-between p-2 text-xs font-semibold text-muted-foreground uppercase tracking-wider hover:text-foreground transition-colors"
+          >
+            <span>Utilisateur</span>
+            <ChevronDown
+              className={cn(
+                "h-4 w-4 transition-transform duration-200",
+                isUserOpen ? "rotate-180" : ""
+              )}
+            />
+          </button>
+        )}
+        
+        {(isUserOpen || collapsed) && (
+          <div className={cn("space-y-1", !collapsed && "mt-2")}>
+            {userMenuItems.map((item: any) => (
               <NavLink
                 key={item.title}
                 to={item.url}
@@ -282,11 +341,14 @@ function DesktopMenuContent({
 // Mobile menu component
 function MobileMenuContent({ 
   adminMenuItems, 
+  userMenuItems,
   clientMenuItems,
   preferenceItems, 
   isActive, 
   isAdminOpen, 
   setIsAdminOpen,
+  isUserOpen,
+  setIsUserOpen,
   isClientOpen,
   setIsClientOpen 
 }: any) {
@@ -310,6 +372,42 @@ function MobileMenuContent({
         {isAdminOpen && (
           <div className="space-y-1 mt-2">
             {adminMenuItems.map((item: any) => (
+              <NavLink
+                key={item.title}
+                to={item.url}
+                className={cn(
+                  "flex items-center rounded-lg px-3 py-2 text-sm font-medium transition-colors",
+                  isActive(item.url)
+                    ? "bg-primary text-primary-foreground shadow-sm"
+                    : "text-muted-foreground hover:text-foreground hover:bg-accent"
+                )}
+              >
+                <item.icon className="h-4 w-4 mr-3" />
+                <span>{item.title}</span>
+              </NavLink>
+            ))}
+          </div>
+        )}
+      </div>
+
+      {/* Mobile Utilisateur Group */}
+      <div className="mb-4">
+        <button
+          onClick={() => setIsUserOpen(!isUserOpen)}
+          className="w-full flex items-center justify-between p-2 text-xs font-semibold text-muted-foreground uppercase tracking-wider hover:text-foreground transition-colors"
+        >
+          <span>Utilisateur</span>
+          <ChevronDown
+            className={cn(
+              "h-4 w-4 transition-transform duration-200",
+              isUserOpen ? "rotate-180" : ""
+            )}
+          />
+        </button>
+        
+        {isUserOpen && (
+          <div className="space-y-1 mt-2">
+            {userMenuItems.map((item: any) => (
               <NavLink
                 key={item.title}
                 to={item.url}
