@@ -479,10 +479,9 @@ Les droits d'auteur restent la propriété du photographe.`,
                               variant="outline" 
                               size="sm" 
                               onClick={() => handleViewDocument(doc)}
-                              className="bg-white/80 hover:bg-white"
+                              className="bg-white/80 hover:bg-white px-2"
                             >
-                              <Eye className="h-4 w-4 mr-1" />
-                              Voir
+                              <Eye className="h-4 w-4" />
                             </Button>
                             <Button 
                               variant="outline" 
