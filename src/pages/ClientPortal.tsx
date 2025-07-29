@@ -33,6 +33,8 @@ export default function ClientPortal() {
   const [documentFilter, setDocumentFilter] = useState("all");
   const [statusFilter, setStatusFilter] = useState("all");
   const [searchQuery, setSearchQuery] = useState("");
+  const [selectedDocument, setSelectedDocument] = useState<any>(null);
+  const [currentStep, setCurrentStep] = useState<"view" | "approve" | "sign">("view");
 
   // Mock client data
   const clientData = {
@@ -66,11 +68,11 @@ export default function ClientPortal() {
     {
       id: "CON-2024-001",
       type: "contrat",
-      title: "Contrat de prestation",
+      title: "Contrat de prestation photo studio",
       date: "2024-01-05",
       amount: "5,000.00 €", 
       status: "en_cours",
-      description: "Contrat annuel de prestations photo"
+      description: "Contrat annuel de prestations photo avec possibilité de signature électronique"
     },
     {
       id: "DEV-2024-002",
@@ -80,6 +82,24 @@ export default function ClientPortal() {
       amount: "3,200.00 €",
       status: "accepte",
       description: "Shooting pour nouvelle collection"
+    },
+    {
+      id: "FAC-2024-002",
+      type: "facture", 
+      title: "Facture shooting corporate",
+      date: "2024-01-25",
+      amount: "2,100.00 €",
+      status: "accepte",
+      description: "Facturation shooting corporate équipe"
+    },
+    {
+      id: "CON-2024-002",
+      type: "contrat",
+      title: "Contrat événementiel",
+      date: "2024-01-12",
+      amount: "4,500.00 €",
+      status: "signe", 
+      description: "Contrat pour couverture photo événement"
     },
     {
       id: "CGV-2024",
@@ -133,11 +153,27 @@ export default function ClientPortal() {
 
     if (doc.type === "devis" && doc.status === "a_signer") {
       actions.push(
-        <Button key="accept" variant="ghost" size="icon" className="text-green-600" title="Accepter">
-          <Check className="h-4 w-4" />
+        <Button 
+          key="accept" 
+          variant="ghost" 
+          size="sm" 
+          className="text-green-600 hover:bg-green-50" 
+          title="Accepter"
+          onClick={() => handleDocumentAction(doc.id, 'accept')}
+        >
+          <Check className="h-4 w-4 mr-1" />
+          Accepter
         </Button>,
-        <Button key="refuse" variant="ghost" size="icon" className="text-red-600" title="Refuser">
-          <X className="h-4 w-4" />
+        <Button 
+          key="refuse" 
+          variant="ghost" 
+          size="sm" 
+          className="text-red-600 hover:bg-red-50" 
+          title="Refuser"
+          onClick={() => handleDocumentAction(doc.id, 'refuse')}
+        >
+          <X className="h-4 w-4 mr-1" />
+          Refuser
         </Button>
       );
     }
@@ -145,8 +181,16 @@ export default function ClientPortal() {
     if ((doc.type === "contrat" && doc.status === "en_cours") || 
         (doc.type === "devis" && doc.status === "accepte")) {
       actions.push(
-        <Button key="sign" variant="ghost" size="icon" className="text-blue-600" title="Signer">
-          <PenTool className="h-4 w-4" />
+        <Button 
+          key="sign" 
+          variant="ghost" 
+          size="sm" 
+          className="text-blue-600 hover:bg-blue-50" 
+          title="Signer"
+          onClick={() => handleDocumentAction(doc.id, 'sign')}
+        >
+          <PenTool className="h-4 w-4 mr-1" />
+          Signer
         </Button>
       );
     }
@@ -162,6 +206,37 @@ export default function ClientPortal() {
     
     return matchesSearch && matchesType && matchesStatus;
   });
+
+  // Handle document actions
+  const handleDocumentAction = (docId: string, action: string) => {
+    const doc = documents.find(d => d.id === docId);
+    if (!doc) return;
+
+    setSelectedDocument(doc);
+    
+    if (action === 'accept' || action === 'refuse') {
+      setCurrentStep("approve");
+    } else if (action === 'sign') {
+      setCurrentStep("sign");
+    } else {
+      setCurrentStep("view");
+    }
+  };
+
+  const handleSignDocument = () => {
+    // Simulate signature process
+    alert(`Document ${selectedDocument?.id} signé avec succès !`);
+    setSelectedDocument(null);
+    setCurrentStep("view");
+  };
+
+  const handleApproveDocument = (approved: boolean) => {
+    // Simulate approval process
+    const action = approved ? "accepté" : "refusé";
+    alert(`Document ${selectedDocument?.id} ${action} avec succès !`);
+    setSelectedDocument(null);
+    setCurrentStep("view");
+  };
 
   // Check token validity
   useEffect(() => {
@@ -303,11 +378,22 @@ export default function ClientPortal() {
                           <TableCell>
                             {getStatusBadge(doc.type, doc.status)}
                           </TableCell>
-                          <TableCell>
-                            <div className="flex gap-1">
-                              {getDocumentActions(doc)}
-                            </div>
-                          </TableCell>
+                           <TableCell>
+                             <div className="flex gap-1 flex-wrap">
+                               <Button 
+                                 variant="ghost" 
+                                 size="icon" 
+                                 title="Voir"
+                                 onClick={() => handleDocumentAction(doc.id, 'view')}
+                               >
+                                 <Eye className="h-4 w-4" />
+                               </Button>
+                               <Button variant="ghost" size="icon" title="Télécharger">
+                                 <Download className="h-4 w-4" />
+                               </Button>
+                               {getDocumentActions(doc)}
+                             </div>
+                           </TableCell>
                         </TableRow>
                       ))}
                     </TableBody>
@@ -391,6 +477,213 @@ export default function ClientPortal() {
             </Card>
           </TabsContent>
         </Tabs>
+
+        {/* Document Viewer/Editor Modal */}
+        {selectedDocument && (
+          <Dialog open={!!selectedDocument} onOpenChange={() => setSelectedDocument(null)}>
+            <DialogContent className="max-w-6xl max-h-[90vh] overflow-y-auto">
+              <DialogHeader>
+                <DialogTitle className="flex items-center gap-2">
+                  <FileText className="h-5 w-5" />
+                  {selectedDocument.title} - {selectedDocument.id}
+                </DialogTitle>
+              </DialogHeader>
+
+              <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                {/* Document Preview */}
+                <div className="lg:col-span-1 space-y-4">
+                  <Card>
+                    <CardContent className="p-4">
+                      <div className="bg-gradient-to-b from-blue-50 to-white border rounded-lg p-6 min-h-[400px] relative">
+                        <div className="absolute top-4 left-4">
+                          <div className="w-8 h-8 bg-blue-500 rounded flex items-center justify-center text-white text-xs font-bold">
+                            1
+                          </div>
+                        </div>
+                        
+                        <div className="text-center space-y-4 mt-8">
+                          <div className="flex items-center justify-center">
+                            <div className="bg-blue-500 text-white px-3 py-1 rounded text-sm">PICSTUDIO</div>
+                          </div>
+                          
+                          <div className="space-y-2">
+                            <div className="font-semibold text-lg">{selectedDocument.title}</div>
+                            <div className="text-sm text-muted-foreground">{selectedDocument.description}</div>
+                          </div>
+
+                          <div className="mt-8 space-y-1 text-sm">
+                            <div className="font-semibold">Document #{selectedDocument.id}</div>
+                            <div>Date: {selectedDocument.date}</div>
+                            <div>Montant: {selectedDocument.amount}</div>
+                          </div>
+
+                          <div className="text-xs space-y-2 mt-8">
+                            <p>Ce document présente les détails de la prestation demandée...</p>
+                            <p>Toutes les conditions sont précisées ci-dessous...</p>
+                          </div>
+                        </div>
+                      </div>
+                    </CardContent>
+                  </Card>
+                </div>
+
+                {/* Action Area */}
+                <div className="lg:col-span-2">
+                  {currentStep === "view" && (
+                    <Card>
+                      <CardContent className="p-6">
+                        <div className="space-y-4">
+                          <h3 className="text-xl font-semibold">Détails du document</h3>
+                          <div className="grid grid-cols-2 gap-4 text-sm">
+                            <div>
+                              <span className="font-medium">Type:</span> {selectedDocument.type}
+                            </div>
+                            <div>
+                              <span className="font-medium">Statut:</span> {getStatusBadge(selectedDocument.type, selectedDocument.status)}
+                            </div>
+                            <div>
+                              <span className="font-medium">Date:</span> {selectedDocument.date}
+                            </div>
+                            <div>
+                              <span className="font-medium">Montant:</span> {selectedDocument.amount}
+                            </div>
+                          </div>
+                          <div>
+                            <span className="font-medium">Description:</span>
+                            <p className="mt-1">{selectedDocument.description}</p>
+                          </div>
+                          
+                          <div className="flex gap-2 pt-4">
+                            {selectedDocument.type === "devis" && selectedDocument.status === "a_signer" && (
+                              <>
+                                <Button 
+                                  onClick={() => setCurrentStep("approve")}
+                                  className="bg-orange-500 hover:bg-orange-600"
+                                >
+                                  Traiter le devis
+                                </Button>
+                              </>
+                            )}
+                            {((selectedDocument.type === "contrat" && selectedDocument.status === "en_cours") || 
+                              (selectedDocument.type === "devis" && selectedDocument.status === "accepte")) && (
+                              <Button 
+                                onClick={() => setCurrentStep("sign")}
+                                className="bg-blue-500 hover:bg-blue-600"
+                              >
+                                Signer le document
+                              </Button>
+                            )}
+                          </div>
+                        </div>
+                      </CardContent>
+                    </Card>
+                  )}
+
+                  {currentStep === "approve" && (
+                    <div className="bg-gradient-to-r from-orange-500 to-orange-600 text-white p-8 rounded-lg space-y-4">
+                      <h2 className="text-2xl font-bold">Validation du devis</h2>
+                      <p className="text-lg">Veuillez examiner ce devis et donner votre accord</p>
+                      
+                      <Card className="bg-white text-black">
+                        <CardContent className="p-4">
+                          <div className="space-y-4">
+                            <div className="font-semibold text-lg">{selectedDocument.title}</div>
+                            <div className="text-sm text-muted-foreground">{selectedDocument.description}</div>
+                            <div className="text-2xl font-bold text-blue-600">{selectedDocument.amount}</div>
+                            
+                            <div className="border-t pt-4 space-y-2 text-sm">
+                              <div><strong>Prestations incluses:</strong></div>
+                              <ul className="list-disc list-inside space-y-1 text-muted-foreground">
+                                <li>Séance photo complète</li>
+                                <li>Retouche des images</li>
+                                <li>Livraison en haute définition</li>
+                                <li>Droit d'usage commercial</li>
+                              </ul>
+                            </div>
+                          </div>
+                        </CardContent>
+                      </Card>
+
+                      <div className="flex gap-4 justify-center pt-4">
+                        <Button 
+                          onClick={() => handleApproveDocument(true)}
+                          className="bg-green-500 hover:bg-green-600 px-8"
+                        >
+                          Accepter le devis
+                        </Button>
+                        <Button 
+                          onClick={() => handleApproveDocument(false)}
+                          className="bg-red-500 hover:bg-red-600 px-8"
+                        >
+                          Refuser le devis
+                        </Button>
+                      </div>
+                    </div>
+                  )}
+
+                  {currentStep === "sign" && (
+                    <div className="bg-gradient-to-r from-blue-500 to-blue-600 text-white p-8 rounded-lg space-y-4">
+                      <h2 className="text-2xl font-bold">Signature électronique</h2>
+                      <p className="text-lg">Veuillez signer ce document pour finaliser l'accord</p>
+                      
+                      <Card className="bg-white text-black">
+                        <CardContent className="p-4">
+                          <div className="space-y-4">
+                            <div className="font-semibold text-lg">{selectedDocument.title}</div>
+                            <div className="text-sm text-muted-foreground">{selectedDocument.description}</div>
+                            
+                            <div className="border rounded-lg p-4 bg-gray-50">
+                              <div className="text-sm space-y-2">
+                                <div><strong>En signant ce document, vous acceptez:</strong></div>
+                                <ul className="list-disc list-inside space-y-1">
+                                  <li>Les termes et conditions énoncés</li>
+                                  <li>Le montant de {selectedDocument.amount}</li>
+                                  <li>Les délais de réalisation convenus</li>
+                                  <li>Les modalités de paiement</li>
+                                </ul>
+                              </div>
+                            </div>
+                            
+                            <div className="border-2 border-dashed border-gray-300 rounded-lg p-8 text-center">
+                              <PenTool className="h-12 w-12 mx-auto text-gray-400 mb-2" />
+                              <div className="text-muted-foreground">Zone de signature électronique</div>
+                              <div className="text-xs text-muted-foreground mt-1">
+                                La signature sera appliquée automatiquement lors de la validation
+                              </div>
+                            </div>
+                          </div>
+                        </CardContent>
+                      </Card>
+
+                      <div className="flex justify-center pt-4">
+                        <Button 
+                          onClick={handleSignDocument}
+                          className="bg-green-500 hover:bg-green-600 px-12 py-3 text-lg"
+                        >
+                          <PenTool className="h-5 w-5 mr-2" />
+                          Signer le document
+                        </Button>
+                      </div>
+                    </div>
+                  )}
+                </div>
+              </div>
+
+              {/* Navigation buttons */}
+              <div className="flex justify-between pt-4 border-t">
+                <Button variant="outline" onClick={() => setSelectedDocument(null)}>
+                  Fermer
+                </Button>
+                
+                {currentStep !== "view" && (
+                  <Button variant="outline" onClick={() => setCurrentStep("view")}>
+                    Retour à la vue document
+                  </Button>
+                )}
+              </div>
+            </DialogContent>
+          </Dialog>
+        )}
       </div>
     </div>
   );
