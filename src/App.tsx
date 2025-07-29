@@ -10,6 +10,8 @@ import UserDetail from "./pages/UserDetail";
 import Transactions from "./pages/Transactions";
 import Subscriptions from "./pages/Subscriptions";
 import Documentation from "./pages/Documentation";
+import UserGuide from "./pages/UserGuide";
+import ClientUserGuide from "./pages/ClientUserGuide";
 import ClientDevis from "./pages/ClientDevis";
 import ClientFactures from "./pages/ClientFactures";
 import ClientDocumentation from "./pages/ClientDocumentation";
@@ -33,6 +35,8 @@ const App = () => (
           <Route path="/transactions" element={<Transactions />} />
           <Route path="/subscriptions" element={<Subscriptions />} />
           <Route path="/documentation" element={<Documentation />} />
+          <Route path="/user-guide" element={<UserGuide />} />
+          <Route path="/client-guide" element={<ClientUserGuide />} />
           <Route path="/client/:clientId" element={<ClientPortal />} />
           <Route path="/client/:clientId/contract/:contractId" element={<ClientContract />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}

@@ -42,7 +42,9 @@ const clientMenuItems = [
 ];
 
 const preferenceItems = [
-  { title: "Documentation", url: "/documentation", icon: BookOpen },
+  { title: "Documentation API", url: "/documentation", icon: BookOpen },
+  { title: "Guide Utilisateur", url: "/user-guide", icon: UserCheck },
+  { title: "Guide Client", url: "/client-guide", icon: FileText },
   { title: "Paramètres", url: "/settings", icon: Settings },
   { title: "Centre d'aide", url: "/help", icon: HelpCircle },
 ];
