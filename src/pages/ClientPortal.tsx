@@ -10,6 +10,7 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { Label } from "@/components/ui/label";
+import { Textarea } from "@/components/ui/textarea";
 import { 
   Search, 
   FileText, 
@@ -19,9 +20,11 @@ import {
   X, 
   PenTool, 
   User,
-  Filter,
   Calendar,
-  Euro
+  Euro,
+  Shield,
+  Clock,
+  CheckCircle
 } from "lucide-react";
 
 export default function ClientPortal() {
@@ -34,7 +37,9 @@ export default function ClientPortal() {
   const [statusFilter, setStatusFilter] = useState("all");
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedDocument, setSelectedDocument] = useState<any>(null);
-  const [currentStep, setCurrentStep] = useState<"view" | "approve" | "sign">("view");
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [modalStep, setModalStep] = useState<"view" | "sign">("view");
+  const [signature, setSignature] = useState("");
 
   // Mock client data
   const clientData = {
@@ -45,8 +50,39 @@ export default function ClientPortal() {
     address: "123 rue de la Paix, 75001 Paris"
   };
 
-  // Mock documents with different types and statuses
+  // Mock documents with enhanced contract data
   const documents = [
+    {
+      id: "CON-2024-001",
+      type: "contrat",
+      title: "Contrat de prestation photo studio",
+      date: "2024-01-05",
+      amount: "5,000.00 €", 
+      status: "en_cours",
+      description: "Contrat annuel de prestations photo avec studio professionnel",
+      content: `CONTRAT DE PRESTATION PHOTOGRAPHIQUE
+
+Entre les soussignés :
+• PICSTUDIO, société spécialisée en photographie professionnelle
+• ${clientData.name}, représentant ${clientData.company}
+
+OBJET DU CONTRAT :
+Le présent contrat a pour objet la réalisation de prestations photographiques professionnelles comprenant :
+- Séances photo en studio
+- Retouches et post-production
+- Livraison des fichiers haute définition
+
+DURÉE : 12 mois à compter de la signature
+MONTANT : 5,000.00 € HT
+
+CONDITIONS PARTICULIÈRES :
+- Planning des séances à définir conjointement
+- Délai de livraison : 7 jours ouvrés
+- Cession des droits d'usage incluse
+
+Ce contrat nécessite votre signature électronique pour être validé.`,
+      signatureRequired: true
+    },
     {
       id: "DEV-2024-001",
       type: "devis",
@@ -54,7 +90,22 @@ export default function ClientPortal() {
       date: "2024-01-15",
       amount: "2,500.00 €",
       status: "a_signer",
-      description: "Séance photo corporate pour 10 personnes"
+      description: "Séance photo corporate pour 10 personnes",
+      content: `DEVIS - SÉANCE PHOTO CORPORATE
+
+Prestation proposée :
+• Séance photo corporate (8h)
+• Studio professionnel avec éclairage
+• Photographe expert + assistant
+• 50 photos retouchées livrées
+• Formats : web et print
+
+Tarif : 2,500.00 € HT
+TVA 20% : 500.00 €
+TOTAL TTC : 3,000.00 €
+
+Validité du devis : 30 jours`,
+      signatureRequired: false
     },
     {
       id: "FAC-2024-001", 
@@ -63,34 +114,23 @@ export default function ClientPortal() {
       date: "2024-01-10",
       amount: "1,800.00 €",
       status: "en_cours",
-      description: "Facturation séance photo produits"
-    },
-    {
-      id: "CON-2024-001",
-      type: "contrat",
-      title: "Contrat de prestation photo studio",
-      date: "2024-01-05",
-      amount: "5,000.00 €", 
-      status: "en_cours",
-      description: "Contrat annuel de prestations photo avec possibilité de signature électronique"
-    },
-    {
-      id: "DEV-2024-002",
-      type: "devis",
-      title: "Devis shooting mode",
-      date: "2024-01-20",
-      amount: "3,200.00 €",
-      status: "accepte",
-      description: "Shooting pour nouvelle collection"
-    },
-    {
-      id: "FAC-2024-002",
-      type: "facture", 
-      title: "Facture shooting corporate",
-      date: "2024-01-25",
-      amount: "2,100.00 €",
-      status: "accepte",
-      description: "Facturation shooting corporate équipe"
+      description: "Facturation séance photo produits",
+      content: `FACTURE N° FAC-2024-001
+
+Date : 10/01/2024
+Échéance : 10/02/2024
+
+Prestation :
+• Séance photo produits (6h)
+• Post-production et retouches
+• Livraison 30 visuels HD
+
+Montant HT : 1,800.00 €
+TVA 20% : 360.00 €
+TOTAL TTC : 2,160.00 €
+
+Règlement par virement ou chèque`,
+      signatureRequired: false
     },
     {
       id: "CON-2024-002",
@@ -99,7 +139,9 @@ export default function ClientPortal() {
       date: "2024-01-12",
       amount: "4,500.00 €",
       status: "signe", 
-      description: "Contrat pour couverture photo événement"
+      description: "Contrat pour couverture photo événement",
+      content: "Contrat signé pour événement corporate...",
+      signatureRequired: false
     },
     {
       id: "CGV-2024",
@@ -107,95 +149,68 @@ export default function ClientPortal() {
       title: "Conditions générales de vente",
       date: "2024-01-01",
       amount: "-",
-      status: "visible",
-      description: "Conditions générales applicables"
+      status: "consultable",
+      description: "Conditions générales applicables",
+      content: `CONDITIONS GÉNÉRALES DE VENTE - PICSTUDIO
+
+Article 1 - Objet
+Les présentes conditions générales s'appliquent à toutes les prestations photographiques.
+
+Article 2 - Commandes
+Toute commande implique l'acceptation de nos CGV.
+
+Article 3 - Tarifs
+Les tarifs sont exprimés en euros HT.
+
+Article 4 - Paiement
+Règlement à 30 jours fin de mois.
+
+Article 5 - Livraison
+Les fichiers sont livrés par transfert sécurisé.
+
+Article 6 - Propriété intellectuelle
+Les droits d'auteur restent la propriété du photographe.`,
+      signatureRequired: false
     }
   ];
 
   const getStatusBadge = (type: string, status: string) => {
     const statusConfig = {
       devis: {
-        a_signer: { label: "À signer", class: "bg-orange-100 text-orange-800 border-orange-200" },
-        refuse: { label: "Refusé", class: "bg-red-100 text-red-800 border-red-200" },
-        accepte: { label: "Accepté", class: "bg-green-100 text-green-800 border-green-200" }
+        a_signer: { label: "À signer", variant: "secondary", color: "bg-amber-100 text-amber-800 border-amber-200" },
+        refuse: { label: "Refusé", variant: "destructive", color: "bg-red-100 text-red-800 border-red-200" },
+        accepte: { label: "Accepté", variant: "default", color: "bg-green-100 text-green-800 border-green-200" }
       },
       facture: {
-        en_cours: { label: "En cours", class: "bg-blue-100 text-blue-800 border-blue-200" },
-        refuse: { label: "Refusé", class: "bg-red-100 text-red-800 border-red-200" },
-        accepte: { label: "Accepté", class: "bg-green-100 text-green-800 border-green-200" }
+        en_cours: { label: "En cours", variant: "secondary", color: "bg-blue-100 text-blue-800 border-blue-200" },
+        refuse: { label: "Refusé", variant: "destructive", color: "bg-red-100 text-red-800 border-red-200" },
+        accepte: { label: "Payée", variant: "default", color: "bg-green-100 text-green-800 border-green-200" }
       },
       contrat: {
-        en_cours: { label: "En cours", class: "bg-blue-100 text-blue-800 border-blue-200" },
-        signe: { label: "Signé", class: "bg-green-100 text-green-800 border-green-200" }
+        en_cours: { label: "À signer", variant: "secondary", color: "bg-amber-100 text-amber-800 border-amber-200" },
+        signe: { label: "Signé", variant: "default", color: "bg-green-100 text-green-800 border-green-200" }
       },
       cgv: {
-        visible: { label: "Consultable", class: "bg-gray-100 text-gray-800 border-gray-200" }
+        consultable: { label: "Consultable", variant: "outline", color: "bg-gray-100 text-gray-800 border-gray-200" }
       }
     };
 
     const config = statusConfig[type as keyof typeof statusConfig]?.[status as keyof any];
     return (
-      <Badge className={config?.class || "bg-gray-100 text-gray-800 border-gray-200"}>
+      <Badge className={config?.color || "bg-gray-100 text-gray-800 border-gray-200"}>
         {config?.label || status}
       </Badge>
     );
   };
 
-  const getDocumentActions = (doc: any) => {
-    const actions = [
-      <Button key="view" variant="ghost" size="icon" title="Voir">
-        <Eye className="h-4 w-4" />
-      </Button>,
-      <Button key="download" variant="ghost" size="icon" title="Télécharger">
-        <Download className="h-4 w-4" />
-      </Button>
-    ];
-
-    if (doc.type === "devis" && doc.status === "a_signer") {
-      actions.push(
-        <Button 
-          key="accept" 
-          variant="ghost" 
-          size="sm" 
-          className="text-green-600 hover:bg-green-50" 
-          title="Accepter"
-          onClick={() => handleDocumentAction(doc.id, 'accept')}
-        >
-          <Check className="h-4 w-4 mr-1" />
-          Accepter
-        </Button>,
-        <Button 
-          key="refuse" 
-          variant="ghost" 
-          size="sm" 
-          className="text-red-600 hover:bg-red-50" 
-          title="Refuser"
-          onClick={() => handleDocumentAction(doc.id, 'refuse')}
-        >
-          <X className="h-4 w-4 mr-1" />
-          Refuser
-        </Button>
-      );
-    }
-
-    if ((doc.type === "contrat" && doc.status === "en_cours") || 
-        (doc.type === "devis" && doc.status === "accepte")) {
-      actions.push(
-        <Button 
-          key="sign" 
-          variant="ghost" 
-          size="sm" 
-          className="text-blue-600 hover:bg-blue-50" 
-          title="Signer"
-          onClick={() => handleDocumentAction(doc.id, 'sign')}
-        >
-          <PenTool className="h-4 w-4 mr-1" />
-          Signer
-        </Button>
-      );
-    }
-
-    return actions;
+  const getDocumentIcon = (type: string) => {
+    const icons = {
+      devis: <FileText className="h-4 w-4 text-blue-600" />,
+      facture: <FileText className="h-4 w-4 text-green-600" />,
+      contrat: <Shield className="h-4 w-4 text-purple-600" />,
+      cgv: <FileText className="h-4 w-4 text-gray-600" />
+    };
+    return icons[type as keyof typeof icons] || <FileText className="h-4 w-4" />;
   };
 
   const filteredDocuments = documents.filter(doc => {
@@ -207,35 +222,54 @@ export default function ClientPortal() {
     return matchesSearch && matchesType && matchesStatus;
   });
 
-  // Handle document actions
+  const handleViewDocument = (doc: any) => {
+    setSelectedDocument(doc);
+    setModalStep("view");
+    setIsModalOpen(true);
+  };
+
+  const handleSignDocument = (doc: any) => {
+    setSelectedDocument(doc);
+    setModalStep("sign");
+    setIsModalOpen(true);
+  };
+
+  const handleCompleteSignature = () => {
+    if (!signature.trim()) {
+      alert("Veuillez saisir votre signature");
+      return;
+    }
+    
+    // Simulate signature completion
+    alert(`Document ${selectedDocument?.id} signé avec succès !`);
+    setIsModalOpen(false);
+    setSignature("");
+    setSelectedDocument(null);
+  };
+
   const handleDocumentAction = (docId: string, action: string) => {
     const doc = documents.find(d => d.id === docId);
     if (!doc) return;
 
-    setSelectedDocument(doc);
-    
-    if (action === 'accept' || action === 'refuse') {
-      setCurrentStep("approve");
-    } else if (action === 'sign') {
-      setCurrentStep("sign");
-    } else {
-      setCurrentStep("view");
+    switch(action) {
+      case 'accept':
+        alert(`Devis ${docId} accepté avec succès !`);
+        break;
+      case 'refuse':
+        alert(`Document ${docId} refusé.`);
+        break;
+      case 'download':
+        alert(`Téléchargement du document ${docId} en cours...`);
+        break;
     }
   };
 
-  const handleSignDocument = () => {
-    // Simulate signature process
-    alert(`Document ${selectedDocument?.id} signé avec succès !`);
-    setSelectedDocument(null);
-    setCurrentStep("view");
-  };
-
-  const handleApproveDocument = (approved: boolean) => {
-    // Simulate approval process
-    const action = approved ? "accepté" : "refusé";
-    alert(`Document ${selectedDocument?.id} ${action} avec succès !`);
-    setSelectedDocument(null);
-    setCurrentStep("view");
+  // Stats for dashboard
+  const documentStats = {
+    total: documents.length,
+    pending: documents.filter(d => d.status === "en_cours" || d.status === "a_signer").length,
+    signed: documents.filter(d => d.status === "signe" || d.status === "accepte").length,
+    toSign: documents.filter(d => d.signatureRequired && d.status === "en_cours").length
   };
 
   // Check token validity
@@ -246,24 +280,31 @@ export default function ClientPortal() {
   }, [token]);
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-purple-50">
       {/* Header */}
-      <div className="border-b border-border bg-card">
+      <div className="border-b bg-white/80 backdrop-blur-sm shadow-sm">
         <div className="container mx-auto px-4 py-4">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-4">
-              <div className="w-12 h-12 bg-blue-500 rounded-lg flex items-center justify-center">
+              <div className="w-12 h-12 bg-gradient-to-br from-blue-600 to-purple-600 rounded-xl flex items-center justify-center shadow-lg">
                 <span className="text-white font-bold text-xl">PS</span>
               </div>
-              <div className="text-2xl font-bold text-blue-600">PICSTUDIO</div>
+              <div>
+                <div className="text-2xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
+                  PICSTUDIO
+                </div>
+                <div className="text-sm text-muted-foreground">Portail Client</div>
+              </div>
             </div>
             <div className="flex items-center gap-4">
-              <Avatar className="h-10 w-10">
+              <Avatar className="h-12 w-12 border-2 border-white shadow-lg">
                 <AvatarImage src="/placeholder.svg" />
-                <AvatarFallback>KW</AvatarFallback>
+                <AvatarFallback className="bg-gradient-to-br from-blue-500 to-purple-500 text-white font-semibold">
+                  {clientData.name.split(' ').map(n => n[0]).join('')}
+                </AvatarFallback>
               </Avatar>
-              <div className="text-right">
-                <div className="font-semibold">{clientData.name}</div>
+              <div className="text-right hidden sm:block">
+                <div className="font-semibold text-foreground">{clientData.name}</div>
                 <div className="text-sm text-muted-foreground">{clientData.company}</div>
               </div>
             </div>
@@ -273,31 +314,94 @@ export default function ClientPortal() {
 
       {/* Main Content */}
       <div className="container mx-auto px-4 py-8">
-        <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
-          <TabsList className="grid w-full grid-cols-2">
-            <TabsTrigger value="documents">Mes Documents</TabsTrigger>
-            <TabsTrigger value="profile">Mon Profil</TabsTrigger>
+        <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-8">
+          <TabsList className="grid w-full grid-cols-2 bg-white/70 backdrop-blur-sm">
+            <TabsTrigger value="documents" className="data-[state=active]:bg-white data-[state=active]:shadow-sm">
+              Mes Documents
+            </TabsTrigger>
+            <TabsTrigger value="profile" className="data-[state=active]:bg-white data-[state=active]:shadow-sm">
+              Mon Profil
+            </TabsTrigger>
           </TabsList>
 
           {/* Documents Tab */}
           <TabsContent value="documents" className="space-y-6">
+            {/* Dashboard Stats */}
+            <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
+              <Card className="bg-white/70 backdrop-blur-sm border-0 shadow-lg">
+                <CardContent className="p-4">
+                  <div className="flex items-center gap-3">
+                    <div className="p-2 bg-blue-100 rounded-lg">
+                      <FileText className="h-5 w-5 text-blue-600" />
+                    </div>
+                    <div>
+                      <div className="text-2xl font-bold text-foreground">{documentStats.total}</div>
+                      <div className="text-sm text-muted-foreground">Total documents</div>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+              
+              <Card className="bg-white/70 backdrop-blur-sm border-0 shadow-lg">
+                <CardContent className="p-4">
+                  <div className="flex items-center gap-3">
+                    <div className="p-2 bg-amber-100 rounded-lg">
+                      <Clock className="h-5 w-5 text-amber-600" />
+                    </div>
+                    <div>
+                      <div className="text-2xl font-bold text-foreground">{documentStats.pending}</div>
+                      <div className="text-sm text-muted-foreground">En attente</div>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+              
+              <Card className="bg-white/70 backdrop-blur-sm border-0 shadow-lg">
+                <CardContent className="p-4">
+                  <div className="flex items-center gap-3">
+                    <div className="p-2 bg-green-100 rounded-lg">
+                      <CheckCircle className="h-5 w-5 text-green-600" />
+                    </div>
+                    <div>
+                      <div className="text-2xl font-bold text-foreground">{documentStats.signed}</div>
+                      <div className="text-sm text-muted-foreground">Validés</div>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+              
+              <Card className="bg-white/70 backdrop-blur-sm border-0 shadow-lg">
+                <CardContent className="p-4">
+                  <div className="flex items-center gap-3">
+                    <div className="p-2 bg-purple-100 rounded-lg">
+                      <PenTool className="h-5 w-5 text-purple-600" />
+                    </div>
+                    <div>
+                      <div className="text-2xl font-bold text-foreground">{documentStats.toSign}</div>
+                      <div className="text-sm text-muted-foreground">À signer</div>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+            </div>
+
             {/* Filters */}
-            <Card>
-              <CardContent className="p-4">
+            <Card className="bg-white/70 backdrop-blur-sm border-0 shadow-lg">
+              <CardContent className="p-6">
                 <div className="flex flex-col sm:flex-row gap-4">
                   <div className="flex-1">
                     <div className="relative">
                       <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground h-4 w-4" />
                       <Input 
                         placeholder="Rechercher un document..."
-                        className="pl-10"
+                        className="pl-10 bg-white/80 border-0 shadow-sm"
                         value={searchQuery}
                         onChange={(e) => setSearchQuery(e.target.value)}
                       />
                     </div>
                   </div>
                   <Select value={documentFilter} onValueChange={setDocumentFilter}>
-                    <SelectTrigger className="w-full sm:w-48">
+                    <SelectTrigger className="w-full sm:w-48 bg-white/80 border-0 shadow-sm">
                       <SelectValue placeholder="Type de document" />
                     </SelectTrigger>
                     <SelectContent>
@@ -309,7 +413,7 @@ export default function ClientPortal() {
                     </SelectContent>
                   </Select>
                   <Select value={statusFilter} onValueChange={setStatusFilter}>
-                    <SelectTrigger className="w-full sm:w-48">
+                    <SelectTrigger className="w-full sm:w-48 bg-white/80 border-0 shadow-sm">
                       <SelectValue placeholder="Statut" />
                     </SelectTrigger>
                     <SelectContent>
@@ -326,78 +430,101 @@ export default function ClientPortal() {
             </Card>
 
             {/* Documents List */}
-            <Card>
+            <Card className="bg-white/70 backdrop-blur-sm border-0 shadow-lg">
               <CardHeader>
-                <CardTitle className="flex items-center gap-2">
-                  <FileText className="h-5 w-5" />
-                  Documents ({filteredDocuments.length})
+                <CardTitle className="flex items-center gap-2 text-xl">
+                  <FileText className="h-6 w-6 text-blue-600" />
+                  Mes Documents ({filteredDocuments.length})
                 </CardTitle>
               </CardHeader>
               <CardContent>
-                <div className="overflow-x-auto">
-                  <Table>
-                    <TableHeader>
-                      <TableRow>
-                        <TableHead>Document</TableHead>
-                        <TableHead className="hidden sm:table-cell">Type</TableHead>
-                        <TableHead className="hidden md:table-cell">Date</TableHead>
-                        <TableHead className="hidden lg:table-cell">Montant</TableHead>
-                        <TableHead>Statut</TableHead>
-                        <TableHead>Actions</TableHead>
-                      </TableRow>
-                    </TableHeader>
-                    <TableBody>
-                      {filteredDocuments.map((doc) => (
-                        <TableRow key={doc.id}>
-                          <TableCell>
-                            <div>
-                              <div className="font-medium">{doc.title}</div>
-                              <div className="text-sm text-muted-foreground">{doc.id}</div>
-                              <div className="text-xs text-muted-foreground sm:hidden">
-                                {doc.type} • {doc.date} • {doc.amount}
-                              </div>
+                <div className="space-y-4">
+                  {filteredDocuments.map((doc) => (
+                    <div key={doc.id} className="p-4 rounded-lg border bg-white/50 hover:bg-white/80 transition-all duration-200 hover:shadow-md">
+                      <div className="flex flex-col lg:flex-row lg:items-center gap-4">
+                        <div className="flex items-start gap-3 flex-1">
+                          {getDocumentIcon(doc.type)}
+                          <div className="flex-1">
+                            <div className="font-semibold text-foreground">{doc.title}</div>
+                            <div className="text-sm text-muted-foreground">{doc.description}</div>
+                            <div className="flex items-center gap-4 mt-2 text-sm text-muted-foreground">
+                              <span className="flex items-center gap-1">
+                                <Calendar className="h-3 w-3" />
+                                {doc.date}
+                              </span>
+                              {doc.amount !== "-" && (
+                                <span className="flex items-center gap-1">
+                                  <Euro className="h-3 w-3" />
+                                  {doc.amount}
+                                </span>
+                              )}
+                              <Badge variant="outline" className="capitalize text-xs">
+                                {doc.type}
+                              </Badge>
                             </div>
-                          </TableCell>
-                          <TableCell className="hidden sm:table-cell">
-                            <Badge variant="outline" className="capitalize">
-                              {doc.type}
-                            </Badge>
-                          </TableCell>
-                          <TableCell className="hidden md:table-cell">
-                            <div className="flex items-center gap-1">
-                              <Calendar className="h-4 w-4" />
-                              {doc.date}
-                            </div>
-                          </TableCell>
-                          <TableCell className="hidden lg:table-cell">
-                            <div className="flex items-center gap-1">
-                              <Euro className="h-4 w-4" />
-                              {doc.amount}
-                            </div>
-                          </TableCell>
-                          <TableCell>
-                            {getStatusBadge(doc.type, doc.status)}
-                          </TableCell>
-                           <TableCell>
-                             <div className="flex gap-1 flex-wrap">
-                               <Button 
-                                 variant="ghost" 
-                                 size="icon" 
-                                 title="Voir"
-                                 onClick={() => handleDocumentAction(doc.id, 'view')}
-                               >
-                                 <Eye className="h-4 w-4" />
-                               </Button>
-                               <Button variant="ghost" size="icon" title="Télécharger">
-                                 <Download className="h-4 w-4" />
-                               </Button>
-                               {getDocumentActions(doc)}
-                             </div>
-                           </TableCell>
-                        </TableRow>
-                      ))}
-                    </TableBody>
-                  </Table>
+                          </div>
+                        </div>
+                        
+                        <div className="flex items-center gap-3">
+                          {getStatusBadge(doc.type, doc.status)}
+                          <div className="flex gap-2">
+                            <Button 
+                              variant="outline" 
+                              size="sm" 
+                              onClick={() => handleViewDocument(doc)}
+                              className="bg-white/80 hover:bg-white"
+                            >
+                              <Eye className="h-4 w-4 mr-1" />
+                              Voir
+                            </Button>
+                            <Button 
+                              variant="outline" 
+                              size="sm" 
+                              onClick={() => handleDocumentAction(doc.id, 'download')}
+                              className="bg-white/80 hover:bg-white"
+                            >
+                              <Download className="h-4 w-4 mr-1" />
+                              PDF
+                            </Button>
+                            
+                            {/* Action buttons based on document type and status */}
+                            {doc.type === "devis" && doc.status === "a_signer" && (
+                              <>
+                                <Button 
+                                  size="sm" 
+                                  onClick={() => handleDocumentAction(doc.id, 'accept')}
+                                  className="bg-green-600 hover:bg-green-700"
+                                >
+                                  <Check className="h-4 w-4 mr-1" />
+                                  Accepter
+                                </Button>
+                                <Button 
+                                  variant="outline" 
+                                  size="sm" 
+                                  onClick={() => handleDocumentAction(doc.id, 'refuse')}
+                                  className="text-red-600 border-red-200 hover:bg-red-50"
+                                >
+                                  <X className="h-4 w-4 mr-1" />
+                                  Refuser
+                                </Button>
+                              </>
+                            )}
+                            
+                            {doc.signatureRequired && doc.status === "en_cours" && (
+                              <Button 
+                                size="sm" 
+                                onClick={() => handleSignDocument(doc)}
+                                className="bg-purple-600 hover:bg-purple-700"
+                              >
+                                <PenTool className="h-4 w-4 mr-1" />
+                                Signer
+                              </Button>
+                            )}
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  ))}
                 </div>
               </CardContent>
             </Card>
@@ -405,10 +532,10 @@ export default function ClientPortal() {
 
           {/* Profile Tab */}
           <TabsContent value="profile">
-            <Card>
+            <Card className="bg-white/70 backdrop-blur-sm border-0 shadow-lg">
               <CardHeader>
-                <CardTitle className="flex items-center gap-2">
-                  <User className="h-5 w-5" />
+                <CardTitle className="flex items-center gap-2 text-xl">
+                  <User className="h-6 w-6 text-blue-600" />
                   Mon Profil
                 </CardTitle>
               </CardHeader>
@@ -416,39 +543,39 @@ export default function ClientPortal() {
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                   <div className="space-y-4">
                     <div>
-                      <Label htmlFor="name">Nom complet</Label>
-                      <Input id="name" value={clientData.name} readOnly />
+                      <Label htmlFor="name" className="text-sm font-medium">Nom complet</Label>
+                      <Input id="name" value={clientData.name} readOnly className="bg-white/80 border-0 shadow-sm" />
                     </div>
                     <div>
-                      <Label htmlFor="email">Email</Label>
-                      <Input id="email" value={clientData.email} readOnly />
+                      <Label htmlFor="email" className="text-sm font-medium">Email</Label>
+                      <Input id="email" value={clientData.email} readOnly className="bg-white/80 border-0 shadow-sm" />
                     </div>
                     <div>
-                      <Label htmlFor="phone">Téléphone</Label>
-                      <Input id="phone" value={clientData.phone} readOnly />
+                      <Label htmlFor="phone" className="text-sm font-medium">Téléphone</Label>
+                      <Input id="phone" value={clientData.phone} readOnly className="bg-white/80 border-0 shadow-sm" />
                     </div>
                   </div>
                   
                   <div className="space-y-4">
                     <div>
-                      <Label htmlFor="company">Entreprise</Label>
-                      <Input id="company" value={clientData.company} readOnly />
+                      <Label htmlFor="company" className="text-sm font-medium">Entreprise</Label>
+                      <Input id="company" value={clientData.company} readOnly className="bg-white/80 border-0 shadow-sm" />
                     </div>
                     <div>
-                      <Label htmlFor="address">Adresse</Label>
-                      <Input id="address" value={clientData.address} readOnly />
+                      <Label htmlFor="address" className="text-sm font-medium">Adresse</Label>
+                      <Input id="address" value={clientData.address} readOnly className="bg-white/80 border-0 shadow-sm" />
                     </div>
                   </div>
                 </div>
 
-                <div className="pt-4 border-t">
+                <div className="pt-6 border-t border-gray-200">
                   <Dialog>
                     <DialogTrigger asChild>
-                      <Button variant="outline">
+                      <Button variant="outline" className="bg-white/80 hover:bg-white">
                         Changer le mot de passe
                       </Button>
                     </DialogTrigger>
-                    <DialogContent>
+                    <DialogContent className="bg-white">
                       <DialogHeader>
                         <DialogTitle>Changer le mot de passe</DialogTitle>
                       </DialogHeader>
@@ -465,10 +592,7 @@ export default function ClientPortal() {
                           <Label htmlFor="confirm-password">Confirmer le mot de passe</Label>
                           <Input id="confirm-password" type="password" />
                         </div>
-                        <div className="flex justify-end gap-2">
-                          <Button variant="outline">Annuler</Button>
-                          <Button>Valider</Button>
-                        </div>
+                        <Button className="w-full">Changer le mot de passe</Button>
                       </div>
                     </DialogContent>
                   </Dialog>
@@ -477,214 +601,143 @@ export default function ClientPortal() {
             </Card>
           </TabsContent>
         </Tabs>
+      </div>
 
-        {/* Document Viewer/Editor Modal */}
-        {selectedDocument && (
-          <Dialog open={!!selectedDocument} onOpenChange={() => setSelectedDocument(null)}>
-            <DialogContent className="max-w-6xl max-h-[90vh] overflow-y-auto">
-              <DialogHeader>
-                <DialogTitle className="flex items-center gap-2">
-                  <FileText className="h-5 w-5" />
-                  {selectedDocument.title} - {selectedDocument.id}
-                </DialogTitle>
-              </DialogHeader>
-
-              <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-                {/* Document Preview */}
-                <div className="lg:col-span-1 space-y-4">
-                  <Card>
-                    <CardContent className="p-4">
-                      <div className="bg-gradient-to-b from-blue-50 to-white border rounded-lg p-6 min-h-[400px] relative">
-                        <div className="absolute top-4 left-4">
-                          <div className="w-8 h-8 bg-blue-500 rounded flex items-center justify-center text-white text-xs font-bold">
-                            1
-                          </div>
-                        </div>
-                        
-                        <div className="text-center space-y-4 mt-8">
-                          <div className="flex items-center justify-center">
-                            <div className="bg-blue-500 text-white px-3 py-1 rounded text-sm">PICSTUDIO</div>
-                          </div>
-                          
-                          <div className="space-y-2">
-                            <div className="font-semibold text-lg">{selectedDocument.title}</div>
-                            <div className="text-sm text-muted-foreground">{selectedDocument.description}</div>
-                          </div>
-
-                          <div className="mt-8 space-y-1 text-sm">
-                            <div className="font-semibold">Document #{selectedDocument.id}</div>
-                            <div>Date: {selectedDocument.date}</div>
-                            <div>Montant: {selectedDocument.amount}</div>
-                          </div>
-
-                          <div className="text-xs space-y-2 mt-8">
-                            <p>Ce document présente les détails de la prestation demandée...</p>
-                            <p>Toutes les conditions sont précisées ci-dessous...</p>
-                          </div>
-                        </div>
-                      </div>
-                    </CardContent>
-                  </Card>
-                </div>
-
-                {/* Action Area */}
-                <div className="lg:col-span-2">
-                  {currentStep === "view" && (
-                    <Card>
-                      <CardContent className="p-6">
-                        <div className="space-y-4">
-                          <h3 className="text-xl font-semibold">Détails du document</h3>
-                          <div className="grid grid-cols-2 gap-4 text-sm">
-                            <div>
-                              <span className="font-medium">Type:</span> {selectedDocument.type}
-                            </div>
-                            <div>
-                              <span className="font-medium">Statut:</span> {getStatusBadge(selectedDocument.type, selectedDocument.status)}
-                            </div>
-                            <div>
-                              <span className="font-medium">Date:</span> {selectedDocument.date}
-                            </div>
-                            <div>
-                              <span className="font-medium">Montant:</span> {selectedDocument.amount}
-                            </div>
-                          </div>
-                          <div>
-                            <span className="font-medium">Description:</span>
-                            <p className="mt-1">{selectedDocument.description}</p>
-                          </div>
-                          
-                          <div className="flex gap-2 pt-4">
-                            {selectedDocument.type === "devis" && selectedDocument.status === "a_signer" && (
-                              <>
-                                <Button 
-                                  onClick={() => setCurrentStep("approve")}
-                                  className="bg-orange-500 hover:bg-orange-600"
-                                >
-                                  Traiter le devis
-                                </Button>
-                              </>
-                            )}
-                            {((selectedDocument.type === "contrat" && selectedDocument.status === "en_cours") || 
-                              (selectedDocument.type === "devis" && selectedDocument.status === "accepte")) && (
-                              <Button 
-                                onClick={() => setCurrentStep("sign")}
-                                className="bg-blue-500 hover:bg-blue-600"
-                              >
-                                Signer le document
-                              </Button>
-                            )}
-                          </div>
-                        </div>
-                      </CardContent>
-                    </Card>
-                  )}
-
-                  {currentStep === "approve" && (
-                    <div className="bg-gradient-to-r from-orange-500 to-orange-600 text-white p-8 rounded-lg space-y-4">
-                      <h2 className="text-2xl font-bold">Validation du devis</h2>
-                      <p className="text-lg">Veuillez examiner ce devis et donner votre accord</p>
-                      
-                      <Card className="bg-white text-black">
-                        <CardContent className="p-4">
-                          <div className="space-y-4">
-                            <div className="font-semibold text-lg">{selectedDocument.title}</div>
-                            <div className="text-sm text-muted-foreground">{selectedDocument.description}</div>
-                            <div className="text-2xl font-bold text-blue-600">{selectedDocument.amount}</div>
-                            
-                            <div className="border-t pt-4 space-y-2 text-sm">
-                              <div><strong>Prestations incluses:</strong></div>
-                              <ul className="list-disc list-inside space-y-1 text-muted-foreground">
-                                <li>Séance photo complète</li>
-                                <li>Retouche des images</li>
-                                <li>Livraison en haute définition</li>
-                                <li>Droit d'usage commercial</li>
-                              </ul>
-                            </div>
-                          </div>
-                        </CardContent>
-                      </Card>
-
-                      <div className="flex gap-4 justify-center pt-4">
-                        <Button 
-                          onClick={() => handleApproveDocument(true)}
-                          className="bg-green-500 hover:bg-green-600 px-8"
-                        >
-                          Accepter le devis
-                        </Button>
-                        <Button 
-                          onClick={() => handleApproveDocument(false)}
-                          className="bg-red-500 hover:bg-red-600 px-8"
-                        >
-                          Refuser le devis
-                        </Button>
-                      </div>
-                    </div>
-                  )}
-
-                  {currentStep === "sign" && (
-                    <div className="bg-gradient-to-r from-blue-500 to-blue-600 text-white p-8 rounded-lg space-y-4">
-                      <h2 className="text-2xl font-bold">Signature électronique</h2>
-                      <p className="text-lg">Veuillez signer ce document pour finaliser l'accord</p>
-                      
-                      <Card className="bg-white text-black">
-                        <CardContent className="p-4">
-                          <div className="space-y-4">
-                            <div className="font-semibold text-lg">{selectedDocument.title}</div>
-                            <div className="text-sm text-muted-foreground">{selectedDocument.description}</div>
-                            
-                            <div className="border rounded-lg p-4 bg-gray-50">
-                              <div className="text-sm space-y-2">
-                                <div><strong>En signant ce document, vous acceptez:</strong></div>
-                                <ul className="list-disc list-inside space-y-1">
-                                  <li>Les termes et conditions énoncés</li>
-                                  <li>Le montant de {selectedDocument.amount}</li>
-                                  <li>Les délais de réalisation convenus</li>
-                                  <li>Les modalités de paiement</li>
-                                </ul>
-                              </div>
-                            </div>
-                            
-                            <div className="border-2 border-dashed border-gray-300 rounded-lg p-8 text-center">
-                              <PenTool className="h-12 w-12 mx-auto text-gray-400 mb-2" />
-                              <div className="text-muted-foreground">Zone de signature électronique</div>
-                              <div className="text-xs text-muted-foreground mt-1">
-                                La signature sera appliquée automatiquement lors de la validation
-                              </div>
-                            </div>
-                          </div>
-                        </CardContent>
-                      </Card>
-
-                      <div className="flex justify-center pt-4">
-                        <Button 
-                          onClick={handleSignDocument}
-                          className="bg-green-500 hover:bg-green-600 px-12 py-3 text-lg"
-                        >
-                          <PenTool className="h-5 w-5 mr-2" />
-                          Signer le document
-                        </Button>
-                      </div>
-                    </div>
-                  )}
+      {/* Document Modal */}
+      <Dialog open={isModalOpen} onOpenChange={setIsModalOpen}>
+        <DialogContent className="max-w-4xl max-h-[90vh] bg-white">
+          <DialogHeader>
+            <DialogTitle className="flex items-center gap-2">
+              {modalStep === "view" ? (
+                <>
+                  <Eye className="h-5 w-5" />
+                  Consultation du document
+                </>
+              ) : (
+                <>
+                  <PenTool className="h-5 w-5" />
+                  Signature électronique
+                </>
+              )}
+            </DialogTitle>
+          </DialogHeader>
+          
+          {modalStep === "view" && selectedDocument && (
+            <div className="space-y-4">
+              <div className="bg-gray-50 p-4 rounded-lg">
+                <h3 className="font-semibold text-lg">{selectedDocument.title}</h3>
+                <div className="text-sm text-muted-foreground mt-1">
+                  {selectedDocument.id} • {selectedDocument.date} • {selectedDocument.amount}
                 </div>
               </div>
-
-              {/* Navigation buttons */}
-              <div className="flex justify-between pt-4 border-t">
-                <Button variant="outline" onClick={() => setSelectedDocument(null)}>
-                  Fermer
+              
+              <div className="bg-white border rounded-lg p-6 max-h-96 overflow-y-auto">
+                <pre className="whitespace-pre-wrap text-sm leading-relaxed">
+                  {selectedDocument.content}
+                </pre>
+              </div>
+              
+              <div className="flex gap-3 pt-4">
+                <Button 
+                  variant="outline" 
+                  onClick={() => handleDocumentAction(selectedDocument.id, 'download')}
+                >
+                  <Download className="h-4 w-4 mr-2" />
+                  Télécharger PDF
                 </Button>
                 
-                {currentStep !== "view" && (
-                  <Button variant="outline" onClick={() => setCurrentStep("view")}>
-                    Retour à la vue document
+                {selectedDocument.signatureRequired && selectedDocument.status === "en_cours" && (
+                  <Button 
+                    onClick={() => setModalStep("sign")}
+                    className="bg-purple-600 hover:bg-purple-700"
+                  >
+                    <PenTool className="h-4 w-4 mr-2" />
+                    Procéder à la signature
                   </Button>
                 )}
+                
+                {selectedDocument.type === "devis" && selectedDocument.status === "a_signer" && (
+                  <>
+                    <Button 
+                      onClick={() => {
+                        handleDocumentAction(selectedDocument.id, 'accept');
+                        setIsModalOpen(false);
+                      }}
+                      className="bg-green-600 hover:bg-green-700"
+                    >
+                      <Check className="h-4 w-4 mr-2" />
+                      Accepter ce devis
+                    </Button>
+                    <Button 
+                      variant="outline" 
+                      onClick={() => {
+                        handleDocumentAction(selectedDocument.id, 'refuse');
+                        setIsModalOpen(false);
+                      }}
+                      className="text-red-600 border-red-200 hover:bg-red-50"
+                    >
+                      <X className="h-4 w-4 mr-2" />
+                      Refuser
+                    </Button>
+                  </>
+                )}
               </div>
-            </DialogContent>
-          </Dialog>
-        )}
-      </div>
+            </div>
+          )}
+          
+          {modalStep === "sign" && selectedDocument && (
+            <div className="space-y-6">
+              <div className="bg-blue-50 p-4 rounded-lg border border-blue-200">
+                <h3 className="font-semibold text-blue-900">Document à signer</h3>
+                <p className="text-blue-700 text-sm mt-1">{selectedDocument.title}</p>
+              </div>
+              
+              <div className="space-y-4">
+                <div>
+                  <Label htmlFor="signature" className="text-sm font-medium">
+                    Signature électronique *
+                  </Label>
+                  <Textarea
+                    id="signature"
+                    placeholder="Saisissez votre nom complet pour confirmer votre signature..."
+                    value={signature}
+                    onChange={(e) => setSignature(e.target.value)}
+                    className="mt-1"
+                    rows={3}
+                  />
+                  <p className="text-xs text-muted-foreground mt-1">
+                    En saisissant votre nom, vous acceptez de signer électroniquement ce document.
+                  </p>
+                </div>
+                
+                <div className="bg-yellow-50 p-4 rounded-lg border border-yellow-200">
+                  <p className="text-yellow-800 text-sm">
+                    <strong>Important :</strong> Votre signature électronique a la même valeur juridique qu'une signature manuscrite. 
+                    En signant, vous vous engagez à respecter les termes du contrat.
+                  </p>
+                </div>
+              </div>
+              
+              <div className="flex gap-3 pt-4">
+                <Button 
+                  variant="outline"
+                  onClick={() => setModalStep("view")}
+                >
+                  Retour à la consultation
+                </Button>
+                <Button 
+                  onClick={handleCompleteSignature}
+                  disabled={!signature.trim()}
+                  className="bg-purple-600 hover:bg-purple-700"
+                >
+                  <PenTool className="h-4 w-4 mr-2" />
+                  Confirmer la signature
+                </Button>
+              </div>
+            </div>
+          )}
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }

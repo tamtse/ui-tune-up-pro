@@ -27,10 +27,7 @@ const adminMenuItems = [
 ];
 
 const clientMenuItems = [
-  { title: "Devis", url: "/client/devis", icon: FileText },
-  { title: "Factures", url: "/client/factures", icon: Receipt },
-  { title: "Documentation", url: "/client/documentation", icon: FileImage },
-  { title: "Contrats", url: "/client/contract", icon: UserCheck },
+  { title: "Dashboard Client", url: "/client/1?token=CmCdX3FjB1WHZ6kqFowkyuQU", icon: BarChart3 },
 ];
 
 const preferenceItems = [
