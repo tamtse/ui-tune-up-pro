@@ -17,6 +17,7 @@ import ClientFactures from "./pages/ClientFactures";
 import ClientDocumentation from "./pages/ClientDocumentation";
 import ClientContract from "./pages/ClientContract";
 import ClientPortal from "./pages/ClientPortal";
+import WebsiteBuilder from "./pages/WebsiteBuilder";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -37,6 +38,7 @@ const App = () => (
           <Route path="/documentation" element={<Documentation />} />
           <Route path="/user-guide" element={<UserGuide />} />
           <Route path="/client-guide" element={<ClientUserGuide />} />
+          <Route path="/website-builder" element={<WebsiteBuilder />} />
           <Route path="/client/:clientId" element={<ClientPortal />} />
           <Route path="/client/:clientId/contract/:contractId" element={<ClientContract />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
