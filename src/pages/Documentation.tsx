@@ -4,7 +4,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
-import { Search, Code, Database, Users, Settings, CreditCard, FileText, Mail, Calendar, Calculator } from "lucide-react";
+import { Search, Code, Database, Users, Settings, CreditCard, FileText, Mail, Calendar, Calculator, Copy, Check } from "lucide-react";
 
 const apiSections = [
   {
@@ -120,9 +120,70 @@ const businessRules = [
   }
 ];
 
+const codeStructure = [
+  {
+    category: "Pages",
+    files: [
+      { name: "src/pages/Dashboard.tsx", description: "Tableau de bord administrateur avec statistiques" },
+      { name: "src/pages/Users.tsx", description: "Gestion des utilisateurs (CRUD)" },
+      { name: "src/pages/Transactions.tsx", description: "Historique des transactions" },
+      { name: "src/pages/Subscriptions.tsx", description: "Gestion des abonnements" },
+      { name: "src/pages/UserDetail.tsx", description: "Détails d'un utilisateur spécifique" },
+      { name: "src/pages/ClientPortal.tsx", description: "Portail client avec devis et factures" },
+      { name: "src/pages/ClientContract.tsx", description: "Signature de contrats client" },
+      { name: "src/pages/ClientFactures.tsx", description: "Factures client" },
+      { name: "src/pages/ClientDevis.tsx", description: "Devis client" },
+      { name: "src/pages/ClientDocumentation.tsx", description: "Documentation client" },
+      { name: "src/pages/Documentation.tsx", description: "Documentation API et code" }
+    ]
+  },
+  {
+    category: "Composants",
+    files: [
+      { name: "src/components/AdminLayout.tsx", description: "Layout principal avec sidebar et header" },
+      { name: "src/components/AdminSidebar.tsx", description: "Sidebar de navigation administrative" },
+      { name: "src/components/AdminHeader.tsx", description: "Header avec menu mobile et notifications" },
+      { name: "src/components/StatCard.tsx", description: "Cartes de statistiques réutilisables" },
+      { name: "src/components/ui/", description: "Composants UI basés sur shadcn/ui" }
+    ]
+  },
+  {
+    category: "Configuration",
+    files: [
+      { name: "src/main.tsx", description: "Point d'entrée de l'application React" },
+      { name: "src/App.tsx", description: "Composant racine avec routage" },
+      { name: "src/index.css", description: "Styles globaux et tokens de design" },
+      { name: "tailwind.config.ts", description: "Configuration Tailwind CSS" },
+      { name: "vite.config.ts", description: "Configuration Vite" },
+      { name: "tsconfig.json", description: "Configuration TypeScript" }
+    ]
+  },
+  {
+    category: "Utilitaires",
+    files: [
+      { name: "src/lib/utils.ts", description: "Fonctions utilitaires (classnames, etc.)" },
+      { name: "src/hooks/use-mobile.tsx", description: "Hook pour détecter les appareils mobiles" },
+      { name: "src/hooks/use-toast.ts", description: "Hook pour les notifications toast" }
+    ]
+  }
+];
+
+const installationSteps = [
+  "npm create vite@latest picstudio-crm --template react-ts",
+  "cd picstudio-crm",
+  "npm install",
+  "npx shadcn-ui@latest init",
+  "npm install @radix-ui/react-accordion @radix-ui/react-alert-dialog",
+  "npm install lucide-react react-router-dom recharts",
+  "npm install @tanstack/react-query sonner",
+  "npm install class-variance-authority clsx tailwind-merge",
+  "npm run dev"
+];
+
 export default function Documentation() {
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedSection, setSelectedSection] = useState("overview");
+  const [copiedCode, setCopiedCode] = useState<string | null>(null);
 
   const filteredSections = apiSections.filter(section =>
     section.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -140,6 +201,16 @@ export default function Documentation() {
       case "PUT": return "bg-yellow-100 text-yellow-800";
       case "DELETE": return "bg-red-100 text-red-800";
       default: return "bg-gray-100 text-gray-800";
+    }
+  };
+
+  const copyToClipboard = async (text: string, type: string) => {
+    try {
+      await navigator.clipboard.writeText(text);
+      setCopiedCode(type);
+      setTimeout(() => setCopiedCode(null), 2000);
+    } catch (err) {
+      console.error("Erreur lors de la copie:", err);
     }
   };
 
@@ -164,10 +235,11 @@ export default function Documentation() {
         </div>
 
         <Tabs value={selectedSection} onValueChange={setSelectedSection} className="space-y-6">
-          <TabsList className="grid w-full grid-cols-2 lg:grid-cols-4">
+          <TabsList className="grid w-full grid-cols-2 lg:grid-cols-5">
             <TabsTrigger value="overview">Vue d'ensemble</TabsTrigger>
             <TabsTrigger value="api">API Endpoints</TabsTrigger>
             <TabsTrigger value="business">Règles Métier</TabsTrigger>
+            <TabsTrigger value="code">Code Source</TabsTrigger>
             <TabsTrigger value="examples">Exemples</TabsTrigger>
           </TabsList>
 
@@ -268,6 +340,153 @@ export default function Documentation() {
                 </CardContent>
               </Card>
             ))}
+          </TabsContent>
+
+          <TabsContent value="code" className="space-y-6">
+            <Card>
+              <CardHeader>
+                <CardTitle className="flex items-center space-x-2">
+                  <Code className="h-5 w-5" />
+                  <span>Structure du Code Source</span>
+                </CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-6">
+                <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                  {codeStructure.map((category, index) => (
+                    <Card key={index}>
+                      <CardHeader>
+                        <CardTitle className="text-lg">{category.category}</CardTitle>
+                      </CardHeader>
+                      <CardContent>
+                        <div className="space-y-3">
+                          {category.files.map((file, fileIndex) => (
+                            <div key={fileIndex} className="p-3 border rounded-lg hover:bg-muted/50 transition-colors">
+                              <div className="flex items-start justify-between">
+                                <div className="flex-1">
+                                  <code className="text-sm font-mono text-primary font-medium">
+                                    {file.name}
+                                  </code>
+                                  <p className="text-xs text-muted-foreground mt-1">{file.description}</p>
+                                </div>
+                                <button
+                                  onClick={() => copyToClipboard(file.name, file.name)}
+                                  className="ml-2 p-1 hover:bg-muted rounded"
+                                  title="Copier le chemin"
+                                >
+                                  {copiedCode === file.name ? (
+                                    <Check className="h-3 w-3 text-green-600" />
+                                  ) : (
+                                    <Copy className="h-3 w-3 text-muted-foreground" />
+                                  )}
+                                </button>
+                              </div>
+                            </div>
+                          ))}
+                        </div>
+                      </CardContent>
+                    </Card>
+                  ))}
+                </div>
+              </CardContent>
+            </Card>
+
+            <Card>
+              <CardHeader>
+                <CardTitle className="flex items-center space-x-2">
+                  <Settings className="h-5 w-5" />
+                  <span>Installation & Configuration</span>
+                </CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-4">
+                <div>
+                  <h3 className="text-lg font-medium mb-3 flex items-center justify-between">
+                    Étapes d'installation
+                    <button
+                      onClick={() => copyToClipboard(installationSteps.join('\n'), 'installation')}
+                      className="p-2 hover:bg-muted rounded flex items-center space-x-1 text-sm"
+                    >
+                      {copiedCode === 'installation' ? (
+                        <Check className="h-4 w-4 text-green-600" />
+                      ) : (
+                        <Copy className="h-4 w-4" />
+                      )}
+                      <span>Copier</span>
+                    </button>
+                  </h3>
+                  <div className="bg-muted p-4 rounded-lg">
+                    <pre className="text-sm overflow-x-auto">
+                      <code>{installationSteps.join('\n')}</code>
+                    </pre>
+                  </div>
+                </div>
+
+                <div>
+                  <h3 className="text-lg font-medium mb-3">Technologies utilisées</h3>
+                  <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3">
+                    {[
+                      { name: "React 18", desc: "Framework UI" },
+                      { name: "TypeScript", desc: "Typage statique" },
+                      { name: "Vite", desc: "Build tool" },
+                      { name: "Tailwind CSS", desc: "Framework CSS" },
+                      { name: "Shadcn/UI", desc: "Composants UI" },
+                      { name: "React Router", desc: "Routage" },
+                      { name: "Lucide React", desc: "Icônes" },
+                      { name: "Recharts", desc: "Graphiques" }
+                    ].map((tech, index) => (
+                      <div key={index} className="p-3 border rounded-lg text-center">
+                        <p className="font-medium text-sm">{tech.name}</p>
+                        <p className="text-xs text-muted-foreground">{tech.desc}</p>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+
+                <div>
+                  <h3 className="text-lg font-medium mb-3 flex items-center justify-between">
+                    Structure des dossiers
+                    <button
+                      onClick={() => copyToClipboard(
+                        `src/
+├── components/          # Composants réutilisables
+│   ├── ui/             # Composants shadcn/ui
+│   ├── AdminLayout.tsx # Layout principal
+│   ├── AdminSidebar.tsx # Navigation
+│   └── AdminHeader.tsx # En-tête
+├── pages/              # Pages de l'application
+├── hooks/              # Hooks personnalisés
+├── lib/                # Utilitaires
+├── index.css           # Styles globaux
+└── main.tsx            # Point d'entrée`, 
+                        'folder-structure'
+                      )}
+                      className="p-2 hover:bg-muted rounded flex items-center space-x-1 text-sm"
+                    >
+                      {copiedCode === 'folder-structure' ? (
+                        <Check className="h-4 w-4 text-green-600" />
+                      ) : (
+                        <Copy className="h-4 w-4" />
+                      )}
+                      <span>Copier</span>
+                    </button>
+                  </h3>
+                  <div className="bg-muted p-4 rounded-lg">
+                    <pre className="text-sm overflow-x-auto">
+                      <code>{`src/
+├── components/          # Composants réutilisables
+│   ├── ui/             # Composants shadcn/ui
+│   ├── AdminLayout.tsx # Layout principal
+│   ├── AdminSidebar.tsx # Navigation
+│   └── AdminHeader.tsx # En-tête
+├── pages/              # Pages de l'application
+├── hooks/              # Hooks personnalisés
+├── lib/                # Utilitaires
+├── index.css           # Styles globaux
+└── main.tsx            # Point d'entrée`}</code>
+                    </pre>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
           </TabsContent>
 
           <TabsContent value="examples" className="space-y-6">
