@@ -12,6 +12,9 @@ import {
   ChevronDown,
   BookOpen,
   X,
+  UserCheck,
+  FileImage,
+  FileText,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
@@ -21,6 +24,12 @@ const adminMenuItems = [
   { title: "Utilisateurs", url: "/users", icon: Users },
   { title: "Transactions", url: "/transactions", icon: Receipt },
   { title: "Gestion des abo", url: "/subscriptions", icon: CreditCard },
+];
+
+const clientMenuItems = [
+  { title: "Devis", url: "/client/devis", icon: FileText },
+  { title: "Documentation", url: "/client/documentation", icon: FileImage },
+  { title: "Contrats", url: "/client/contract", icon: UserCheck },
 ];
 
 const preferenceItems = [
@@ -38,6 +47,7 @@ interface AdminSidebarProps {
 export function AdminSidebar({ isOpen, setIsOpen, isMobile }: AdminSidebarProps) {
   const [collapsed, setCollapsed] = useState(false);
   const [isAdminOpen, setIsAdminOpen] = useState(true);
+  const [isClientOpen, setIsClientOpen] = useState(true);
   const location = useLocation();
 
   const isActive = (path: string) => {
@@ -93,10 +103,13 @@ export function AdminSidebar({ isOpen, setIsOpen, isMobile }: AdminSidebarProps)
           <div className="flex-1 px-3 py-4">
             <MobileMenuContent 
               adminMenuItems={adminMenuItems}
+              clientMenuItems={clientMenuItems}
               preferenceItems={preferenceItems}
               isActive={isActive}
               isAdminOpen={isAdminOpen}
               setIsAdminOpen={setIsAdminOpen}
+              isClientOpen={isClientOpen}
+              setIsClientOpen={setIsClientOpen}
             />
           </div>
         </div>
@@ -135,10 +148,13 @@ export function AdminSidebar({ isOpen, setIsOpen, isMobile }: AdminSidebarProps)
       <div className="flex-1 px-3 py-4">
         <DesktopMenuContent 
           adminMenuItems={adminMenuItems}
+          clientMenuItems={clientMenuItems}
           preferenceItems={preferenceItems}
           isActive={isActive}
           isAdminOpen={isAdminOpen}
           setIsAdminOpen={setIsAdminOpen}
+          isClientOpen={isClientOpen}
+          setIsClientOpen={setIsClientOpen}
           collapsed={collapsed}
         />
       </div>
@@ -149,10 +165,13 @@ export function AdminSidebar({ isOpen, setIsOpen, isMobile }: AdminSidebarProps)
 // Desktop menu component
 function DesktopMenuContent({ 
   adminMenuItems, 
+  clientMenuItems,
   preferenceItems, 
   isActive, 
   isAdminOpen, 
-  setIsAdminOpen, 
+  setIsAdminOpen,
+  isClientOpen,
+  setIsClientOpen, 
   collapsed 
 }: any) {
   return (
@@ -177,6 +196,44 @@ function DesktopMenuContent({
         {(isAdminOpen || collapsed) && (
           <div className={cn("space-y-1", !collapsed && "mt-2")}>
             {adminMenuItems.map((item: any) => (
+              <NavLink
+                key={item.title}
+                to={item.url}
+                className={cn(
+                  "flex items-center rounded-lg px-3 py-2 text-sm font-medium transition-colors",
+                  isActive(item.url)
+                    ? "bg-primary text-primary-foreground shadow-sm"
+                    : "text-muted-foreground hover:text-foreground hover:bg-accent"
+                )}
+              >
+                <item.icon className={cn("h-4 w-4", !collapsed && "mr-3")} />
+                {!collapsed && <span>{item.title}</span>}
+              </NavLink>
+            ))}
+          </div>
+        )}
+      </div>
+
+      {/* Groupe Client */}
+      <div className="mb-4">
+        {!collapsed && (
+          <button
+            onClick={() => setIsClientOpen(!isClientOpen)}
+            className="w-full flex items-center justify-between p-2 text-xs font-semibold text-muted-foreground uppercase tracking-wider hover:text-foreground transition-colors"
+          >
+            <span>Client</span>
+            <ChevronDown
+              className={cn(
+                "h-4 w-4 transition-transform duration-200",
+                isClientOpen ? "rotate-180" : ""
+              )}
+            />
+          </button>
+        )}
+        
+        {(isClientOpen || collapsed) && (
+          <div className={cn("space-y-1", !collapsed && "mt-2")}>
+            {clientMenuItems.map((item: any) => (
               <NavLink
                 key={item.title}
                 to={item.url}
@@ -227,10 +284,13 @@ function DesktopMenuContent({
 // Mobile menu component
 function MobileMenuContent({ 
   adminMenuItems, 
+  clientMenuItems,
   preferenceItems, 
   isActive, 
   isAdminOpen, 
-  setIsAdminOpen 
+  setIsAdminOpen,
+  isClientOpen,
+  setIsClientOpen 
 }: any) {
   return (
     <>
@@ -252,6 +312,42 @@ function MobileMenuContent({
         {isAdminOpen && (
           <div className="space-y-1 mt-2">
             {adminMenuItems.map((item: any) => (
+              <NavLink
+                key={item.title}
+                to={item.url}
+                className={cn(
+                  "flex items-center rounded-lg px-3 py-2 text-sm font-medium transition-colors",
+                  isActive(item.url)
+                    ? "bg-primary text-primary-foreground shadow-sm"
+                    : "text-muted-foreground hover:text-foreground hover:bg-accent"
+                )}
+              >
+                <item.icon className="h-4 w-4 mr-3" />
+                <span>{item.title}</span>
+              </NavLink>
+            ))}
+          </div>
+        )}
+      </div>
+
+      {/* Mobile Client Group */}
+      <div className="mb-4">
+        <button
+          onClick={() => setIsClientOpen(!isClientOpen)}
+          className="w-full flex items-center justify-between p-2 text-xs font-semibold text-muted-foreground uppercase tracking-wider hover:text-foreground transition-colors"
+        >
+          <span>Client</span>
+          <ChevronDown
+            className={cn(
+              "h-4 w-4 transition-transform duration-200",
+              isClientOpen ? "rotate-180" : ""
+            )}
+          />
+        </button>
+        
+        {isClientOpen && (
+          <div className="space-y-1 mt-2">
+            {clientMenuItems.map((item: any) => (
               <NavLink
                 key={item.title}
                 to={item.url}
