@@ -223,9 +223,14 @@ Les droits d'auteur restent la propriété du photographe.`,
   });
 
   const handleViewDocument = (doc: any) => {
-    setSelectedDocument(doc);
-    setModalStep("view");
-    setIsModalOpen(true);
+    if (doc.type === "contrat") {
+      // Navigate to dedicated contract page
+      window.location.href = `/client/${clientId}/contract/${doc.id}?token=${token}`;
+    } else {
+      setSelectedDocument(doc);
+      setModalStep("view");
+      setIsModalOpen(true);
+    }
   };
 
   const handleSignDocument = (doc: any) => {
