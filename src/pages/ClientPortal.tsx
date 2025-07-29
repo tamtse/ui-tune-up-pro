@@ -57,7 +57,7 @@ export default function ClientPortal() {
       type: "contrat",
       title: "Contrat de prestation photo studio",
       date: "2024-01-05",
-      amount: "5,000.00 €", 
+      amount: "5 000 000 F CFA", 
       status: "en_cours",
       description: "Contrat annuel de prestations photo avec studio professionnel",
       content: `CONTRAT DE PRESTATION PHOTOGRAPHIQUE
@@ -73,7 +73,7 @@ Le présent contrat a pour objet la réalisation de prestations photographiques 
 - Livraison des fichiers haute définition
 
 DURÉE : 12 mois à compter de la signature
-MONTANT : 5,000.00 € HT
+MONTANT : 5 000 000 F CFA HT
 
 CONDITIONS PARTICULIÈRES :
 - Planning des séances à définir conjointement
@@ -88,7 +88,7 @@ Ce contrat nécessite votre signature électronique pour être validé.`,
       type: "devis",
       title: "Devis séance photo corporate",
       date: "2024-01-15",
-      amount: "2,500.00 €",
+      amount: "2 500 000 F CFA",
       status: "a_signer",
       description: "Séance photo corporate pour 10 personnes",
       content: `DEVIS - SÉANCE PHOTO CORPORATE
@@ -100,9 +100,9 @@ Prestation proposée :
 • 50 photos retouchées livrées
 • Formats : web et print
 
-Tarif : 2,500.00 € HT
-TVA 20% : 500.00 €
-TOTAL TTC : 3,000.00 €
+Tarif : 2 500 000 F CFA HT
+TVA 18% : 450 000 F CFA
+TOTAL TTC : 2 950 000 F CFA
 
 Validité du devis : 30 jours`,
       signatureRequired: false
@@ -112,7 +112,7 @@ Validité du devis : 30 jours`,
       type: "facture",
       title: "Facture prestation photo",
       date: "2024-01-10",
-      amount: "1,800.00 €",
+      amount: "1 800 000 F CFA",
       status: "en_cours",
       description: "Facturation séance photo produits",
       content: `FACTURE N° FAC-2024-001
@@ -125,9 +125,9 @@ Prestation :
 • Post-production et retouches
 • Livraison 30 visuels HD
 
-Montant HT : 1,800.00 €
-TVA 20% : 360.00 €
-TOTAL TTC : 2,160.00 €
+Montant HT : 1 800 000 F CFA
+TVA 18% : 324 000 F CFA
+TOTAL TTC : 2 124 000 F CFA
 
 Règlement par virement ou chèque`,
       signatureRequired: false
@@ -137,7 +137,7 @@ Règlement par virement ou chèque`,
       type: "contrat",
       title: "Contrat événementiel",
       date: "2024-01-12",
-      amount: "4,500.00 €",
+      amount: "4 500 000 F CFA",
       status: "signe", 
       description: "Contrat pour couverture photo événement",
       content: "Contrat signé pour événement corporate...",
@@ -160,7 +160,7 @@ Article 2 - Commandes
 Toute commande implique l'acceptation de nos CGV.
 
 Article 3 - Tarifs
-Les tarifs sont exprimés en euros HT.
+Les tarifs sont exprimés en Francs CFA HT.
 
 Article 4 - Paiement
 Règlement à 30 jours fin de mois.

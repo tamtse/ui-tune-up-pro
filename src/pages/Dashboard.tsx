@@ -59,7 +59,7 @@ const transactions = [
     avatar: "MH",
     date: "10 Nov 2023, 08:00",
     subscription: "Annuel",
-    amount: "$500.00",
+    amount: "500 000 F CFA",
   },
   {
     id: 2,
@@ -67,7 +67,7 @@ const transactions = [
     avatar: "CH",
     date: "10 Nov 2023, 08:00",
     subscription: "Mensuel",
-    amount: "$250.00",
+    amount: "250 000 F CFA",
   },
   {
     id: 3,
@@ -75,7 +75,7 @@ const transactions = [
     avatar: "JJ",
     date: "10 Nov 2023, 08:00",
     subscription: "Trim",
-    amount: "$1,250.00",
+    amount: "1 250 000 F CFA",
   },
   {
     id: 4,
@@ -83,7 +83,7 @@ const transactions = [
     avatar: "CF",
     date: "10 Nov 2023, 08:00",
     subscription: "Annuel",
-    amount: "$310.99",
+    amount: "310 000 F CFA",
   },
   {
     id: 5,
@@ -91,7 +91,7 @@ const transactions = [
     avatar: "MH",
     date: "10 Nov 2023, 08:00",
     subscription: "Annuel",
-    amount: "$310.99",
+    amount: "310 000 F CFA",
   },
 ];
 
