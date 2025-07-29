@@ -1,280 +1,282 @@
-import { useState } from "react";
-import { AdminLayout } from "@/components/AdminLayout";
-import { Card, CardContent } from "@/components/ui/card";
+import { useState, useEffect } from "react";
+import { useParams, useSearchParams, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { ChevronLeft, ZoomIn, MessageSquare, FileText, Eye, RotateCcw } from "lucide-react";
+import { Textarea } from "@/components/ui/textarea";
+import { ArrowLeft, Download, PenTool, FileText, CheckCircle } from "lucide-react";
+import { toast } from "@/hooks/use-toast";
 
 export default function ClientContract() {
-  const [currentStep, setCurrentStep] = useState<"approve" | "sign">("approve");
+  const { clientId, contractId } = useParams();
+  const [searchParams] = useSearchParams();
+  const navigate = useNavigate();
+  const token = searchParams.get('token');
+  
+  const [signature, setSignature] = useState("");
+  const [contractStatus, setContractStatus] = useState("en cours");
+
+  // Mock contract data
+  const contractData = {
+    id: "CONT-001",
+    number: "1867",
+    title: "Contrat de prestation photographique",
+    client: {
+      name: "Lionel Feugana",
+      company: "Sample Client",
+      email: "contact@sampleclient.com"
+    },
+    photographer: {
+      name: "John Smith",
+      title: "Chef Directeur",
+      address: "35, 35 Lorem Road Singapore - 8965",
+      email: "www.example.com",
+      phone: "+865 - 1234 - 4789"
+    },
+    date: "19 Septembre, 2018",
+    status: contractStatus,
+    content: `Dans le cadre de notre collaboration, le présent contrat a été élaboré pour démontrer les options offertes par l'Your Company Letter Head Design. Votre prestataire préféré, il est prévu de travail en harmonie avec tous les autres éléments Letter Head.
+
+Ce Letter Head Design a le droit de projeter une image de professionnalisme et de la fiabilité. En utilisant simple design nous avons créé un sentiment très agréable. La simplicité suggérer négative questionnaires contribuent à appuyer le layout. Ces trois variétés autres que la plum Your Company.
+
+Look and helps reconnect the Your Company brand. Letter Head design a le droit de projeter une image de design. Votre prestataire préféré, il est prévu de travail en harmonie avec tous les autres éléments Letter Head simplicité and reliabilité.
+
+Ce Letter Head Design est basé sur la forme de votre logo de Your Company Logo. Each stationery we have created a very spacious feeling. The simplicity suggests strengths like spreadsamont contribué post of the thorns of your logos.
+
+Dans le cadre de notre collaboration photographique, les termes suivants sont convenus :
+
+1. OBJET DU CONTRAT
+   - Prestation photographique pour événement d'entreprise
+   - Livraison des images retouchées sous 15 jours ouvrables
+   - Remise d'un DVD avec l'ensemble des photos haute définition
+
+2. OBLIGATIONS DU PHOTOGRAPHE
+   - Respecter les horaires convenus
+   - Fournir un matériel professionnel adapté
+   - Assurer la confidentialité des images
+
+3. OBLIGATIONS DU CLIENT
+   - Faciliter l'accès aux lieux de prise de vue
+   - Régler les honoraires selon les modalités convenues
+   - Informer de toute contrainte particulière
+
+4. PROPRIÉTÉ INTELLECTUELLE
+   - Les droits d'auteur restent la propriété du photographe
+   - Le client obtient un droit d'usage selon les termes convenus
+   - Toute utilisation commerciale nécessite un accord préalable
+
+5. MODALITÉS FINANCIÈRES
+   - Montant total : 2 500 000 F CFA TTC
+   - Acompte de 30% à la signature
+   - Solde à la livraison des images
+
+Ce contrat prend effet à sa signature par les deux parties et reste valable pour la durée de la prestation convenue.`
+  };
+
+  const handleDownload = () => {
+    toast({
+      title: "Téléchargement en cours",
+      description: "Le contrat est en cours de téléchargement...",
+    });
+  };
+
+  const handleSign = () => {
+    if (!signature.trim()) {
+      toast({
+        title: "Signature requise",
+        description: "Veuillez entrer votre signature avant de signer le document.",
+        variant: "destructive"
+      });
+      return;
+    }
+    
+    setContractStatus("signé");
+    toast({
+      title: "Contrat signé avec succès",
+      description: "Votre signature a été enregistrée.",
+    });
+    
+    // Redirect back to portal after 2 seconds
+    setTimeout(() => {
+      navigate(`/client/${clientId}?token=${token}`);
+    }, 2000);
+  };
+
+  const getStatusBadge = (status: string) => {
+    const statusConfig = {
+      "brouillon": { color: "bg-gray-100 text-gray-800", label: "Brouillon" },
+      "en cours": { color: "bg-blue-100 text-blue-800", label: "En cours" },
+      "signé": { color: "bg-green-100 text-green-800", label: "Signé" }
+    };
+    
+    const config = statusConfig[status as keyof typeof statusConfig] || statusConfig["en cours"];
+    return (
+      <Badge className={config.color}>
+        {config.label}
+      </Badge>
+    );
+  };
+
+  if (!token) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <Card className="w-96">
+          <CardContent className="pt-6">
+            <p className="text-center text-muted-foreground">Accès non autorisé</p>
+          </CardContent>
+        </Card>
+      </div>
+    );
+  }
 
   return (
-    <AdminLayout>
-      <div className="space-y-6">
-        {/* Header */}
-        <div className="flex items-center justify-between">
-          <div className="flex items-center gap-4">
-            <Button variant="ghost" size="icon">
-              <ChevronLeft className="h-4 w-4" />
+    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100">
+      {/* Header */}
+      <div className="bg-gradient-to-r from-blue-600 to-indigo-600 text-white p-6">
+        <div className="max-w-4xl mx-auto">
+          <div className="flex items-center justify-between mb-4">
+            <Button 
+              variant="ghost" 
+              onClick={() => navigate(`/client/${clientId}?token=${token}`)}
+              className="text-white hover:bg-white/10"
+            >
+              <ArrowLeft className="h-4 w-4 mr-2" />
+              Retour au portail
             </Button>
-            <div className="flex items-center gap-4">
-              <div className="w-12 h-12 bg-blue-500 rounded-lg flex items-center justify-center">
-                <span className="text-white font-bold text-xl">PS</span>
-              </div>
-              <div>
-                <div className="text-2xl font-bold text-blue-600">PICSTUDIO</div>
+            <div className="text-center">
+              <div className="bg-white/10 px-4 py-2 rounded-lg backdrop-blur-sm">
+                <FileText className="h-6 w-6 mx-auto mb-1" />
+                <span className="text-sm font-medium">Logo</span>
               </div>
             </div>
+            <div></div>
           </div>
-          <div className="flex items-center gap-4">
-            <div className="text-right">
-              <div className="font-semibold">Sample Client Contract</div>
-              <div className="text-sm text-muted-foreground">N° 07554356</div>
-            </div>
-            <div className="flex gap-2">
-              <Button variant="outline" size="icon">
-                <ZoomIn className="h-4 w-4" />
-              </Button>
-              <Button variant="outline" size="icon">
-                <MessageSquare className="h-4 w-4" />
-              </Button>
-            </div>
+          
+          <div className="text-center">
+            <h1 className="text-2xl font-bold mb-2">
+              Hello {contractData.client.name},
+            </h1>
+            <p className="text-blue-100">
+              {contractStatus === "signé" 
+                ? "Votre contrat a été signé avec succès" 
+                : "Veuillez examiner et signer ce contrat"
+              }
+            </p>
           </div>
-        </div>
-
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-          {/* Document Preview */}
-          <div className="lg:col-span-1 space-y-4">
-            <Card className="relative">
-              <CardContent className="p-4">
-                <div className="bg-gradient-to-b from-blue-50 to-white border rounded-lg p-6 min-h-[400px] relative">
-                  <div className="absolute top-4 left-4">
-                    <div className="w-8 h-8 bg-blue-500 rounded flex items-center justify-center text-white text-xs font-bold">
-                      1
-                    </div>
-                  </div>
-                  
-                  <div className="text-center space-y-4 mt-8">
-                    <div className="flex items-center justify-center">
-                      <div className="bg-blue-500 text-white px-3 py-1 rounded text-sm">Logo</div>
-                    </div>
-                    
-                    <div className="space-y-2">
-                      <div className="font-semibold text-lg">LOGO HERE</div>
-                      <div className="text-sm text-muted-foreground">TAGLINE GOES HERE</div>
-                    </div>
-
-                    <div className="mt-8 space-y-1 text-sm">
-                      <div className="font-semibold">John Smooth</div>
-                      <div>Chief Executive</div>
-                      <div>69 Ubi Harbourfront Road Singapore 408909</div>
-                      <div>📧 email@mail.com www.myyweb.com</div>
-                      <div>📞 +886 - 12345 - 6789</div>
-                    </div>
-
-                    <div className="text-right text-sm mt-12">
-                      Date: 10 September, 2018
-                    </div>
-
-                    <div className="text-left text-xs space-y-2 mt-8">
-                      <p>This is a sample letter that has been placed to demonstrate typing remat (Your Company) letterhead design...</p>
-                      <p>This letterhead design is meant project an image of professionalism reliability...</p>
-                    </div>
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
-
-            <Card>
-              <CardContent className="p-4">
-                <div className="bg-gradient-to-b from-blue-50 to-white border rounded-lg p-6 min-h-[300px] relative">
-                  <div className="absolute top-4 left-4">
-                    <div className="w-8 h-8 bg-blue-500 rounded flex items-center justify-center text-white text-xs font-bold">
-                      2
-                    </div>
-                  </div>
-                  
-                  <div className="mt-8">
-                    <div className="text-xs space-y-2">
-                      <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit...</p>
-                      <p>Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua...</p>
-                    </div>
-                    
-                    <div className="flex justify-center gap-8 mt-8 text-xs">
-                      <div className="text-center">
-                        <div className="w-4 h-4 bg-blue-500 rounded-full mx-auto mb-1"></div>
-                        <div>📍</div>
-                        <div>9020 Bourbon Street</div>
-                        <div>Bakersfield, CA 90210</div>
-                      </div>
-                      <div className="text-center">
-                        <div className="w-4 h-4 bg-blue-500 rounded-full mx-auto mb-1"></div>
-                        <div>📱</div>
-                        <div>Tel: +345-8760</div>
-                        <div>Fax: +345-8750</div>
-                      </div>
-                      <div className="text-center">
-                        <div className="w-4 h-4 bg-blue-500 rounded-full mx-auto mb-1"></div>
-                        <div>✉️</div>
-                        <div>info@websites.com</div>
-                        <div>www.websites.com</div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
-          </div>
-
-          {/* Content Area */}
-          <div className="lg:col-span-2">
-            {currentStep === "approve" && (
-              <div className="bg-gradient-to-r from-blue-500 to-blue-600 text-white p-8 rounded-lg text-center space-y-4">
-                <div className="bg-white/20 text-white px-3 py-1 rounded text-sm w-fit mx-auto">Logo</div>
-                <h2 className="text-2xl font-bold">Hello Lionel,</h2>
-                <p className="text-lg">Veuillez examiner et signer cette facture</p>
-                
-                <Card className="bg-white text-black mt-8">
-                  <CardContent className="p-4">
-                    <div className="flex items-center justify-between mb-4">
-                      <div className="text-sm">
-                        <div className="font-semibold">Devis N° 1867</div>
-                        <div className="text-muted-foreground">
-                          FROM: Lionel Feugana | TO: Sample Client
-                        </div>
-                        <div className="text-muted-foreground">www.picstudio.com</div>
-                      </div>
-                      <div className="flex gap-2">
-                        <Button variant="ghost" size="icon">
-                          <FileText className="h-4 w-4" />
-                        </Button>
-                        <Button variant="ghost" size="icon">
-                          <RotateCcw className="h-4 w-4" />
-                        </Button>
-                      </div>
-                    </div>
-
-                    <div className="border rounded-lg p-4 mb-6">
-                      <div className="flex items-center gap-2 mb-4">
-                        <div className="bg-blue-500 text-white px-3 py-1 rounded text-sm">LOGO HERE</div>
-                        <div className="text-sm font-semibold">TAGLINE GOES HERE</div>
-                      </div>
-
-                      <div className="grid grid-cols-2 gap-8 text-sm">
-                        <div>
-                          <div className="font-semibold mb-2">John Smooth</div>
-                          <div>Chief Executive</div>
-                          <div>69 Ubi Harbourfront Road Singapore 408909</div>
-                          <div>📧 email@mail.com www.myyweb.com</div>
-                          <div>📞 +886 - 12345 - 6789</div>
-                        </div>
-                        <div className="text-right">
-                          <div>Date: 10 September, 2018</div>
-                        </div>
-                      </div>
-
-                      <div className="mt-6 text-xs space-y-2">
-                        <p>This is a sample letter that has been placed to demonstrate typing remat (Your Company) letterhead design. When positioned properly, it will serve to work in harmony with all other elements letterhead.</p>
-                        <p>This letterhead design is meant project an image of</p>
-                        <p>This letterhead design is meant project an image of professionalism reliability. By using simple align we have created a very spacious feeling. The simplicity suggest: reingtthe spaciousness contributes h aesthetics the layout. These basic qualities along with the (Your Company)</p>
-                        <p>look and helps reinforce the (Your Company) brand. letterhead design is meant to project an image p design. When positioned properly, it will serve to work in harmony all the other elements letterhead. simulation and reliability.</p>
-                        <p>This letterhead design is based on the theme of your logo) from (Your Company) logo. Each stationary we have created a very spacious feeling. The simplicity suggest: strength the spaciousness contributes part of the theme of your logo).</p>
-                      </div>
-
-                      <div className="flex justify-center gap-8 mt-8 text-xs">
-                        <div className="text-center">
-                          <div>📍</div>
-                          <div>9020 Bourbon Street</div>
-                          <div>Bakersfield, CA 90210</div>
-                        </div>
-                        <div className="text-center">
-                          <div>📱</div>
-                          <div>Tel: +345-8760</div>
-                          <div>Fax: +345-8750</div>
-                        </div>
-                        <div className="text-center">
-                          <div>✉️</div>
-                          <div>info@websites.com</div>
-                          <div>www.websites.com</div>
-                        </div>
-                      </div>
-                    </div>
-
-                    <div className="text-center text-xs text-muted-foreground mb-4">0 words</div>
-                  </CardContent>
-                </Card>
-
-                <div className="flex gap-4 justify-center">
-                  <Button variant="outline" className="bg-green-500 text-white border-green-500 hover:bg-green-600 px-8">
-                    Accepter
-                  </Button>
-                  <Button variant="outline" className="bg-red-500 text-white border-red-500 hover:bg-red-600 px-8">
-                    Refuser
-                  </Button>
-                </div>
-              </div>
-            )}
-
-            {currentStep === "sign" && (
-              <div className="bg-gradient-to-r from-blue-500 to-blue-600 text-white p-8 rounded-lg text-center space-y-4">
-                <div className="bg-white/20 text-white px-3 py-1 rounded text-sm w-fit mx-auto">Logo</div>
-                <h2 className="text-2xl font-bold">Hello Lionel,</h2>
-                <p className="text-lg">Veuillez examiner et signer ce contrat</p>
-                
-                <Card className="bg-white text-black mt-8">
-                  <CardContent className="p-4">
-                    {/* Same content as approve step */}
-                    <div className="flex items-center justify-between mb-4">
-                      <div className="text-sm">
-                        <div className="font-semibold">Devis N° 1867</div>
-                        <div className="text-muted-foreground">
-                          FROM: Lionel Feugana | TO: Sample Client
-                        </div>
-                        <div className="text-muted-foreground">www.picstudio.com</div>
-                      </div>
-                      <div className="flex gap-2">
-                        <Button variant="ghost" size="icon">
-                          <FileText className="h-4 w-4" />
-                        </Button>
-                        <Button variant="ghost" size="icon">
-                          <RotateCcw className="h-4 w-4" />
-                        </Button>
-                      </div>
-                    </div>
-
-                    {/* Document content same as above */}
-                    <div className="border rounded-lg p-4 mb-6">
-                      {/* Same content */}
-                    </div>
-
-                    <div className="text-center text-xs text-muted-foreground mb-4">0 words</div>
-                  </CardContent>
-                </Card>
-
-                <Button className="bg-blue-600 hover:bg-blue-700 px-12 py-3 text-lg">
-                  Signer le document
-                </Button>
-              </div>
-            )}
-          </div>
-        </div>
-
-        {/* Toggle between steps for demo */}
-        <div className="flex justify-center gap-4">
-          <Button 
-            variant={currentStep === "approve" ? "default" : "outline"}
-            onClick={() => setCurrentStep("approve")}
-          >
-            Vue Approbation
-          </Button>
-          <Button 
-            variant={currentStep === "sign" ? "default" : "outline"}
-            onClick={() => setCurrentStep("sign")}
-          >
-            Vue Signature
-          </Button>
         </div>
       </div>
-    </AdminLayout>
+
+      {/* Document viewer */}
+      <div className="max-w-4xl mx-auto p-6">
+        <Card className="shadow-xl">
+          <CardHeader className="border-b bg-white">
+            <div className="flex items-center justify-between">
+              <div>
+                <CardTitle className="text-xl">Contrat N° {contractData.number}</CardTitle>
+                <p className="text-muted-foreground mt-1">
+                  FROM: {contractData.photographer.name} - TO: {contractData.client.company}
+                </p>
+              </div>
+              <div className="flex items-center gap-3">
+                {getStatusBadge(contractStatus)}
+                <Button 
+                  variant="outline" 
+                  size="sm"
+                  onClick={handleDownload}
+                >
+                  <Download className="h-4 w-4 mr-2" />
+                  Télécharger
+                </Button>
+              </div>
+            </div>
+          </CardHeader>
+
+          <CardContent className="p-8">
+            {/* Contract header info */}
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8 p-4 bg-gray-50 rounded-lg">
+              <div>
+                <h3 className="font-semibold mb-2 text-blue-600">Prestataire</h3>
+                <p className="font-medium">{contractData.photographer.name}</p>
+                <p className="text-sm text-muted-foreground">{contractData.photographer.title}</p>
+                <p className="text-sm text-muted-foreground">{contractData.photographer.address}</p>
+                <p className="text-sm text-muted-foreground">{contractData.photographer.phone}</p>
+              </div>
+              
+              <div>
+                <h3 className="font-semibold mb-2 text-blue-600">Client</h3>
+                <p className="font-medium">{contractData.client.name}</p>
+                <p className="text-sm text-muted-foreground">{contractData.client.company}</p>
+                <p className="text-sm text-muted-foreground">{contractData.client.email}</p>
+                <p className="text-sm text-muted-foreground">Date: {contractData.date}</p>
+              </div>
+            </div>
+
+            {/* Contract content */}
+            <div className="prose max-w-none mb-8">
+              <div className="whitespace-pre-line text-sm leading-relaxed text-gray-700">
+                {contractData.content}
+              </div>
+            </div>
+
+            {/* Signature section */}
+            {contractStatus !== "signé" && (
+              <div className="border-t pt-6">
+                <h3 className="text-lg font-semibold mb-4 flex items-center">
+                  <PenTool className="h-5 w-5 mr-2 text-blue-600" />
+                  Signature électronique
+                </h3>
+                
+                <div className="bg-blue-50 p-4 rounded-lg mb-4">
+                  <p className="text-sm text-blue-800 mb-3">
+                    En signant ce document, vous acceptez tous les termes et conditions énoncés ci-dessus.
+                  </p>
+                  
+                  <div className="space-y-3">
+                    <div>
+                      <label className="block text-sm font-medium mb-2">
+                        Tapez votre nom complet pour signer :
+                      </label>
+                      <Textarea
+                        placeholder="Entrez votre nom complet ici..."
+                        value={signature}
+                        onChange={(e) => setSignature(e.target.value)}
+                        className="min-h-[80px] font-mono text-lg"
+                      />
+                    </div>
+                    
+                    <Button 
+                      onClick={handleSign}
+                      className="w-full bg-blue-600 hover:bg-blue-700"
+                      size="lg"
+                    >
+                      <PenTool className="h-4 w-4 mr-2" />
+                      Signer le document
+                    </Button>
+                  </div>
+                </div>
+              </div>
+            )}
+
+            {/* Signed confirmation */}
+            {contractStatus === "signé" && (
+              <div className="border-t pt-6">
+                <div className="bg-green-50 p-6 rounded-lg text-center">
+                  <CheckCircle className="h-12 w-12 text-green-600 mx-auto mb-3" />
+                  <h3 className="text-lg font-semibold text-green-800 mb-2">
+                    Document signé avec succès
+                  </h3>
+                  <p className="text-green-700 mb-4">
+                    Signature : <span className="font-mono font-semibold">{signature}</span>
+                  </p>
+                  <p className="text-sm text-green-600">
+                    Date de signature : {new Date().toLocaleDateString('fr-FR')}
+                  </p>
+                </div>
+              </div>
+            )}
+          </CardContent>
+        </Card>
+      </div>
+    </div>
   );
 }

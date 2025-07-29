@@ -210,7 +210,7 @@ export default function UserDetail() {
                       </div>
                       <div>
                         <label className="text-sm text-muted-foreground">Montant mensuel</label>
-                        <p className="font-medium">29,99 €</p>
+                        <p className="font-medium">29 900 F CFA</p>
                       </div>
                     </div>
                   </CardContent>

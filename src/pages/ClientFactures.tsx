@@ -17,28 +17,28 @@ export default function ClientFactures() {
       id: "FAC010624-001",
       object: "Prestation photo studio",
       date: "15 Nov 2023",
-      montant: "2,500.00 €",
+      montant: "2 500 000 F CFA",
       status: "paid"
     },
     {
       id: "FAC010624-002", 
       object: "Séance photo corporate",
       date: "03 Nov 2023",
-      montant: "1,800.00 €",
+      montant: "1 800 000 F CFA",
       status: "pending"
     },
     {
       id: "FAC010624-003",
       object: "Retouche photos produits", 
       date: "28 Oct 2023",
-      montant: "950.00 €",
+      montant: "950 000 F CFA",
       status: "paid"
     },
     {
       id: "FAC010624-004",
       object: "Shooting mode collection",
       date: "15 Oct 2023", 
-      montant: "3,200.00 €",
+      montant: "3 200 000 F CFA",
       status: "overdue"
     }
   ];
