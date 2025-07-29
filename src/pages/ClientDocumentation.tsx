@@ -53,14 +53,14 @@ export default function ClientDocumentation() {
     <AdminLayout>
       <div className="space-y-6">
         {/* Header */}
-        <div className="flex items-center justify-between">
-          <div className="flex items-center gap-4">
-            <div className="w-12 h-12 bg-blue-500 rounded-lg flex items-center justify-center">
-              <span className="text-white font-bold text-xl">PS</span>
+        <div className="flex items-center justify-between gap-2 sm:gap-4">
+          <div className="flex items-center gap-2 sm:gap-4 min-w-0">
+            <div className="w-10 h-10 sm:w-12 sm:h-12 bg-blue-500 rounded-lg flex items-center justify-center flex-shrink-0">
+              <span className="text-white font-bold text-lg sm:text-xl">PS</span>
             </div>
-            <div className="text-2xl font-bold text-blue-600">PICSTUDIO</div>
+            <div className="text-lg sm:text-2xl font-bold text-blue-600 truncate">PICSTUDIO</div>
           </div>
-          <div className="flex-1 max-w-md mx-8">
+          <div className="flex-1 max-w-md mx-2 sm:mx-8 hidden md:block">
             <div className="relative">
               <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground h-4 w-4" />
               <Input 
@@ -71,7 +71,7 @@ export default function ClientDocumentation() {
               />
             </div>
           </div>
-          <Button variant="outline" size="icon">
+          <Button variant="outline" size="icon" className="flex-shrink-0">
             <span className="sr-only">Notifications</span>
             🔔
           </Button>
@@ -79,18 +79,18 @@ export default function ClientDocumentation() {
 
         {/* Welcome Section */}
         <div>
-          <h1 className="text-4xl font-bold text-foreground mb-6">Bienvenue,</h1>
+          <h1 className="text-2xl sm:text-4xl font-bold text-foreground mb-4 sm:mb-6">Bienvenue,</h1>
           
-          <Card className="w-fit">
-            <CardContent className="p-4">
-              <div className="flex items-center gap-3">
-                <Avatar className="h-12 w-12">
+          <Card className="w-full sm:w-fit">
+            <CardContent className="p-3 sm:p-4">
+              <div className="flex items-center gap-2 sm:gap-3">
+                <Avatar className="h-10 w-10 sm:h-12 sm:w-12 flex-shrink-0">
                   <AvatarImage src="/placeholder.svg" />
                   <AvatarFallback>KW</AvatarFallback>
                 </Avatar>
-                <div>
-                  <div className="font-semibold">Kristin Watson</div>
-                  <div className="text-sm text-muted-foreground">kristinwatson@mail.com</div>
+                <div className="min-w-0">
+                  <div className="font-semibold text-sm sm:text-base">Kristin Watson</div>
+                  <div className="text-xs sm:text-sm text-muted-foreground truncate">kristinwatson@mail.com</div>
                 </div>
               </div>
             </CardContent>
@@ -99,21 +99,21 @@ export default function ClientDocumentation() {
 
         {/* Content Area */}
         <Card>
-          <CardContent className="p-6">
+          <CardContent className="p-3 sm:p-6">
             <Tabs defaultValue="documentation" className="w-full">
-              <div className="flex items-center justify-between mb-6">
-                <TabsList>
-                  <TabsTrigger value="devis">Devis</TabsTrigger>
-                  <TabsTrigger value="facture">Facture</TabsTrigger>
-                  <TabsTrigger value="facture2">Facture</TabsTrigger>
-                  <TabsTrigger value="documentation" className="bg-blue-500 text-white data-[state=active]:bg-blue-500 data-[state=active]:text-white">
+              <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 sm:gap-6 mb-4 sm:mb-6">
+                <TabsList className="w-full sm:w-auto overflow-x-auto">
+                  <TabsTrigger value="devis" className="text-xs sm:text-sm">Devis</TabsTrigger>
+                  <TabsTrigger value="facture" className="text-xs sm:text-sm">Facture</TabsTrigger>
+                  <TabsTrigger value="facture2" className="text-xs sm:text-sm">Facture</TabsTrigger>
+                  <TabsTrigger value="documentation" className="bg-blue-500 text-white data-[state=active]:bg-blue-500 data-[state=active]:text-white text-xs sm:text-sm">
                     Documentation
                   </TabsTrigger>
                 </TabsList>
                 
-                <div className="relative">
+                <div className="relative w-full sm:w-auto">
                   <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground h-4 w-4" />
-                  <Input placeholder="Rechercher" className="pl-10 w-64" />
+                  <Input placeholder="Rechercher" className="pl-10 w-full sm:w-64" />
                 </div>
               </div>
 

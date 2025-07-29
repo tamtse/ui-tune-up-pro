@@ -132,31 +132,32 @@ Ce contrat prend effet à sa signature par les deux parties et reste valable pou
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100">
       {/* Header */}
-      <div className="bg-gradient-to-r from-blue-600 to-indigo-600 text-white p-6">
+      <div className="bg-gradient-to-r from-blue-600 to-indigo-600 text-white p-3 sm:p-6">
         <div className="max-w-4xl mx-auto">
-          <div className="flex items-center justify-between mb-4">
+          <div className="flex items-center justify-between mb-4 gap-2">
             <Button 
               variant="ghost" 
               onClick={() => navigate(`/client/${clientId}?token=${token}`)}
-              className="text-white hover:bg-white/10"
+              className="text-white hover:bg-white/10 text-sm sm:text-base flex-shrink-0"
             >
-              <ArrowLeft className="h-4 w-4 mr-2" />
-              Retour au portail
+              <ArrowLeft className="h-4 w-4 mr-1 sm:mr-2" />
+              <span className="hidden sm:inline">Retour au portail</span>
+              <span className="sm:hidden">Retour</span>
             </Button>
-            <div className="text-center">
-              <div className="bg-white/10 px-4 py-2 rounded-lg backdrop-blur-sm">
-                <FileText className="h-6 w-6 mx-auto mb-1" />
-                <span className="text-sm font-medium">Logo</span>
+            <div className="text-center flex-shrink-0">
+              <div className="bg-white/10 px-2 sm:px-4 py-2 rounded-lg backdrop-blur-sm">
+                <FileText className="h-5 w-5 sm:h-6 sm:w-6 mx-auto mb-1" />
+                <span className="text-xs sm:text-sm font-medium">Logo</span>
               </div>
             </div>
-            <div></div>
+            <div className="w-16 sm:w-20"></div>
           </div>
           
           <div className="text-center">
-            <h1 className="text-2xl font-bold mb-2">
+            <h1 className="text-lg sm:text-2xl font-bold mb-2">
               Hello {contractData.client.name},
             </h1>
-            <p className="text-blue-100">
+            <p className="text-blue-100 text-sm sm:text-base">
               {contractStatus === "signé" 
                 ? "Votre contrat a été signé avec succès" 
                 : "Veuillez examiner et signer ce contrat"
@@ -167,53 +168,55 @@ Ce contrat prend effet à sa signature par les deux parties et reste valable pou
       </div>
 
       {/* Document viewer */}
-      <div className="max-w-4xl mx-auto p-6">
+      <div className="max-w-4xl mx-auto p-3 sm:p-6">
         <Card className="shadow-xl">
-          <CardHeader className="border-b bg-white">
-            <div className="flex items-center justify-between">
-              <div>
-                <CardTitle className="text-xl">Contrat N° {contractData.number}</CardTitle>
-                <p className="text-muted-foreground mt-1">
+          <CardHeader className="border-b bg-white p-3 sm:p-6">
+            <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
+              <div className="min-w-0 flex-1">
+                <CardTitle className="text-lg sm:text-xl">Contrat N° {contractData.number}</CardTitle>
+                <p className="text-muted-foreground mt-1 text-sm break-words">
                   FROM: {contractData.photographer.name} - TO: {contractData.client.company}
                 </p>
               </div>
-              <div className="flex items-center gap-3">
+              <div className="flex items-center gap-2 sm:gap-3 flex-shrink-0 w-full sm:w-auto">
                 {getStatusBadge(contractStatus)}
                 <Button 
                   variant="outline" 
                   size="sm"
                   onClick={handleDownload}
+                  className="text-xs sm:text-sm"
                 >
-                  <Download className="h-4 w-4 mr-2" />
-                  Télécharger
+                  <Download className="h-3 w-3 sm:h-4 sm:w-4 mr-1 sm:mr-2" />
+                  <span className="hidden sm:inline">Télécharger</span>
+                  <span className="sm:hidden">DL</span>
                 </Button>
               </div>
             </div>
           </CardHeader>
 
-          <CardContent className="p-8">
+          <CardContent className="p-3 sm:p-8">
             {/* Contract header info */}
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8 p-4 bg-gray-50 rounded-lg">
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-6 mb-6 sm:mb-8 p-3 sm:p-4 bg-gray-50 rounded-lg">
               <div>
-                <h3 className="font-semibold mb-2 text-blue-600">Prestataire</h3>
-                <p className="font-medium">{contractData.photographer.name}</p>
-                <p className="text-sm text-muted-foreground">{contractData.photographer.title}</p>
-                <p className="text-sm text-muted-foreground">{contractData.photographer.address}</p>
-                <p className="text-sm text-muted-foreground">{contractData.photographer.phone}</p>
+                <h3 className="font-semibold mb-2 text-blue-600 text-sm sm:text-base">Prestataire</h3>
+                <p className="font-medium text-sm sm:text-base">{contractData.photographer.name}</p>
+                <p className="text-xs sm:text-sm text-muted-foreground">{contractData.photographer.title}</p>
+                <p className="text-xs sm:text-sm text-muted-foreground break-words">{contractData.photographer.address}</p>
+                <p className="text-xs sm:text-sm text-muted-foreground">{contractData.photographer.phone}</p>
               </div>
               
               <div>
-                <h3 className="font-semibold mb-2 text-blue-600">Client</h3>
-                <p className="font-medium">{contractData.client.name}</p>
-                <p className="text-sm text-muted-foreground">{contractData.client.company}</p>
-                <p className="text-sm text-muted-foreground">{contractData.client.email}</p>
-                <p className="text-sm text-muted-foreground">Date: {contractData.date}</p>
+                <h3 className="font-semibold mb-2 text-blue-600 text-sm sm:text-base">Client</h3>
+                <p className="font-medium text-sm sm:text-base">{contractData.client.name}</p>
+                <p className="text-xs sm:text-sm text-muted-foreground">{contractData.client.company}</p>
+                <p className="text-xs sm:text-sm text-muted-foreground break-words">{contractData.client.email}</p>
+                <p className="text-xs sm:text-sm text-muted-foreground">Date: {contractData.date}</p>
               </div>
             </div>
 
             {/* Contract content */}
-            <div className="prose max-w-none mb-8">
-              <div className="whitespace-pre-line text-sm leading-relaxed text-gray-700">
+            <div className="prose max-w-none mb-6 sm:mb-8">
+              <div className="whitespace-pre-line text-xs sm:text-sm leading-relaxed text-gray-700">
                 {contractData.content}
               </div>
             </div>

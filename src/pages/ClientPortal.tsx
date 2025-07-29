@@ -286,45 +286,45 @@ Les droits d'auteur restent la propriété du photographe.`,
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-purple-50">
-      {/* Header */}
-      <div className="border-b bg-white/80 backdrop-blur-sm shadow-sm">
-        <div className="container mx-auto px-4 py-4">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-4">
-              <div className="w-12 h-12 bg-gradient-to-br from-blue-600 to-purple-600 rounded-xl flex items-center justify-center shadow-lg">
-                <span className="text-white font-bold text-xl">PS</span>
-              </div>
-              <div>
-                <div className="text-2xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
-                  PICSTUDIO
+        {/* Header */}
+        <div className="border-b bg-white/80 backdrop-blur-sm shadow-sm">
+          <div className="container mx-auto px-2 sm:px-4 py-4">
+            <div className="flex items-center justify-between gap-2">
+              <div className="flex items-center gap-2 sm:gap-4 min-w-0">
+                <div className="w-10 h-10 sm:w-12 sm:h-12 bg-gradient-to-br from-blue-600 to-purple-600 rounded-xl flex items-center justify-center shadow-lg flex-shrink-0">
+                  <span className="text-white font-bold text-lg sm:text-xl">PS</span>
                 </div>
-                <div className="text-sm text-muted-foreground">Portail Client</div>
+                <div className="min-w-0">
+                  <div className="text-lg sm:text-2xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent truncate">
+                    PICSTUDIO
+                  </div>
+                  <div className="text-xs sm:text-sm text-muted-foreground">Portail Client</div>
+                </div>
               </div>
-            </div>
-            <div className="flex items-center gap-4">
-              <Avatar className="h-12 w-12 border-2 border-white shadow-lg">
-                <AvatarImage src="/placeholder.svg" />
-                <AvatarFallback className="bg-gradient-to-br from-blue-500 to-purple-500 text-white font-semibold">
-                  {clientData.name.split(' ').map(n => n[0]).join('')}
-                </AvatarFallback>
-              </Avatar>
-              <div className="text-right hidden sm:block">
-                <div className="font-semibold text-foreground">{clientData.name}</div>
-                <div className="text-sm text-muted-foreground">{clientData.company}</div>
+              <div className="flex items-center gap-2 sm:gap-4 flex-shrink-0">
+                <Avatar className="h-10 w-10 sm:h-12 sm:w-12 border-2 border-white shadow-lg">
+                  <AvatarImage src="/placeholder.svg" />
+                  <AvatarFallback className="bg-gradient-to-br from-blue-500 to-purple-500 text-white font-semibold text-sm sm:text-base">
+                    {clientData.name.split(' ').map(n => n[0]).join('')}
+                  </AvatarFallback>
+                </Avatar>
+                <div className="text-right hidden md:block min-w-0">
+                  <div className="font-semibold text-foreground truncate">{clientData.name}</div>
+                  <div className="text-sm text-muted-foreground truncate">{clientData.company}</div>
+                </div>
               </div>
             </div>
           </div>
         </div>
-      </div>
 
       {/* Main Content */}
-      <div className="container mx-auto px-4 py-8">
-        <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-8">
+      <div className="container mx-auto px-2 sm:px-4 py-4 sm:py-8">
+        <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-4 sm:space-y-8">
           <TabsList className="grid w-full grid-cols-2 bg-white/70 backdrop-blur-sm">
-            <TabsTrigger value="documents" className="data-[state=active]:bg-white data-[state=active]:shadow-sm">
+            <TabsTrigger value="documents" className="data-[state=active]:bg-white data-[state=active]:shadow-sm text-sm sm:text-base">
               Mes Documents
             </TabsTrigger>
-            <TabsTrigger value="profile" className="data-[state=active]:bg-white data-[state=active]:shadow-sm">
+            <TabsTrigger value="profile" className="data-[state=active]:bg-white data-[state=active]:shadow-sm text-sm sm:text-base">
               Mon Profil
             </TabsTrigger>
           </TabsList>
@@ -332,58 +332,58 @@ Les droits d'auteur restent la propriété du photographe.`,
           {/* Documents Tab */}
           <TabsContent value="documents" className="space-y-6">
             {/* Dashboard Stats */}
-            <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
+            <div className="grid grid-cols-2 lg:grid-cols-4 gap-2 sm:gap-4 mb-4 sm:mb-6">
               <Card className="bg-white/70 backdrop-blur-sm border-0 shadow-lg">
-                <CardContent className="p-4">
-                  <div className="flex items-center gap-3">
-                    <div className="p-2 bg-blue-100 rounded-lg">
-                      <FileText className="h-5 w-5 text-blue-600" />
+                <CardContent className="p-3 sm:p-4">
+                  <div className="flex items-center gap-2 sm:gap-3">
+                    <div className="p-1.5 sm:p-2 bg-blue-100 rounded-lg flex-shrink-0">
+                      <FileText className="h-4 w-4 sm:h-5 sm:w-5 text-blue-600" />
                     </div>
-                    <div>
-                      <div className="text-2xl font-bold text-foreground">{documentStats.total}</div>
-                      <div className="text-sm text-muted-foreground">Total documents</div>
+                    <div className="min-w-0">
+                      <div className="text-lg sm:text-2xl font-bold text-foreground">{documentStats.total}</div>
+                      <div className="text-xs sm:text-sm text-muted-foreground">Total documents</div>
                     </div>
                   </div>
                 </CardContent>
               </Card>
               
               <Card className="bg-white/70 backdrop-blur-sm border-0 shadow-lg">
-                <CardContent className="p-4">
-                  <div className="flex items-center gap-3">
-                    <div className="p-2 bg-amber-100 rounded-lg">
-                      <Clock className="h-5 w-5 text-amber-600" />
+                <CardContent className="p-3 sm:p-4">
+                  <div className="flex items-center gap-2 sm:gap-3">
+                    <div className="p-1.5 sm:p-2 bg-amber-100 rounded-lg flex-shrink-0">
+                      <Clock className="h-4 w-4 sm:h-5 sm:w-5 text-amber-600" />
                     </div>
-                    <div>
-                      <div className="text-2xl font-bold text-foreground">{documentStats.pending}</div>
-                      <div className="text-sm text-muted-foreground">En attente</div>
-                    </div>
-                  </div>
-                </CardContent>
-              </Card>
-              
-              <Card className="bg-white/70 backdrop-blur-sm border-0 shadow-lg">
-                <CardContent className="p-4">
-                  <div className="flex items-center gap-3">
-                    <div className="p-2 bg-green-100 rounded-lg">
-                      <CheckCircle className="h-5 w-5 text-green-600" />
-                    </div>
-                    <div>
-                      <div className="text-2xl font-bold text-foreground">{documentStats.signed}</div>
-                      <div className="text-sm text-muted-foreground">Validés</div>
+                    <div className="min-w-0">
+                      <div className="text-lg sm:text-2xl font-bold text-foreground">{documentStats.pending}</div>
+                      <div className="text-xs sm:text-sm text-muted-foreground">En attente</div>
                     </div>
                   </div>
                 </CardContent>
               </Card>
               
               <Card className="bg-white/70 backdrop-blur-sm border-0 shadow-lg">
-                <CardContent className="p-4">
-                  <div className="flex items-center gap-3">
-                    <div className="p-2 bg-purple-100 rounded-lg">
-                      <PenTool className="h-5 w-5 text-purple-600" />
+                <CardContent className="p-3 sm:p-4">
+                  <div className="flex items-center gap-2 sm:gap-3">
+                    <div className="p-1.5 sm:p-2 bg-green-100 rounded-lg flex-shrink-0">
+                      <CheckCircle className="h-4 w-4 sm:h-5 sm:w-5 text-green-600" />
                     </div>
-                    <div>
-                      <div className="text-2xl font-bold text-foreground">{documentStats.toSign}</div>
-                      <div className="text-sm text-muted-foreground">À signer</div>
+                    <div className="min-w-0">
+                      <div className="text-lg sm:text-2xl font-bold text-foreground">{documentStats.signed}</div>
+                      <div className="text-xs sm:text-sm text-muted-foreground">Validés</div>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+              
+              <Card className="bg-white/70 backdrop-blur-sm border-0 shadow-lg">
+                <CardContent className="p-3 sm:p-4">
+                  <div className="flex items-center gap-2 sm:gap-3">
+                    <div className="p-1.5 sm:p-2 bg-purple-100 rounded-lg flex-shrink-0">
+                      <PenTool className="h-4 w-4 sm:h-5 sm:w-5 text-purple-600" />
+                    </div>
+                    <div className="min-w-0">
+                      <div className="text-lg sm:text-2xl font-bold text-foreground">{documentStats.toSign}</div>
+                      <div className="text-xs sm:text-sm text-muted-foreground">À signer</div>
                     </div>
                   </div>
                 </CardContent>
@@ -392,44 +392,46 @@ Les droits d'auteur restent la propriété du photographe.`,
 
             {/* Filters */}
             <Card className="bg-white/70 backdrop-blur-sm border-0 shadow-lg">
-              <CardContent className="p-6">
-                <div className="flex flex-col sm:flex-row gap-4">
-                  <div className="flex-1">
+              <CardContent className="p-3 sm:p-6">
+                <div className="flex flex-col gap-3 sm:gap-4">
+                  <div className="w-full">
                     <div className="relative">
                       <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground h-4 w-4" />
                       <Input 
                         placeholder="Rechercher un document..."
-                        className="pl-10 bg-white/80 border-0 shadow-sm"
+                        className="pl-10 bg-white/80 border-0 shadow-sm text-sm sm:text-base"
                         value={searchQuery}
                         onChange={(e) => setSearchQuery(e.target.value)}
                       />
                     </div>
                   </div>
-                  <Select value={documentFilter} onValueChange={setDocumentFilter}>
-                    <SelectTrigger className="w-full sm:w-48 bg-white/80 border-0 shadow-sm">
-                      <SelectValue placeholder="Type de document" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="all">Tous les types</SelectItem>
-                      <SelectItem value="devis">Devis</SelectItem>
-                      <SelectItem value="facture">Factures</SelectItem>
-                      <SelectItem value="contrat">Contrats</SelectItem>
-                      <SelectItem value="cgv">Documents CGV</SelectItem>
-                    </SelectContent>
-                  </Select>
-                  <Select value={statusFilter} onValueChange={setStatusFilter}>
-                    <SelectTrigger className="w-full sm:w-48 bg-white/80 border-0 shadow-sm">
-                      <SelectValue placeholder="Statut" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="all">Tous les statuts</SelectItem>
-                      <SelectItem value="a_signer">À signer</SelectItem>
-                      <SelectItem value="en_cours">En cours</SelectItem>
-                      <SelectItem value="accepte">Accepté</SelectItem>
-                      <SelectItem value="signe">Signé</SelectItem>
-                      <SelectItem value="refuse">Refusé</SelectItem>
-                    </SelectContent>
-                  </Select>
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                    <Select value={documentFilter} onValueChange={setDocumentFilter}>
+                      <SelectTrigger className="w-full bg-white/80 border-0 shadow-sm text-sm sm:text-base">
+                        <SelectValue placeholder="Type de document" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="all">Tous les types</SelectItem>
+                        <SelectItem value="devis">Devis</SelectItem>
+                        <SelectItem value="facture">Factures</SelectItem>
+                        <SelectItem value="contrat">Contrats</SelectItem>
+                        <SelectItem value="cgv">Documents CGV</SelectItem>
+                      </SelectContent>
+                    </Select>
+                    <Select value={statusFilter} onValueChange={setStatusFilter}>
+                      <SelectTrigger className="w-full bg-white/80 border-0 shadow-sm text-sm sm:text-base">
+                        <SelectValue placeholder="Statut" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="all">Tous les statuts</SelectItem>
+                        <SelectItem value="a_signer">À signer</SelectItem>
+                        <SelectItem value="en_cours">En cours</SelectItem>
+                        <SelectItem value="accepte">Accepté</SelectItem>
+                        <SelectItem value="signe">Signé</SelectItem>
+                        <SelectItem value="refuse">Refusé</SelectItem>
+                      </SelectContent>
+                    </Select>
+                  </div>
                 </div>
               </CardContent>
             </Card>
