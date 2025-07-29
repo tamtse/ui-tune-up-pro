@@ -143,49 +143,49 @@ export default function UserDashboard() {
       <div className="space-y-6">
         {/* Welcome Header */}
         <div className="space-y-2">
-          <h1 className="text-2xl lg:text-3xl font-bold text-foreground">
+          <h1 className="text-xl sm:text-2xl lg:text-3xl font-bold text-foreground">
             Bon après-midi, 2F FOTSO
           </h1>
-          <p className="text-muted-foreground">Voici un aperçu de votre activité</p>
+          <p className="text-sm sm:text-base text-muted-foreground">Voici un aperçu de votre activité</p>
         </div>
 
         {/* Stats Grid */}
-        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-4 lg:gap-6">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-3 sm:gap-4 lg:gap-6">
           {userStats.map((stat, index) => (
             <StatCard key={index} {...stat} />
           ))}
         </div>
 
         {/* Main Content Grid */}
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 sm:gap-6">
           {/* Devis récents */}
-          <Card>
-            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-4">
-              <CardTitle className="text-lg">Devis récents</CardTitle>
-              <Button variant="ghost" size="sm" className="text-primary">
+          <Card className="lg:col-span-1">
+            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-3 sm:pb-4">
+              <CardTitle className="text-base sm:text-lg">Devis récents</CardTitle>
+              <Button variant="ghost" size="sm" className="text-primary text-xs sm:text-sm">
                 Voir tout
               </Button>
             </CardHeader>
-            <CardContent className="space-y-4">
+            <CardContent className="space-y-3 sm:space-y-4">
               {recentQuotes.map((quote) => (
-                <div key={quote.id} className="flex items-center justify-between p-3 rounded-lg border border-border">
-                  <div className="flex items-center space-x-3">
-                    <Avatar className="h-8 w-8">
+                <div key={quote.id} className="flex items-center justify-between p-2 sm:p-3 rounded-lg border border-border">
+                  <div className="flex items-center space-x-2 sm:space-x-3 min-w-0 flex-1">
+                    <Avatar className="h-6 w-6 sm:h-8 sm:w-8 flex-shrink-0">
                       <AvatarFallback className="text-xs">{quote.avatar}</AvatarFallback>
                     </Avatar>
-                    <div>
-                      <p className="font-medium text-sm">{quote.client}</p>
-                      <p className="text-xs text-muted-foreground">{quote.type}</p>
+                    <div className="min-w-0 flex-1">
+                      <p className="font-medium text-xs sm:text-sm truncate">{quote.client}</p>
+                      <p className="text-xs text-muted-foreground truncate">{quote.type}</p>
                     </div>
                   </div>
-                  <div className="text-right">
+                  <div className="text-right flex-shrink-0 ml-2">
                     <Badge 
                       variant="outline" 
                       className={`text-xs ${getStatusColor(quote.status, quote.statusColor)}`}
                     >
                       {quote.status}
                     </Badge>
-                    <p className="text-xs text-muted-foreground mt-1">{quote.amount}</p>
+                    <p className="text-xs text-muted-foreground mt-1 hidden sm:block">{quote.amount}</p>
                   </div>
                 </div>
               ))}
@@ -193,33 +193,33 @@ export default function UserDashboard() {
           </Card>
 
           {/* Factures récentes */}
-          <Card>
-            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-4">
-              <CardTitle className="text-lg">Factures récentes</CardTitle>
-              <Button variant="ghost" size="sm" className="text-primary">
+          <Card className="lg:col-span-1">
+            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-3 sm:pb-4">
+              <CardTitle className="text-base sm:text-lg">Factures récentes</CardTitle>
+              <Button variant="ghost" size="sm" className="text-primary text-xs sm:text-sm">
                 Voir tout
               </Button>
             </CardHeader>
-            <CardContent className="space-y-4">
+            <CardContent className="space-y-3 sm:space-y-4">
               {recentInvoices.map((invoice) => (
-                <div key={invoice.id} className="flex items-center justify-between p-3 rounded-lg border border-border">
-                  <div className="flex items-center space-x-3">
-                    <Avatar className="h-8 w-8">
+                <div key={invoice.id} className="flex items-center justify-between p-2 sm:p-3 rounded-lg border border-border">
+                  <div className="flex items-center space-x-2 sm:space-x-3 min-w-0 flex-1">
+                    <Avatar className="h-6 w-6 sm:h-8 sm:w-8 flex-shrink-0">
                       <AvatarFallback className="text-xs">{invoice.avatar}</AvatarFallback>
                     </Avatar>
-                    <div>
-                      <p className="font-medium text-sm">{invoice.client}</p>
-                      <p className="text-xs text-muted-foreground">{invoice.type}</p>
+                    <div className="min-w-0 flex-1">
+                      <p className="font-medium text-xs sm:text-sm truncate">{invoice.client}</p>
+                      <p className="text-xs text-muted-foreground truncate">{invoice.type}</p>
                     </div>
                   </div>
-                  <div className="text-right">
+                  <div className="text-right flex-shrink-0 ml-2">
                     <Badge 
                       variant="outline" 
                       className={`text-xs ${getStatusColor(invoice.status, invoice.statusColor)}`}
                     >
                       {invoice.status}
                     </Badge>
-                    <p className="text-xs text-muted-foreground mt-1">{invoice.amount}</p>
+                    <p className="text-xs text-muted-foreground mt-1 hidden sm:block">{invoice.amount}</p>
                   </div>
                 </div>
               ))}
@@ -227,17 +227,17 @@ export default function UserDashboard() {
           </Card>
 
           {/* Événements du jour */}
-          <Card>
-            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-4">
-              <CardTitle className="text-lg">Événements du jour</CardTitle>
-              <Button variant="ghost" size="sm" className="text-primary">
+          <Card className="lg:col-span-1">
+            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-3 sm:pb-4">
+              <CardTitle className="text-base sm:text-lg">Événements du jour</CardTitle>
+              <Button variant="ghost" size="sm" className="text-primary text-xs sm:text-sm">
                 Voir tout
               </Button>
             </CardHeader>
-            <CardContent>
-              <div className="text-center py-8">
-                <Calendar className="h-12 w-12 text-muted-foreground mx-auto mb-2" />
-                <p className="text-muted-foreground text-sm">Aucun événement prévu</p>
+            <CardContent className="p-4 sm:p-6">
+              <div className="text-center py-6 sm:py-8">
+                <Calendar className="h-10 w-10 sm:h-12 sm:w-12 text-muted-foreground mx-auto mb-2" />
+                <p className="text-muted-foreground text-xs sm:text-sm">Aucun événement prévu</p>
               </div>
             </CardContent>
           </Card>
@@ -245,21 +245,21 @@ export default function UserDashboard() {
 
         {/* Actions rapides */}
         <Card>
-          <CardHeader>
-            <CardTitle className="text-lg">Actions rapides</CardTitle>
+          <CardHeader className="pb-3 sm:pb-4">
+            <CardTitle className="text-base sm:text-lg">Actions rapides</CardTitle>
           </CardHeader>
-          <CardContent>
-            <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
+          <CardContent className="p-4 sm:p-6">
+            <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
               {quickActions.map((action, index) => (
                 <Button
                   key={index}
                   variant="outline"
-                  className="h-auto p-6 flex flex-col items-center space-y-2 hover:bg-primary/5 hover:border-primary/20"
+                  className="h-auto p-4 sm:p-6 flex flex-col items-center space-y-1 sm:space-y-2 hover:bg-primary/5 hover:border-primary/20"
                 >
                   <div className="text-primary">{action.icon}</div>
                   <div className="text-center">
-                    <p className="font-medium text-sm">{action.title}</p>
-                    <p className="text-xs text-muted-foreground">{action.description}</p>
+                    <p className="font-medium text-xs sm:text-sm">{action.title}</p>
+                    <p className="text-xs text-muted-foreground hidden sm:block">{action.description}</p>
                   </div>
                 </Button>
               ))}
