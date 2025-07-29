@@ -144,12 +144,14 @@ export default function ClientDevis() {
                           <TableCell>{doc.object}</TableCell>
                           <TableCell>{doc.date}</TableCell>
                           <TableCell>
-                            <div className="flex gap-2">
-                              <Badge variant="outline" className="text-green-600 border-green-600">
-                                Accepter
+                            <div className="flex gap-1">
+                              <Badge variant="outline" className="text-green-600 border-green-600 text-xs px-2 py-1">
+                                <span className="hidden sm:inline">Accepter</span>
+                                <span className="sm:hidden">✓</span>
                               </Badge>
-                              <Badge variant="outline" className="text-red-600 border-red-600">
-                                Refuser
+                              <Badge variant="outline" className="text-red-600 border-red-600 text-xs px-2 py-1">
+                                <span className="hidden sm:inline">Refuser</span>
+                                <span className="sm:hidden">✕</span>
                               </Badge>
                             </div>
                           </TableCell>

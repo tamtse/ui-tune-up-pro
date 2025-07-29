@@ -500,19 +500,21 @@ Les droits d'auteur restent la propriété du photographe.`,
                                 <Button 
                                   size="sm" 
                                   onClick={() => handleDocumentAction(doc.id, 'accept')}
-                                  className="bg-green-600 hover:bg-green-700"
+                                  className="bg-green-600 hover:bg-green-700 px-2 py-1 text-xs"
                                 >
-                                  <Check className="h-4 w-4 mr-1" />
-                                  Accepter
+                                  <Check className="h-3 w-3 mr-1" />
+                                  <span className="hidden sm:inline">Accepter</span>
+                                  <span className="sm:hidden">✓</span>
                                 </Button>
                                 <Button 
                                   variant="outline" 
                                   size="sm" 
                                   onClick={() => handleDocumentAction(doc.id, 'refuse')}
-                                  className="text-red-600 border-red-200 hover:bg-red-50"
+                                  className="text-red-600 border-red-200 hover:bg-red-50 px-2 py-1 text-xs"
                                 >
-                                  <X className="h-4 w-4 mr-1" />
-                                  Refuser
+                                  <X className="h-3 w-3 mr-1" />
+                                  <span className="hidden sm:inline">Refuser</span>
+                                  <span className="sm:hidden">✕</span>
                                 </Button>
                               </>
                             )}
@@ -671,9 +673,10 @@ Les droits d'auteur restent la propriété du photographe.`,
                         setIsModalOpen(false);
                       }}
                       className="bg-green-600 hover:bg-green-700"
+                      size="sm"
                     >
                       <Check className="h-4 w-4 mr-2" />
-                      Accepter ce devis
+                      Accepter
                     </Button>
                     <Button 
                       variant="outline" 
@@ -682,6 +685,7 @@ Les droits d'auteur restent la propriété du photographe.`,
                         setIsModalOpen(false);
                       }}
                       className="text-red-600 border-red-200 hover:bg-red-50"
+                      size="sm"
                     >
                       <X className="h-4 w-4 mr-2" />
                       Refuser
