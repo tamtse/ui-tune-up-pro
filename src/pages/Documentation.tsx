@@ -443,6 +443,135 @@ export default function Documentation() {
 
                 <div>
                   <h3 className="text-lg font-medium mb-3 flex items-center justify-between">
+                    Design System & Charte Graphique
+                    <button
+                      onClick={() => copyToClipboard(
+                        `// ✅ CORRECT - Utiliser les tokens sémantiques
+<Button variant="primary">Action principale</Button>
+<div className="bg-primary text-primary-foreground">
+<Card className="bg-card text-card-foreground">
+
+// ❌ INCORRECT - Éviter les couleurs directes
+<div className="bg-blue-500 text-white">
+<Button className="bg-red-500">`, 
+                        'design-system'
+                      )}
+                      className="p-2 hover:bg-muted rounded flex items-center space-x-1 text-sm"
+                    >
+                      {copiedCode === 'design-system' ? (
+                        <Check className="h-4 w-4 text-green-600" />
+                      ) : (
+                        <Copy className="h-4 w-4" />
+                      )}
+                      <span>Copier</span>
+                    </button>
+                  </h3>
+                  
+                  <div className="space-y-4">
+                    <div className="bg-muted p-4 rounded-lg">
+                      <h4 className="font-medium mb-2">1. Tokens de couleurs sémantiques</h4>
+                      <pre className="text-sm overflow-x-auto">
+                        <code>{`// ✅ CORRECT - Utiliser les tokens sémantiques
+<Button variant="primary">Action principale</Button>
+<div className="bg-primary text-primary-foreground">
+<Card className="bg-card text-card-foreground">
+<Badge variant="destructive">Erreur</Badge>
+
+// ❌ INCORRECT - Éviter les couleurs directes  
+<div className="bg-blue-500 text-white">
+<Button className="bg-red-500">`}</code>
+                      </pre>
+                    </div>
+
+                    <div className="bg-muted p-4 rounded-lg">
+                      <h4 className="font-medium mb-2">2. Palette de couleurs disponibles</h4>
+                      <div className="grid grid-cols-2 md:grid-cols-3 gap-3 text-xs">
+                        <div className="space-y-1">
+                          <div className="h-8 bg-primary rounded flex items-center justify-center text-primary-foreground">primary</div>
+                          <div className="h-8 bg-secondary rounded flex items-center justify-center text-secondary-foreground">secondary</div>
+                          <div className="h-8 bg-accent rounded flex items-center justify-center text-accent-foreground">accent</div>
+                        </div>
+                        <div className="space-y-1">
+                          <div className="h-8 bg-success rounded flex items-center justify-center text-success-foreground">success</div>
+                          <div className="h-8 bg-warning rounded flex items-center justify-center text-warning-foreground">warning</div>
+                          <div className="h-8 bg-destructive rounded flex items-center justify-center text-destructive-foreground">destructive</div>
+                        </div>
+                        <div className="space-y-1">
+                          <div className="h-8 bg-muted rounded flex items-center justify-center text-muted-foreground">muted</div>
+                          <div className="h-8 bg-card border rounded flex items-center justify-center text-card-foreground">card</div>
+                          <div className="h-8 bg-background border rounded flex items-center justify-center text-foreground">background</div>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div className="bg-muted p-4 rounded-lg">
+                      <h4 className="font-medium mb-2">3. Gradients personnalisés</h4>
+                      <pre className="text-sm overflow-x-auto">
+                        <code>{`// Utilisation des gradients
+<div className="bg-gradient-primary">
+<div className="bg-gradient-success">
+<div className="bg-gradient-warning">`}</code>
+                      </pre>
+                      <div className="mt-2 space-y-2">
+                        <div className="h-8 bg-gradient-primary rounded flex items-center justify-center text-white text-sm">gradient-primary</div>
+                        <div className="h-8 bg-gradient-success rounded flex items-center justify-center text-white text-sm">gradient-success</div>
+                        <div className="h-8 bg-gradient-warning rounded flex items-center justify-center text-white text-sm">gradient-warning</div>
+                      </div>
+                    </div>
+
+                    <div className="bg-muted p-4 rounded-lg">
+                      <h4 className="font-medium mb-2">4. Ombres et rayons de bordure</h4>
+                      <pre className="text-sm overflow-x-auto">
+                        <code>{`// Ombres standardisées
+<Card className="shadow-sm">  // Légère
+<Card className="shadow-md">  // Moyenne  
+<Card className="shadow-lg">  // Grande
+<Card className="shadow-xl">  // Extra large
+
+// Rayons de bordure cohérents
+<div className="rounded-sm">   // Petit
+<div className="rounded-md">   // Moyen
+<div className="rounded-lg">   // Grand`}</code>
+                      </pre>
+                      <div className="mt-2 grid grid-cols-2 gap-2">
+                        <div className="p-3 bg-white rounded-sm shadow-sm border text-center text-sm">shadow-sm</div>
+                        <div className="p-3 bg-white rounded-md shadow-md border text-center text-sm">shadow-md</div>
+                        <div className="p-3 bg-white rounded-lg shadow-lg border text-center text-sm">shadow-lg</div>
+                        <div className="p-3 bg-white rounded-lg shadow-xl border text-center text-sm">shadow-xl</div>
+                      </div>
+                    </div>
+
+                    <div className="bg-muted p-4 rounded-lg">
+                      <h4 className="font-medium mb-2">5. Composants avec variants</h4>
+                      <pre className="text-sm overflow-x-auto">
+                        <code>{`// Utiliser les variants des composants
+<Button variant="default">Par défaut</Button>
+<Button variant="secondary">Secondaire</Button>
+<Button variant="outline">Contour</Button>
+<Button variant="destructive">Destructeur</Button>
+
+<Badge variant="default">Normal</Badge>
+<Badge variant="secondary">Secondaire</Badge>
+<Badge variant="outline">Contour</Badge>
+<Badge variant="destructive">Erreur</Badge>`}</code>
+                      </pre>
+                    </div>
+
+                    <div className="bg-yellow-50 border border-yellow-200 p-4 rounded-lg">
+                      <h4 className="font-medium mb-2 text-yellow-800">⚠️ Règles importantes</h4>
+                      <ul className="text-sm text-yellow-700 space-y-1">
+                        <li>• <strong>Toujours</strong> utiliser les tokens CSS variables (--primary, --secondary, etc.)</li>
+                        <li>• <strong>Jamais</strong> utiliser de couleurs hardcodées (bg-blue-500, text-red-600, etc.)</li>
+                        <li>• <strong>Privilégier</strong> les variants des composants shadcn/ui</li>
+                        <li>• <strong>Respecter</strong> le contraste entre foreground et background</li>
+                        <li>• <strong>Tester</strong> en mode sombre et clair</li>
+                      </ul>
+                    </div>
+                  </div>
+                </div>
+
+                <div>
+                  <h3 className="text-lg font-medium mb-3 flex items-center justify-between">
                     Structure des dossiers
                     <button
                       onClick={() => copyToClipboard(
