@@ -1,7 +1,7 @@
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { Camera, Users, Calendar, BarChart3, Star, Check, ArrowRight, Menu, X, ChevronDown, Shield, Zap } from "lucide-react";
+import { Check, ArrowRight, Menu, X, Star, Users, Calendar, BarChart3, Camera, Zap, Shield } from "lucide-react";
 import { useState } from "react";
 
 const Index = () => {
@@ -18,24 +18,24 @@ const Index = () => {
               <div className="w-8 h-8 bg-blue-600 rounded-lg flex items-center justify-center">
                 <Camera className="w-5 h-5 text-white" />
               </div>
-              <span className="font-bold text-xl text-gray-900">Studio</span>
+              <span className="font-bold text-xl text-gray-900">PhotographyPro</span>
             </div>
 
             {/* Desktop Navigation */}
             <nav className="hidden md:flex items-center gap-8">
-              <a href="#" className="text-gray-600 hover:text-gray-900 transition-colors">Fonctionnalités</a>
-              <a href="#" className="text-gray-600 hover:text-gray-900 transition-colors">Tarifs</a>
-              <a href="#" className="text-gray-600 hover:text-gray-900 transition-colors">À propos</a>
+              <a href="#" className="text-gray-600 hover:text-gray-900 transition-colors">Features</a>
+              <a href="#" className="text-gray-600 hover:text-gray-900 transition-colors">Pricing</a>
+              <a href="#" className="text-gray-600 hover:text-gray-900 transition-colors">About</a>
               <a href="#" className="text-gray-600 hover:text-gray-900 transition-colors">Contact</a>
             </nav>
 
             {/* Desktop CTA */}
             <div className="hidden md:flex items-center gap-4">
               <Button variant="ghost" className="text-gray-600">
-                Se connecter
+                Login
               </Button>
               <Button className="bg-blue-600 hover:bg-blue-700 text-white">
-                Essai gratuit
+                Try Free
               </Button>
             </div>
 
@@ -52,13 +52,13 @@ const Index = () => {
           {isMenuOpen && (
             <div className="md:hidden py-4 border-t">
               <nav className="flex flex-col gap-4">
-                <a href="#" className="text-gray-600 hover:text-gray-900 transition-colors">Fonctionnalités</a>
-                <a href="#" className="text-gray-600 hover:text-gray-900 transition-colors">Tarifs</a>
-                <a href="#" className="text-gray-600 hover:text-gray-900 transition-colors">À propos</a>
+                <a href="#" className="text-gray-600 hover:text-gray-900 transition-colors">Features</a>
+                <a href="#" className="text-gray-600 hover:text-gray-900 transition-colors">Pricing</a>
+                <a href="#" className="text-gray-600 hover:text-gray-900 transition-colors">About</a>
                 <a href="#" className="text-gray-600 hover:text-gray-900 transition-colors">Contact</a>
                 <div className="flex flex-col gap-2 pt-4">
-                  <Button variant="ghost" className="justify-start">Se connecter</Button>
-                  <Button className="bg-blue-600 hover:bg-blue-700 text-white justify-start">Essai gratuit</Button>
+                  <Button variant="ghost" className="justify-start">Login</Button>
+                  <Button className="bg-blue-600 hover:bg-blue-700 text-white justify-start">Try Free</Button>
                 </div>
               </nav>
             </div>
@@ -67,66 +67,95 @@ const Index = () => {
       </header>
 
       {/* Hero Section */}
-      <section className="bg-gradient-to-br from-blue-600 via-blue-500 to-blue-400 text-white relative overflow-hidden">
-        {/* Background decorations */}
-        <div className="absolute inset-0 opacity-10">
-          <div className="absolute top-20 left-10 w-20 h-20 border border-white/20 rounded-full"></div>
-          <div className="absolute top-40 right-20 w-16 h-16 border border-white/20 rounded-full"></div>
-          <div className="absolute bottom-20 left-1/4 w-12 h-12 border border-white/20 rounded-full"></div>
-        </div>
-        
-        <div className="container mx-auto px-4 py-16 lg:py-24 relative">
+      <section className="bg-gradient-to-br from-blue-50 to-indigo-100 py-20 lg:py-32">
+        <div className="container mx-auto px-4">
           <div className="grid lg:grid-cols-2 gap-12 items-center">
+            {/* Left Content */}
             <div className="space-y-8">
-              <h1 className="text-4xl lg:text-6xl font-bold leading-tight">
-                Tout ce dont les photographes ont
-                <span className="block">besoin pour gérer leur entreprise</span>
-              </h1>
-              <p className="text-xl lg:text-2xl text-blue-100 max-w-lg">
-                De la planification à la livraison, gérez tous vos projets photographiques en un seul endroit.
-              </p>
+              <div className="space-y-6">
+                <h1 className="text-4xl lg:text-6xl font-bold text-gray-900 leading-tight">
+                  The <span className="text-blue-600">Photography</span><br />
+                  Business Platform
+                </h1>
+                <p className="text-xl text-gray-600 max-w-lg">
+                  Everything you need to run your photography business. From client management to project delivery.
+                </p>
+              </div>
+              
               <div className="flex flex-col sm:flex-row gap-4">
-                <Button size="lg" className="bg-white text-blue-600 hover:bg-gray-100 text-lg px-8">
-                  Commencer gratuitement
+                <Button size="lg" className="bg-blue-600 hover:bg-blue-700 text-white px-8">
+                  Start Free Trial
+                  <ArrowRight className="w-5 h-5 ml-2" />
                 </Button>
-                <Button size="lg" variant="outline" className="border-white text-white hover:bg-white hover:text-blue-600 text-lg px-8">
-                  Regarder la démo
+                <Button size="lg" variant="outline" className="border-gray-300 text-gray-700 hover:bg-gray-50 px-8">
+                  Watch Demo
                 </Button>
+              </div>
+
+              {/* Trust Indicators */}
+              <div className="pt-8">
+                <p className="text-sm text-gray-500 mb-4">Trusted by 10,000+ photographers</p>
+                <div className="flex items-center gap-4">
+                  <div className="flex items-center gap-1">
+                    {[...Array(5)].map((_, i) => (
+                      <Star key={i} className="w-5 h-5 fill-yellow-400 text-yellow-400" />
+                    ))}
+                  </div>
+                  <span className="text-sm text-gray-600">4.9/5 rating</span>
+                </div>
               </div>
             </div>
             
-            {/* Dashboard Preview */}
+            {/* Right Side - Dashboard Mockup */}
             <div className="relative">
-              <div className="bg-white/10 backdrop-blur-lg rounded-2xl p-6 border border-white/20 shadow-2xl">
-                <div className="bg-white rounded-lg p-6 text-gray-900">
-                  <div className="flex items-center justify-between mb-6">
-                    <h3 className="font-semibold text-lg">Tableau de bord</h3>
-                    <Badge className="bg-green-100 text-green-800">En ligne</Badge>
+              <div className="bg-white rounded-2xl shadow-2xl p-6 transform rotate-3 hover:rotate-0 transition-transform duration-300">
+                {/* Browser Bar */}
+                <div className="flex items-center gap-2 pb-4 border-b mb-6">
+                  <div className="w-3 h-3 bg-red-400 rounded-full"></div>
+                  <div className="w-3 h-3 bg-yellow-400 rounded-full"></div>
+                  <div className="w-3 h-3 bg-green-400 rounded-full"></div>
+                  <div className="ml-4 text-xs text-gray-400">photographypro.com/dashboard</div>
+                </div>
+                
+                {/* Dashboard Content */}
+                <div className="space-y-6">
+                  <div className="flex items-center justify-between">
+                    <h3 className="font-semibold text-lg text-gray-900">Dashboard</h3>
+                    <Badge className="bg-green-100 text-green-800">Online</Badge>
                   </div>
                   
-                  <div className="grid grid-cols-2 gap-4 mb-6">
-                    <div className="bg-gray-50 rounded-lg p-4">
-                      <div className="text-2xl font-bold text-blue-600">€4,250</div>
-                      <div className="text-sm text-gray-600">Revenus ce mois</div>
+                  <div className="grid grid-cols-2 gap-4">
+                    <div className="bg-blue-50 rounded-lg p-4">
+                      <div className="text-2xl font-bold text-blue-600">$12,450</div>
+                      <div className="text-sm text-gray-600">This Month</div>
                     </div>
-                    <div className="bg-gray-50 rounded-lg p-4">
-                      <div className="text-2xl font-bold text-green-600">12</div>
-                      <div className="text-sm text-gray-600">Projets actifs</div>
+                    <div className="bg-green-50 rounded-lg p-4">
+                      <div className="text-2xl font-bold text-green-600">23</div>
+                      <div className="text-sm text-gray-600">Active Projects</div>
                     </div>
                   </div>
                   
                   <div className="space-y-3">
                     <div className="flex items-center justify-between py-2 border-b">
-                      <span className="text-sm">Mariage Sophie & Marc</span>
-                      <Badge variant="outline" className="text-xs">En cours</Badge>
+                      <div className="flex items-center gap-3">
+                        <div className="w-8 h-8 bg-gray-200 rounded-full"></div>
+                        <span className="text-sm font-medium">Wedding - Sarah & John</span>
+                      </div>
+                      <Badge variant="outline" className="text-xs">In Progress</Badge>
                     </div>
                     <div className="flex items-center justify-between py-2 border-b">
-                      <span className="text-sm">Portrait Corporate</span>
-                      <Badge className="bg-green-100 text-green-800 text-xs">Terminé</Badge>
+                      <div className="flex items-center gap-3">
+                        <div className="w-8 h-8 bg-gray-200 rounded-full"></div>
+                        <span className="text-sm font-medium">Corporate Headshots</span>
+                      </div>
+                      <Badge className="bg-green-100 text-green-800 text-xs">Completed</Badge>
                     </div>
                     <div className="flex items-center justify-between py-2">
-                      <span className="text-sm">Shooting Mode</span>
-                      <Badge variant="outline" className="text-xs">Planifié</Badge>
+                      <div className="flex items-center gap-3">
+                        <div className="w-8 h-8 bg-gray-200 rounded-full"></div>
+                        <span className="text-sm font-medium">Fashion Shoot</span>
+                      </div>
+                      <Badge variant="outline" className="text-xs">Scheduled</Badge>
                     </div>
                   </div>
                 </div>
@@ -136,250 +165,206 @@ const Index = () => {
         </div>
       </section>
 
-      {/* Features Section 1 */}
-      <section className="py-16 lg:py-24">
-        <div className="container mx-auto px-4">
-          <div className="grid lg:grid-cols-2 gap-12 items-center">
-            <div>
-              <h2 className="text-3xl lg:text-4xl font-bold text-gray-900 mb-6">
-                Un logiciel adapté pour les professionnels de la photographie
-              </h2>
-              <p className="text-lg text-gray-600 mb-8">
-                Gérez vos clients, organisez vos séances, suivez vos revenus et automatisez votre facturation. 
-                Tout ce dont vous avez besoin pour faire croître votre entreprise photographique.
-              </p>
-              <Button className="bg-blue-600 hover:bg-blue-700 text-white">
-                Découvrir les fonctionnalités
-              </Button>
-            </div>
-            
-            <div className="relative">
-              <div className="bg-gray-100 rounded-2xl p-8 relative">
-                <div className="absolute top-4 right-4">
-                  <Camera className="w-16 h-16 text-blue-600 opacity-20" />
-                </div>
-                <div className="bg-white rounded-lg p-6 shadow-lg">
-                  <div className="flex items-center gap-4 mb-4">
-                    <div className="w-12 h-12 bg-blue-100 rounded-full flex items-center justify-center">
-                      <Users className="w-6 h-6 text-blue-600" />
-                    </div>
-                    <div>
-                      <h3 className="font-semibold">Gestion des clients</h3>
-                      <p className="text-sm text-gray-600">45 clients actifs</p>
-                    </div>
-                  </div>
-                  <div className="space-y-2">
-                    <div className="flex justify-between text-sm">
-                      <span>Marie Dubois</span>
-                      <span className="text-green-600">Payé</span>
-                    </div>
-                    <div className="flex justify-between text-sm">
-                      <span>Thomas Martin</span>
-                      <span className="text-orange-600">En attente</span>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* Features Section 2 */}
-      <section className="py-16 lg:py-24 bg-gray-50">
+      {/* Features Overview */}
+      <section className="py-20 lg:py-32">
         <div className="container mx-auto px-4">
           <div className="text-center mb-16">
-            <h2 className="text-3xl lg:text-4xl font-bold text-gray-900 mb-6">
-              Tout le nécessaire pour votre entreprise
+            <h2 className="text-3xl lg:text-5xl font-bold text-gray-900 mb-6">
+              Everything you need to grow
             </h2>
-          </div>
-          
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-            <div className="bg-white rounded-lg p-6 shadow-lg">
-              <div className="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center mb-4">
-                <Calendar className="w-6 h-6 text-blue-600" />
-              </div>
-              <h3 className="font-semibold text-lg mb-2">Planification intelligente</h3>
-              <p className="text-gray-600">Gérez votre calendrier, planifiez vos séances et synchronisez avec vos clients.</p>
-            </div>
-            
-            <div className="bg-white rounded-lg p-6 shadow-lg">
-              <div className="w-12 h-12 bg-green-100 rounded-lg flex items-center justify-center mb-4">
-                <BarChart3 className="w-6 h-6 text-green-600" />
-              </div>
-              <h3 className="font-semibold text-lg mb-2">Analyses détaillées</h3>
-              <p className="text-gray-600">Suivez vos performances, analysez vos revenus et optimisez votre rentabilité.</p>
-            </div>
-            
-            <div className="bg-white rounded-lg p-6 shadow-lg">
-              <div className="w-12 h-12 bg-purple-100 rounded-lg flex items-center justify-center mb-4">
-                <Shield className="w-6 h-6 text-purple-600" />
-              </div>
-              <h3 className="font-semibold text-lg mb-2">Sécurité garantie</h3>
-              <p className="text-gray-600">Vos données et celles de vos clients sont protégées par un chiffrement de niveau bancaire.</p>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* Productivity Section */}
-      <section className="py-16 lg:py-24">
-        <div className="container mx-auto px-4">
-          <div className="text-center mb-16">
-            <h2 className="text-3xl lg:text-4xl font-bold text-gray-900 mb-6">
-              Augmentez votre productivité et gagnez en temps
-            </h2>
-            <p className="text-lg text-gray-600 max-w-3xl mx-auto">
-              Automatisez les tâches répétitives et concentrez-vous sur votre art. Notre plateforme vous fait gagner jusqu'à 10 heures par semaine.
+            <p className="text-xl text-gray-600 max-w-3xl mx-auto">
+              Streamline your workflow with powerful tools designed specifically for photography professionals.
             </p>
           </div>
           
-          <div className="grid md:grid-cols-3 gap-8">
-            <div className="text-center">
-              <div className="w-16 h-16 bg-blue-600 rounded-full flex items-center justify-center mx-auto mb-4">
-                <Zap className="w-8 h-8 text-white" />
-              </div>
-              <h3 className="font-semibold text-lg mb-2">Automatisation</h3>
-              <p className="text-gray-600">Factures, rappels et suivis automatiques pour un gain de temps maximal.</p>
-            </div>
+          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+            <Card className="p-6 hover:shadow-lg transition-shadow">
+              <CardContent className="p-0">
+                <div className="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center mb-4">
+                  <Users className="w-6 h-6 text-blue-600" />
+                </div>
+                <h3 className="font-semibold text-lg mb-2">Client Management</h3>
+                <p className="text-gray-600">Organize client information, communication history, and project details in one place.</p>
+              </CardContent>
+            </Card>
             
-            <div className="text-center">
-              <div className="w-16 h-16 bg-green-600 rounded-full flex items-center justify-center mx-auto mb-4">
-                <Users className="w-8 h-8 text-white" />
-              </div>
-              <h3 className="font-semibold text-lg mb-2">Collaboration</h3>
-              <p className="text-gray-600">Partagez vos galeries avec vos clients et recevez leurs retours en temps réel.</p>
-            </div>
+            <Card className="p-6 hover:shadow-lg transition-shadow">
+              <CardContent className="p-0">
+                <div className="w-12 h-12 bg-green-100 rounded-lg flex items-center justify-center mb-4">
+                  <Calendar className="w-6 h-6 text-green-600" />
+                </div>
+                <h3 className="font-semibold text-lg mb-2">Smart Scheduling</h3>
+                <p className="text-gray-600">Automated booking system with calendar sync and client notifications.</p>
+              </CardContent>
+            </Card>
             
-            <div className="text-center">
-              <div className="w-16 h-16 bg-purple-600 rounded-full flex items-center justify-center mx-auto mb-4">
-                <BarChart3 className="w-8 h-8 text-white" />
-              </div>
-              <h3 className="font-semibold text-lg mb-2">Optimisation</h3>
-              <p className="text-gray-600">Analyses avancées pour identifier les opportunités d'amélioration.</p>
-            </div>
+            <Card className="p-6 hover:shadow-lg transition-shadow">
+              <CardContent className="p-0">
+                <div className="w-12 h-12 bg-purple-100 rounded-lg flex items-center justify-center mb-4">
+                  <BarChart3 className="w-6 h-6 text-purple-600" />
+                </div>
+                <h3 className="font-semibold text-lg mb-2">Revenue Analytics</h3>
+                <p className="text-gray-600">Track earnings, expenses, and business growth with detailed reports.</p>
+              </CardContent>
+            </Card>
+            
+            <Card className="p-6 hover:shadow-lg transition-shadow">
+              <CardContent className="p-0">
+                <div className="w-12 h-12 bg-orange-100 rounded-lg flex items-center justify-center mb-4">
+                  <Camera className="w-6 h-6 text-orange-600" />
+                </div>
+                <h3 className="font-semibold text-lg mb-2">Gallery Management</h3>
+                <p className="text-gray-600">Secure photo delivery and client proofing with watermark protection.</p>
+              </CardContent>
+            </Card>
+            
+            <Card className="p-6 hover:shadow-lg transition-shadow">
+              <CardContent className="p-0">
+                <div className="w-12 h-12 bg-red-100 rounded-lg flex items-center justify-center mb-4">
+                  <Zap className="w-6 h-6 text-red-600" />
+                </div>
+                <h3 className="font-semibold text-lg mb-2">Automation</h3>
+                <p className="text-gray-600">Automate invoicing, contracts, and follow-up communications.</p>
+              </CardContent>
+            </Card>
+            
+            <Card className="p-6 hover:shadow-lg transition-shadow">
+              <CardContent className="p-0">
+                <div className="w-12 h-12 bg-indigo-100 rounded-lg flex items-center justify-center mb-4">
+                  <Shield className="w-6 h-6 text-indigo-600" />
+                </div>
+                <h3 className="font-semibold text-lg mb-2">Secure Backup</h3>
+                <p className="text-gray-600">Cloud storage with enterprise-grade security for all your photos.</p>
+              </CardContent>
+            </Card>
           </div>
         </div>
       </section>
 
       {/* Pricing Section */}
-      <section className="py-16 lg:py-24 bg-gradient-to-br from-slate-900 to-slate-800 text-white">
+      <section className="py-20 lg:py-32 bg-gray-50">
         <div className="container mx-auto px-4">
           <div className="text-center mb-16">
-            <h2 className="text-3xl lg:text-4xl font-bold mb-6">
-              Tarifs simples et flexibles
+            <h2 className="text-3xl lg:text-5xl font-bold text-gray-900 mb-6">
+              Simple, transparent pricing
             </h2>
-            <p className="text-lg text-slate-300 max-w-3xl mx-auto">
-              Choisissez le plan qui correspond à vos besoins. Changez ou annulez à tout moment.
+            <p className="text-xl text-gray-600 max-w-3xl mx-auto">
+              Choose the plan that fits your business. Upgrade or downgrade at any time.
             </p>
           </div>
           
-          <div className="grid md:grid-cols-3 gap-8 max-w-6xl mx-auto">
-            {/* Gratuit */}
-            <Card className="bg-white text-gray-900 border-0">
-              <CardHeader className="text-center pb-8">
-                <CardTitle className="text-xl mb-2">Gratuit</CardTitle>
-                <div className="text-4xl font-bold">0€</div>
-                <div className="text-gray-600">par mois</div>
-              </CardHeader>
-              <CardContent>
+          <div className="grid md:grid-cols-3 gap-8 max-w-5xl mx-auto">
+            {/* Starter Plan */}
+            <Card className="relative p-8 hover:shadow-xl transition-shadow">
+              <CardContent className="p-0">
+                <div className="text-center mb-8">
+                  <h3 className="text-xl font-semibold mb-2">Starter</h3>
+                  <div className="text-4xl font-bold text-gray-900 mb-2">$29</div>
+                  <div className="text-gray-600">per month</div>
+                </div>
+                
                 <ul className="space-y-3 mb-8">
                   <li className="flex items-center gap-3">
                     <Check className="w-4 h-4 text-green-600" />
-                    <span className="text-sm">Jusqu'à 5 clients</span>
+                    <span className="text-sm">Up to 50 clients</span>
                   </li>
                   <li className="flex items-center gap-3">
                     <Check className="w-4 h-4 text-green-600" />
-                    <span className="text-sm">1 GB de stockage</span>
+                    <span className="text-sm">10GB storage</span>
                   </li>
                   <li className="flex items-center gap-3">
                     <Check className="w-4 h-4 text-green-600" />
-                    <span className="text-sm">Support email</span>
+                    <span className="text-sm">Basic analytics</span>
                   </li>
                   <li className="flex items-center gap-3">
                     <Check className="w-4 h-4 text-green-600" />
-                    <span className="text-sm">Facturation basique</span>
+                    <span className="text-sm">Email support</span>
                   </li>
                 </ul>
+                
                 <Button variant="outline" className="w-full">
-                  Commencer gratuitement
+                  Start Free Trial
                 </Button>
               </CardContent>
             </Card>
 
-            {/* Pro */}
-            <Card className="bg-blue-600 text-white border-2 border-blue-400 transform scale-105 shadow-2xl">
+            {/* Professional Plan */}
+            <Card className="relative p-8 border-2 border-blue-200 shadow-xl bg-white">
               <div className="absolute -top-4 left-1/2 transform -translate-x-1/2">
-                <Badge className="bg-orange-500 text-white px-4 py-1">
-                  Plus populaire
+                <Badge className="bg-blue-600 text-white px-4 py-1">
+                  Most Popular
                 </Badge>
               </div>
-              <CardHeader className="text-center pb-8">
-                <CardTitle className="text-xl mb-2">Pro</CardTitle>
-                <div className="text-4xl font-bold">29€</div>
-                <div className="text-blue-200">par mois</div>
-              </CardHeader>
-              <CardContent>
+              <CardContent className="p-0">
+                <div className="text-center mb-8">
+                  <h3 className="text-xl font-semibold mb-2">Professional</h3>
+                  <div className="text-4xl font-bold text-gray-900 mb-2">$79</div>
+                  <div className="text-gray-600">per month</div>
+                </div>
+                
                 <ul className="space-y-3 mb-8">
                   <li className="flex items-center gap-3">
-                    <Check className="w-4 h-4 text-white" />
-                    <span className="text-sm">Clients illimités</span>
+                    <Check className="w-4 h-4 text-green-600" />
+                    <span className="text-sm">Unlimited clients</span>
                   </li>
                   <li className="flex items-center gap-3">
-                    <Check className="w-4 h-4 text-white" />
-                    <span className="text-sm">100 GB de stockage</span>
+                    <Check className="w-4 h-4 text-green-600" />
+                    <span className="text-sm">100GB storage</span>
                   </li>
                   <li className="flex items-center gap-3">
-                    <Check className="w-4 h-4 text-white" />
-                    <span className="text-sm">Support prioritaire</span>
+                    <Check className="w-4 h-4 text-green-600" />
+                    <span className="text-sm">Advanced analytics</span>
                   </li>
                   <li className="flex items-center gap-3">
-                    <Check className="w-4 h-4 text-white" />
-                    <span className="text-sm">Automatisation avancée</span>
+                    <Check className="w-4 h-4 text-green-600" />
+                    <span className="text-sm">Priority support</span>
                   </li>
                   <li className="flex items-center gap-3">
-                    <Check className="w-4 h-4 text-white" />
-                    <span className="text-sm">Analyses détaillées</span>
+                    <Check className="w-4 h-4 text-green-600" />
+                    <span className="text-sm">Automation tools</span>
                   </li>
                 </ul>
-                <Button className="w-full bg-white text-blue-600 hover:bg-gray-100">
-                  Choisir Pro
+                
+                <Button className="w-full bg-blue-600 hover:bg-blue-700 text-white">
+                  Start Free Trial
                 </Button>
               </CardContent>
             </Card>
 
-            {/* Enterprise */}
-            <Card className="bg-white text-gray-900 border-0">
-              <CardHeader className="text-center pb-8">
-                <CardTitle className="text-xl mb-2">Enterprise</CardTitle>
-                <div className="text-4xl font-bold">99€</div>
-                <div className="text-gray-600">par mois</div>
-              </CardHeader>
-              <CardContent>
+            {/* Enterprise Plan */}
+            <Card className="relative p-8 hover:shadow-xl transition-shadow">
+              <CardContent className="p-0">
+                <div className="text-center mb-8">
+                  <h3 className="text-xl font-semibold mb-2">Enterprise</h3>
+                  <div className="text-4xl font-bold text-gray-900 mb-2">$199</div>
+                  <div className="text-gray-600">per month</div>
+                </div>
+                
                 <ul className="space-y-3 mb-8">
                   <li className="flex items-center gap-3">
                     <Check className="w-4 h-4 text-green-600" />
-                    <span className="text-sm">Tout du plan Pro</span>
+                    <span className="text-sm">Everything in Pro</span>
                   </li>
                   <li className="flex items-center gap-3">
                     <Check className="w-4 h-4 text-green-600" />
-                    <span className="text-sm">Stockage illimité</span>
+                    <span className="text-sm">1TB storage</span>
                   </li>
                   <li className="flex items-center gap-3">
                     <Check className="w-4 h-4 text-green-600" />
-                    <span className="text-sm">Support téléphonique</span>
+                    <span className="text-sm">White-label options</span>
                   </li>
                   <li className="flex items-center gap-3">
                     <Check className="w-4 h-4 text-green-600" />
-                    <span className="text-sm">API personnalisée</span>
+                    <span className="text-sm">24/7 phone support</span>
                   </li>
                   <li className="flex items-center gap-3">
                     <Check className="w-4 h-4 text-green-600" />
-                    <span className="text-sm">Formation dédiée</span>
+                    <span className="text-sm">Custom integrations</span>
                   </li>
                 </ul>
+                
                 <Button variant="outline" className="w-full">
-                  Contacter l'équipe
+                  Contact Sales
                 </Button>
               </CardContent>
             </Card>
@@ -387,151 +372,83 @@ const Index = () => {
         </div>
       </section>
 
-      {/* Testimonials Section */}
-      <section className="py-16 lg:py-24">
-        <div className="container mx-auto px-4">
-          <div className="text-center mb-16">
-            <h2 className="text-3xl lg:text-4xl font-bold text-gray-900 mb-6">
-              C'est pourquoi les clients nous aiment
-            </h2>
-          </div>
-          
-          <div className="grid md:grid-cols-3 gap-8">
-            <Card className="border-0 shadow-lg">
-              <CardContent className="pt-6">
-                <div className="flex mb-4">
-                  {[...Array(5)].map((_, i) => (
-                    <Star key={i} className="w-4 h-4 fill-yellow-400 text-yellow-400" />
-                  ))}
-                </div>
-                <p className="text-gray-600 mb-6">
-                  "Cette plateforme a révolutionné ma façon de travailler. Je gagne un temps précieux sur la gestion administrative."
-                </p>
-                <div className="flex items-center gap-3">
-                  <div className="w-10 h-10 bg-gray-200 rounded-full"></div>
-                  <div>
-                    <div className="font-semibold">Marie Dubois</div>
-                    <div className="text-sm text-gray-600">Photographe Portrait</div>
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
-
-            <Card className="border-0 shadow-lg">
-              <CardContent className="pt-6">
-                <div className="flex mb-4">
-                  {[...Array(5)].map((_, i) => (
-                    <Star key={i} className="w-4 h-4 fill-yellow-400 text-yellow-400" />
-                  ))}
-                </div>
-                <p className="text-gray-600 mb-6">
-                  "L'interface est intuitive et mes clients adorent pouvoir suivre l'avancement de leurs projets en temps réel."
-                </p>
-                <div className="flex items-center gap-3">
-                  <div className="w-10 h-10 bg-gray-200 rounded-full"></div>
-                  <div>
-                    <div className="font-semibold">Thomas Martin</div>
-                    <div className="text-sm text-gray-600">Photographe Mariage</div>
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
-
-            <Card className="border-0 shadow-lg">
-              <CardContent className="pt-6">
-                <div className="flex mb-4">
-                  {[...Array(5)].map((_, i) => (
-                    <Star key={i} className="w-4 h-4 fill-yellow-400 text-yellow-400" />
-                  ))}
-                </div>
-                <p className="text-gray-600 mb-6">
-                  "Les analyses m'aident à comprendre quels services sont les plus rentables. Indispensable pour mon business."
-                </p>
-                <div className="flex items-center gap-3">
-                  <div className="w-10 h-10 bg-gray-200 rounded-full"></div>
-                  <div>
-                    <div className="font-semibold">Sophie Laurent</div>
-                    <div className="text-sm text-gray-600">Studio Photo</div>
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
-          </div>
-        </div>
-      </section>
-
-      {/* Final CTA Section */}
-      <section className="py-16 lg:py-24 bg-gradient-to-br from-blue-600 to-blue-800 text-white">
+      {/* CTA Section */}
+      <section className="py-20 lg:py-32 bg-blue-600 text-white">
         <div className="container mx-auto px-4 text-center">
-          <div className="max-w-4xl mx-auto">
-            <h2 className="text-3xl lg:text-5xl font-bold mb-6">
-              Gérez efficacement vos prestations avec une plateforme centralisée
-            </h2>
-            <p className="text-xl mb-8 text-blue-100">
-              Rejoignez plus de 2000 photographes qui utilisent notre solution pour développer leur activité.
-            </p>
-            <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <Button size="lg" className="bg-white text-blue-600 hover:bg-gray-100 text-lg px-8">
-                Commencer gratuitement
-                <ArrowRight className="ml-2 w-5 h-5" />
-              </Button>
-              <Button size="lg" variant="outline" className="border-white text-white hover:bg-white hover:text-blue-600 text-lg px-8">
-                Planifier une démo
-              </Button>
-            </div>
-            <p className="text-sm text-blue-200 mt-6">
-              Aucune carte bancaire requise • Configuration en 5 minutes • Support en français
-            </p>
+          <h2 className="text-3xl lg:text-5xl font-bold mb-6">
+            Ready to grow your photography business?
+          </h2>
+          <p className="text-xl text-blue-100 mb-8 max-w-2xl mx-auto">
+            Join thousands of photographers who trust PhotographyPro to manage their business.
+          </p>
+          <div className="flex flex-col sm:flex-row gap-4 justify-center">
+            <Button size="lg" className="bg-white text-blue-600 hover:bg-gray-100 px-8">
+              Start Free Trial
+              <ArrowRight className="w-5 h-5 ml-2" />
+            </Button>
+            <Button size="lg" variant="outline" className="border-white text-white hover:bg-white hover:text-blue-600 px-8">
+              Schedule Demo
+            </Button>
           </div>
         </div>
       </section>
 
       {/* Footer */}
-      <footer className="bg-gray-900 text-white py-12">
+      <footer className="bg-gray-900 text-white py-16">
         <div className="container mx-auto px-4">
-          <div className="grid md:grid-cols-4 gap-8 mb-8">
-            <div>
-              <div className="flex items-center gap-2 mb-4">
+          <div className="grid md:grid-cols-4 gap-8">
+            <div className="space-y-4">
+              <div className="flex items-center gap-2">
                 <div className="w-8 h-8 bg-blue-600 rounded-lg flex items-center justify-center">
                   <Camera className="w-5 h-5 text-white" />
                 </div>
-                <span className="font-bold text-xl">Studio</span>
+                <span className="font-bold text-xl">PhotographyPro</span>
               </div>
-              <p className="text-gray-400 mb-4">
-                La solution complète pour gérer votre activité de photographe professionnel.
+              <p className="text-gray-400 text-sm">
+                The complete business platform for photography professionals.
               </p>
             </div>
             
             <div>
-              <h3 className="font-semibold mb-4">Produit</h3>
+              <h4 className="font-semibold mb-4">Product</h4>
               <ul className="space-y-2 text-sm text-gray-400">
-                <li><a href="#" className="hover:text-white transition-colors">Fonctionnalités</a></li>
-                <li><a href="#" className="hover:text-white transition-colors">Tarifs</a></li>
-                <li><a href="#" className="hover:text-white transition-colors">Intégrations</a></li>
+                <li><a href="#" className="hover:text-white transition-colors">Features</a></li>
+                <li><a href="#" className="hover:text-white transition-colors">Pricing</a></li>
+                <li><a href="#" className="hover:text-white transition-colors">Security</a></li>
+                <li><a href="#" className="hover:text-white transition-colors">Integrations</a></li>
               </ul>
             </div>
             
             <div>
-              <h3 className="font-semibold mb-4">Support</h3>
+              <h4 className="font-semibold mb-4">Company</h4>
               <ul className="space-y-2 text-sm text-gray-400">
-                <li><a href="#" className="hover:text-white transition-colors">Centre d'aide</a></li>
-                <li><a href="#" className="hover:text-white transition-colors">Contact</a></li>
-                <li><a href="#" className="hover:text-white transition-colors">Statut</a></li>
-              </ul>
-            </div>
-            
-            <div>
-              <h3 className="font-semibold mb-4">Entreprise</h3>
-              <ul className="space-y-2 text-sm text-gray-400">
-                <li><a href="#" className="hover:text-white transition-colors">À propos</a></li>
+                <li><a href="#" className="hover:text-white transition-colors">About</a></li>
                 <li><a href="#" className="hover:text-white transition-colors">Blog</a></li>
-                <li><a href="#" className="hover:text-white transition-colors">Carrières</a></li>
+                <li><a href="#" className="hover:text-white transition-colors">Careers</a></li>
+                <li><a href="#" className="hover:text-white transition-colors">Contact</a></li>
+              </ul>
+            </div>
+            
+            <div>
+              <h4 className="font-semibold mb-4">Support</h4>
+              <ul className="space-y-2 text-sm text-gray-400">
+                <li><a href="#" className="hover:text-white transition-colors">Help Center</a></li>
+                <li><a href="#" className="hover:text-white transition-colors">Documentation</a></li>
+                <li><a href="#" className="hover:text-white transition-colors">Community</a></li>
+                <li><a href="#" className="hover:text-white transition-colors">Status</a></li>
               </ul>
             </div>
           </div>
           
-          <div className="border-t border-gray-800 pt-8 text-center text-sm text-gray-400">
-            <p>&copy; 2024 Studio. Tous droits réservés.</p>
+          <div className="border-t border-gray-800 mt-12 pt-8 flex flex-col md:flex-row justify-between items-center gap-4">
+            <div className="text-sm text-gray-400">
+              © 2024 PhotographyPro. All rights reserved.
+            </div>
+            <div className="flex gap-6 text-sm text-gray-400">
+              <a href="#" className="hover:text-white transition-colors">Privacy Policy</a>
+              <a href="#" className="hover:text-white transition-colors">Terms of Service</a>
+              <a href="#" className="hover:text-white transition-colors">Cookie Policy</a>
+            </div>
           </div>
         </div>
       </footer>
