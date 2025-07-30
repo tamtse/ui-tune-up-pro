@@ -102,13 +102,12 @@ export default function Contacts() {
                     Actions rapides
                   </Button>
                 </DropdownMenuTrigger>
-                <DropdownMenuContent>
-                  <DropdownMenuItem>Créer un devis</DropdownMenuItem>
-                  <DropdownMenuItem>Créer une facture</DropdownMenuItem>
-                  <DropdownMenuItem>Créer un contrat</DropdownMenuItem>
-                  <DropdownMenuItem>Planifier une séance</DropdownMenuItem>
-                  <DropdownMenuItem>Nouvelle prestation</DropdownMenuItem>
-                </DropdownMenuContent>
+                  <DropdownMenuContent>
+                    <DropdownMenuItem>Créer un devis</DropdownMenuItem>
+                    <DropdownMenuItem>Créer une facture</DropdownMenuItem>
+                    <DropdownMenuItem>Créer un contrat</DropdownMenuItem>
+                    <DropdownMenuItem>Nouvelle prestation</DropdownMenuItem>
+                  </DropdownMenuContent>
               </DropdownMenu>
               <Button>
                 <span className="mr-2">✏️</span>
@@ -225,9 +224,33 @@ export default function Contacts() {
                   </div>
                 </CardHeader>
                 <CardContent>
-                  <div className="text-center py-12">
-                    <div className="text-muted-foreground mb-2">Aucune prestation planifiée</div>
-                    <div className="text-sm text-muted-foreground">Créez votre première prestation</div>
+                  <div className="space-y-4">
+                    <div className="border rounded-lg p-4">
+                      <div className="flex items-center justify-between mb-3">
+                        <div>
+                          <h4 className="font-medium">Séance Portrait</h4>
+                          <p className="text-sm text-muted-foreground">Studio - 2 heures</p>
+                        </div>
+                        <Badge variant="outline" className="bg-green-50 text-green-700 border-green-200">Terminé</Badge>
+                      </div>
+                      <div className="text-sm text-muted-foreground space-y-1">
+                        <p>📅 15 juin 2024 - 14h00</p>
+                        <p>💰 200 000 FCFA</p>
+                      </div>
+                    </div>
+                    <div className="border rounded-lg p-4">
+                      <div className="flex items-center justify-between mb-3">
+                        <div>
+                          <h4 className="font-medium">Shooting Produit</h4>
+                          <p className="text-sm text-muted-foreground">E-commerce - 4 heures</p>
+                        </div>
+                        <Badge variant="outline" className="bg-orange-50 text-orange-700 border-orange-200">En cours</Badge>
+                      </div>
+                      <div className="text-sm text-muted-foreground space-y-1">
+                        <p>📅 25 juin 2024 - 09h00</p>
+                        <p>💰 350 000 FCFA</p>
+                      </div>
+                    </div>
                   </div>
                 </CardContent>
               </Card>
@@ -245,10 +268,29 @@ export default function Contacts() {
                   </div>
                 </CardHeader>
                 <CardContent>
-                  <div className="text-center py-12">
-                    <div className="text-6xl text-muted-foreground mb-4">📅</div>
-                    <div className="text-lg font-medium mb-2">Aucun événement planifié</div>
-                    <div className="text-sm text-muted-foreground">Planifiez votre prochaine séance photo</div>
+                  <div className="space-y-4">
+                    <div className="border-l-4 border-blue-500 bg-blue-50 p-4 rounded-r-lg">
+                      <div className="flex items-center justify-between mb-2">
+                        <h4 className="font-medium text-blue-900">Pré-production Mariage</h4>
+                        <span className="text-sm text-blue-700">Dans 3 jours</span>
+                      </div>
+                      <div className="text-sm text-blue-700 space-y-1">
+                        <p>📅 28 juillet 2024 - 10h00</p>
+                        <p>📍 Douala, Bonanjo</p>
+                        <p>👥 Rendez-vous avec les mariés</p>
+                      </div>
+                    </div>
+                    <div className="border-l-4 border-green-500 bg-green-50 p-4 rounded-r-lg">
+                      <div className="flex items-center justify-between mb-2">
+                        <h4 className="font-medium text-green-900">Livraison Photos</h4>
+                        <span className="text-sm text-green-700">Dans 5 jours</span>
+                      </div>
+                      <div className="text-sm text-green-700 space-y-1">
+                        <p>📅 30 juillet 2024 - 15h00</p>
+                        <p>📍 Bureau client</p>
+                        <p>📦 Remise des photos éditées</p>
+                      </div>
+                    </div>
                   </div>
                 </CardContent>
               </Card>
@@ -266,10 +308,58 @@ export default function Contacts() {
                   </div>
                 </CardHeader>
                 <CardContent>
-                  <div className="text-center py-12">
-                    <div className="text-6xl text-muted-foreground mb-4">📄</div>
-                    <div className="text-lg font-medium mb-2">Aucun document</div>
-                    <div className="text-sm text-muted-foreground">Les devis, contrats et documents apparaîtront ici</div>
+                  <div className="space-y-3">
+                    <div className="flex items-center justify-between p-3 border rounded-lg">
+                      <div className="flex items-center space-x-3">
+                        <div className="p-2 bg-blue-100 rounded-lg">
+                          <span className="text-blue-600">📄</span>
+                        </div>
+                        <div>
+                          <p className="font-medium">Devis Portrait Studio</p>
+                          <p className="text-sm text-muted-foreground">Créé le 10 juin 2024</p>
+                        </div>
+                      </div>
+                      <div className="flex items-center space-x-2">
+                        <Badge variant="outline" className="bg-green-50 text-green-700 border-green-200">Accepté</Badge>
+                        <Button variant="ghost" size="sm">
+                          <Download className="h-4 w-4" />
+                        </Button>
+                      </div>
+                    </div>
+                    <div className="flex items-center justify-between p-3 border rounded-lg">
+                      <div className="flex items-center space-x-3">
+                        <div className="p-2 bg-orange-100 rounded-lg">
+                          <span className="text-orange-600">📋</span>
+                        </div>
+                        <div>
+                          <p className="font-medium">Contrat Shooting Produit</p>
+                          <p className="text-sm text-muted-foreground">Créé le 15 juin 2024</p>
+                        </div>
+                      </div>
+                      <div className="flex items-center space-x-2">
+                        <Badge variant="outline" className="bg-orange-50 text-orange-700 border-orange-200">En attente</Badge>
+                        <Button variant="ghost" size="sm">
+                          <Download className="h-4 w-4" />
+                        </Button>
+                      </div>
+                    </div>
+                    <div className="flex items-center justify-between p-3 border rounded-lg">
+                      <div className="flex items-center space-x-3">
+                        <div className="p-2 bg-purple-100 rounded-lg">
+                          <span className="text-purple-600">🧾</span>
+                        </div>
+                        <div>
+                          <p className="font-medium">Facture F-2024-001</p>
+                          <p className="text-sm text-muted-foreground">Créé le 20 juin 2024</p>
+                        </div>
+                      </div>
+                      <div className="flex items-center space-x-2">
+                        <Badge variant="outline" className="bg-blue-50 text-blue-700 border-blue-200">Payée</Badge>
+                        <Button variant="ghost" size="sm">
+                          <Download className="h-4 w-4" />
+                        </Button>
+                      </div>
+                    </div>
                   </div>
                 </CardContent>
               </Card>
@@ -280,34 +370,43 @@ export default function Contacts() {
                 <CardHeader>
                   <CardTitle>Portail client</CardTitle>
                 </CardHeader>
-                <CardContent className="space-y-4">
-                  <p className="text-muted-foreground">
-                    Générez un lien sécurisé pour permettre à votre client d'accéder à son portail personnel
-                    où il pourra consulter ses devis, factures, contrats et documents.
-                  </p>
+                <CardContent className="space-y-6">
+                  <div className="bg-muted/30 rounded-lg p-4">
+                    <h4 className="font-medium mb-2">Qu'est-ce que le portail client ?</h4>
+                    <p className="text-sm text-muted-foreground mb-3">
+                      Le portail client permet à votre client d'accéder de manière sécurisée à :
+                    </p>
+                    <ul className="text-sm text-muted-foreground space-y-1 ml-4">
+                      <li>• Ses devis et leur statut en temps réel</li>
+                      <li>• Ses factures et historique de paiements</li>
+                      <li>• Ses contrats et documents signés</li>
+                      <li>• La galerie de ses photos livrées</li>
+                      <li>• Le planning de ses prochaines séances</li>
+                    </ul>
+                  </div>
                   
                   <div className="space-y-3">
-                    <Button onClick={generatePortalLink} className="w-full">
-                      Générer le lien du portail client
+                    <Button onClick={generatePortalLink} size="default" className="w-auto">
+                      🔗 Générer le lien du portail client
                     </Button>
                     
                     {portalLink && (
-                      <div className="space-y-2">
-                        <label className="text-sm font-medium">Lien du portail client :</label>
+                      <div className="space-y-3 p-4 border rounded-lg bg-green-50">
+                        <label className="text-sm font-medium text-green-800">Lien du portail client généré :</label>
                         <div className="flex items-center space-x-2">
-                          <Input value={portalLink} readOnly className="flex-1" />
+                          <Input value={portalLink} readOnly className="flex-1 bg-white" />
                           <Button 
                             variant="outline" 
                             size="sm" 
                             onClick={copyToClipboard}
-                            className="flex items-center space-x-1"
+                            className="flex items-center space-x-2"
                           >
                             {linkCopied ? <CheckIcon className="h-4 w-4" /> : <Copy className="h-4 w-4" />}
                             <span>{linkCopied ? "Copié !" : "Copier"}</span>
                           </Button>
                         </div>
-                        <p className="text-xs text-muted-foreground">
-                          Partagez ce lien avec votre client pour qu'il puisse accéder à son portail.
+                        <p className="text-xs text-green-700">
+                          ✅ Partagez ce lien avec votre client par email ou SMS. Le lien est sécurisé et personnel.
                         </p>
                       </div>
                     )}
@@ -498,7 +597,6 @@ export default function Contacts() {
                       <DropdownMenuItem>Créer un devis</DropdownMenuItem>
                       <DropdownMenuItem>Créer une facture</DropdownMenuItem>
                       <DropdownMenuItem>Créer un contrat</DropdownMenuItem>
-                      <DropdownMenuItem>Planifier une séance</DropdownMenuItem>
                       <DropdownMenuItem>Nouvelle prestation</DropdownMenuItem>
                     </DropdownMenuContent>
                   </DropdownMenu>

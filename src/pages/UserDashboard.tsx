@@ -47,11 +47,11 @@ const userStats = [
     icon: <Users className="h-5 w-5" />,
   },
   {
-    title: "Événements à venir",
-    value: "0",
-    change: "Cette semaine",
-    changeType: "positive" as const,
-    icon: <Calendar className="h-5 w-5" />,
+    title: "Factures non payées",
+    value: "2",
+    change: "À relancer",
+    changeType: "negative" as const,
+    icon: <FileText className="h-5 w-5" />,
   },
 ];
 
@@ -118,9 +118,9 @@ const quickActions = [
     description: "Nouveau devis client",
   },
   {
-    title: "Planifier",
+    title: "Créer un contrat",
     icon: <CalendarDays className="h-8 w-8" />,
-    description: "Gérer le calendrier",
+    description: "Nouveau contrat client",
   },
 ];
 
@@ -234,10 +234,30 @@ export default function UserDashboard() {
                 Voir tout
               </Button>
             </CardHeader>
-            <CardContent className="p-4 sm:p-6">
-              <div className="text-center py-6 sm:py-8">
-                <Calendar className="h-10 w-10 sm:h-12 sm:w-12 text-muted-foreground mx-auto mb-2" />
-                <p className="text-muted-foreground text-xs sm:text-sm">Aucun événement prévu</p>
+            <CardContent className="space-y-3">
+              <div className="flex items-center justify-between p-2 sm:p-3 rounded-lg border border-blue-200 bg-blue-50">
+                <div className="flex items-center space-x-2 sm:space-x-3 min-w-0 flex-1">
+                  <div className="h-6 w-6 sm:h-8 sm:w-8 bg-blue-500 rounded-full flex items-center justify-center text-white text-xs font-bold flex-shrink-0">
+                    📸
+                  </div>
+                  <div className="min-w-0 flex-1">
+                    <p className="font-medium text-xs sm:text-sm text-blue-900">Shooting Mariage</p>
+                    <p className="text-xs text-blue-700">15h00 - Bonanjo</p>
+                  </div>
+                </div>
+                <span className="text-xs text-blue-700 flex-shrink-0">Demain</span>
+              </div>
+              <div className="flex items-center justify-between p-2 sm:p-3 rounded-lg border border-green-200 bg-green-50">
+                <div className="flex items-center space-x-2 sm:space-x-3 min-w-0 flex-1">
+                  <div className="h-6 w-6 sm:h-8 sm:w-8 bg-green-500 rounded-full flex items-center justify-center text-white text-xs font-bold flex-shrink-0">
+                    📦
+                  </div>
+                  <div className="min-w-0 flex-1">
+                    <p className="font-medium text-xs sm:text-sm text-green-900">Livraison Photos</p>
+                    <p className="text-xs text-green-700">10h00 - Bureau client</p>
+                  </div>
+                </div>
+                <span className="text-xs text-green-700 flex-shrink-0">Vendredi</span>
               </div>
             </CardContent>
           </Card>
