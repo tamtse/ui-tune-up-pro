@@ -23,13 +23,6 @@ const stats = [
     icon: <UserPlus className="h-5 w-5" />,
   },
   {
-    title: "Revenus (FCFA)",
-    value: "2,500,000",
-    change: "+15,2%",
-    changeType: "positive" as const,
-    icon: <DollarSign className="h-5 w-5" />,
-  },
-  {
     title: "Transactions",
     value: "847",
     change: "Cette semaine",
