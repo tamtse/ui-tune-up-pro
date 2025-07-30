@@ -17,10 +17,10 @@ export function StatCard({ title, value, change, changeType, icon, trend }: Stat
       <CardContent className="p-3 sm:p-4 lg:p-6 h-full flex flex-col">
         <div className="flex items-start justify-between flex-1">
           <div className="min-w-0 flex-1 mr-2 sm:mr-3">
-            <p className="text-xs sm:text-sm font-medium text-muted-foreground truncate">{title}</p>
-            <p className="text-base sm:text-lg lg:text-2xl font-bold text-foreground mt-1 sm:mt-2 leading-tight">{value}</p>
+            <p className="text-sm font-medium text-muted-foreground truncate">{title}</p>
+            <p className="text-lg sm:text-xl lg:text-2xl font-bold text-foreground mt-2 leading-tight">{value}</p>
             <p className={cn(
-              "text-xs sm:text-sm mt-1 sm:mt-2 font-medium truncate leading-tight",
+              "text-sm mt-2 font-medium truncate leading-tight",
               changeType === "positive" ? "text-success" : "text-destructive"
             )}>
               {change}
