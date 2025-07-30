@@ -4,8 +4,10 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
-import { Search, Filter, Download, MoreHorizontal, DollarSign, CreditCard, TrendingUp, TrendingDown } from "lucide-react";
+import { Search, Filter, Download, Eye, DollarSign, CreditCard, TrendingUp, TrendingDown } from "lucide-react";
 import { StatCard } from "@/components/StatCard";
+import { TransactionDetailDialog } from "@/components/TransactionDetailDialog";
+import { useState } from "react";
 
 const transactions = [
   {
@@ -99,6 +101,14 @@ const transactions = [
 ];
 
 export default function Transactions() {
+  const [selectedTransaction, setSelectedTransaction] = useState<any>(null);
+  const [isDetailDialogOpen, setIsDetailDialogOpen] = useState(false);
+
+  const handleViewTransaction = (transaction: any) => {
+    setSelectedTransaction(transaction);
+    setIsDetailDialogOpen(true);
+  };
+
   const getTransactionStatusColor = (status: string) => {
     switch (status) {
       case "Payé":
@@ -213,8 +223,14 @@ export default function Transactions() {
                         </Badge>
                       </td>
                       <td className="py-3 px-2 sm:py-4 sm:px-4">
-                        <Button variant="ghost" size="sm" className="h-8 w-8 p-0">
-                          <MoreHorizontal className="h-4 w-4" />
+                        <Button 
+                          variant="outline" 
+                          size="sm" 
+                          className="h-8 px-2"
+                          onClick={() => handleViewTransaction(transaction)}
+                        >
+                          <Eye className="h-4 w-4 mr-1" />
+                          <span className="text-xs">View</span>
                         </Button>
                       </td>
                     </tr>
@@ -240,6 +256,13 @@ export default function Transactions() {
           </CardContent>
         </Card>
       </div>
+
+      {/* Transaction Detail Dialog */}
+      <TransactionDetailDialog
+        isOpen={isDetailDialogOpen}
+        onClose={() => setIsDetailDialogOpen(false)}
+        transaction={selectedTransaction}
+      />
     </AdminLayout>
   );
 }

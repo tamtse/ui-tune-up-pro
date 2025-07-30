@@ -6,6 +6,8 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { ArrowLeft, Share, MoreHorizontal, Mail, MessageSquare, TrendingUp, TrendingDown, CheckCircle, XCircle, Shield } from "lucide-react";
 import { Link, useParams } from "react-router-dom";
+import { SubscriptionActionDialog } from "@/components/SubscriptionActionDialog";
+import { useState } from "react";
 
 const activityData = {
   clients: { value: 450, change: "+10 la semaine précédente", trend: "up" },
@@ -16,6 +18,8 @@ const activityData = {
 
 export default function UserDetail() {
   const { id } = useParams();
+  const [isExtendDialogOpen, setIsExtendDialogOpen] = useState(false);
+  const [isCancelDialogOpen, setIsCancelDialogOpen] = useState(false);
 
   return (
     <AdminLayout>
@@ -100,8 +104,8 @@ export default function UserDetail() {
                   <span className="sm:hidden">Abo</span>
                 </TabsTrigger>
                 <TabsTrigger value="validation" className="text-xs sm:text-sm p-2 sm:p-3">
-                  <span className="hidden sm:inline">Validation Email</span>
-                  <span className="sm:hidden">Email</span>
+                  <span className="hidden sm:inline">Validation</span>
+                  <span className="sm:hidden">Valid</span>
                 </TabsTrigger>
               </TabsList>
 
@@ -226,6 +230,27 @@ export default function UserDetail() {
                         <label className="text-sm text-muted-foreground">Montant mensuel</label>
                         <p className="font-medium">29 900 F CFA</p>
                       </div>
+                      
+                      {/* Actions d'abonnement */}
+                      <div className="pt-4 border-t">
+                        <h4 className="text-sm font-medium mb-3">Actions d'abonnement</h4>
+                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                          <Button 
+                            variant="outline" 
+                            className="w-full"
+                            onClick={() => setIsExtendDialogOpen(true)}
+                          >
+                            Prolonger l'abonnement
+                          </Button>
+                          <Button 
+                            variant="destructive" 
+                            className="w-full"
+                            onClick={() => setIsCancelDialogOpen(true)}
+                          >
+                            Annuler l'abonnement
+                          </Button>
+                        </div>
+                      </div>
                     </div>
                   </CardContent>
                 </Card>
@@ -335,6 +360,23 @@ export default function UserDetail() {
           </div>
         </div>
       </div>
+
+      {/* Dialogs */}
+      <SubscriptionActionDialog
+        isOpen={isExtendDialogOpen}
+        onClose={() => setIsExtendDialogOpen(false)}
+        action="extend"
+        currentPlan="Premium"
+        currentEndDate="2024-12-15"
+      />
+      
+      <SubscriptionActionDialog
+        isOpen={isCancelDialogOpen}
+        onClose={() => setIsCancelDialogOpen(false)}
+        action="cancel"
+        currentPlan="Premium"
+        currentEndDate="2024-12-15"
+      />
     </AdminLayout>
   );
 }
