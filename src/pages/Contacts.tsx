@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { AdminLayout } from "@/components/AdminLayout";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -6,9 +7,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Input } from "@/components/ui/input";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
-import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { ArrowLeft, Search, Filter, Grid, List, Plus, MoreHorizontal, Users, Building, User, TrendingUp, Download, Upload, Copy, CheckIcon } from "lucide-react";
-import { Link } from "react-router-dom";
 
 const contactsData = [
   {
@@ -77,53 +76,10 @@ export default function Contacts() {
 
   if (selectedContact) {
     return (
-      <div className="min-h-screen bg-background">
-        {/* Sidebar */}
-        <div className="fixed left-0 top-0 w-64 h-full bg-background border-r border-border p-4">
-          <div className="space-y-6">
-            <div>
-              <h2 className="text-sm font-medium text-muted-foreground mb-4">MENU</h2>
-              <div className="space-y-2">
-                <div className="flex items-center space-x-3 text-muted-foreground">
-                  <div className="w-5 h-5 grid grid-cols-2 gap-0.5">
-                    <div className="bg-current rounded-sm"></div>
-                    <div className="bg-current rounded-sm"></div>
-                    <div className="bg-current rounded-sm"></div>
-                    <div className="bg-current rounded-sm"></div>
-                  </div>
-                  <span>Tableau de bord</span>
-                </div>
-                <div className="flex items-center space-x-3 text-primary font-medium bg-primary/10 px-3 py-2 rounded-md">
-                  <Users className="w-5 h-5" />
-                  <span>Contacts</span>
-                </div>
-                <div className="flex items-center space-x-3 text-muted-foreground">
-                  <div className="w-5 h-5 bg-current rounded"></div>
-                  <span>Prestations</span>
-                </div>
-              </div>
-            </div>
-            
-            <div>
-              <h2 className="text-sm font-medium text-muted-foreground mb-4">PRÉFÉRENCES</h2>
-              <div className="space-y-2">
-                <div className="flex items-center space-x-3 text-muted-foreground">
-                  <div className="w-5 h-5 bg-current rounded"></div>
-                  <span>Drive</span>
-                </div>
-                <div className="flex items-center space-x-3 text-muted-foreground">
-                  <div className="w-5 h-5 bg-current rounded"></div>
-                  <span>Paramètres</span>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        {/* Main Content */}
-        <div className="ml-64 p-6">
+      <AdminLayout>
+        <div className="space-y-6">
           {/* Header */}
-          <div className="flex items-center justify-between mb-6">
+          <div className="flex items-center justify-between">
             <div className="flex items-center space-x-4">
               <Button variant="ghost" size="sm" onClick={() => setSelectedContact(null)}>
                 <ArrowLeft className="h-4 w-4" />
@@ -162,7 +118,7 @@ export default function Contacts() {
           </div>
 
           {/* Contact Info Header */}
-          <div className="bg-muted/30 rounded-lg p-6 mb-6">
+          <div className="bg-muted/30 rounded-lg p-6">
             <div className="flex items-center justify-between">
               <div className="flex items-center space-x-4">
                 <Avatar className="w-16 h-16">
@@ -361,78 +317,15 @@ export default function Contacts() {
             </TabsContent>
           </Tabs>
         </div>
-      </div>
+      </AdminLayout>
     );
   }
 
   return (
-    <div className="min-h-screen bg-background">
-      {/* Sidebar */}
-      <div className="fixed left-0 top-0 w-64 h-full bg-background border-r border-border p-4">
-        <div className="space-y-6">
-          <div>
-            <h2 className="text-sm font-medium text-muted-foreground mb-4">MENU</h2>
-            <div className="space-y-2">
-              <div className="flex items-center space-x-3 text-muted-foreground">
-                <div className="w-5 h-5 grid grid-cols-2 gap-0.5">
-                  <div className="bg-current rounded-sm"></div>
-                  <div className="bg-current rounded-sm"></div>
-                  <div className="bg-current rounded-sm"></div>
-                  <div className="bg-current rounded-sm"></div>
-                </div>
-                <span>Tableau de bord</span>
-              </div>
-              <div className="flex items-center space-x-3 text-primary font-medium bg-primary/10 px-3 py-2 rounded-md">
-                <Users className="w-5 h-5" />
-                <span>Contacts</span>
-              </div>
-              <div className="flex items-center space-x-3 text-muted-foreground">
-                <div className="w-5 h-5 bg-current rounded"></div>
-                <span>Prestations</span>
-              </div>
-              <div className="flex items-center space-x-3 text-muted-foreground">
-                <div className="w-5 h-5 bg-current rounded"></div>
-                <span>Documents</span>
-              </div>
-              <div className="flex items-center space-x-3 text-muted-foreground">
-                <div className="w-5 h-5 bg-current rounded"></div>
-                <span>Modèles</span>
-              </div>
-              <div className="flex items-center space-x-3 text-muted-foreground">
-                <div className="w-5 h-5 bg-current rounded"></div>
-                <span>Calendrier</span>
-              </div>
-              <div className="flex items-center space-x-3 text-muted-foreground">
-                <div className="w-5 h-5 bg-current rounded"></div>
-                <span>Finances</span>
-              </div>
-            </div>
-          </div>
-          
-          <div>
-            <h2 className="text-sm font-medium text-muted-foreground mb-4">PRÉFÉRENCES</h2>
-            <div className="space-y-2">
-              <div className="flex items-center space-x-3 text-muted-foreground">
-                <div className="w-5 h-5 bg-current rounded"></div>
-                <span>Drive</span>
-              </div>
-              <div className="flex items-center space-x-3 text-muted-foreground">
-                <div className="w-5 h-5 bg-current rounded"></div>
-                <span>Paramètres</span>
-              </div>
-              <div className="flex items-center space-x-3 text-muted-foreground">
-                <div className="w-5 h-5 bg-current rounded"></div>
-                <span>Centre d'aide</span>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      {/* Main Content */}
-      <div className="ml-64 p-6">
+    <AdminLayout>
+      <div className="space-y-6">
         {/* Header */}
-        <div className="flex items-center justify-between mb-6">
+        <div className="flex items-center justify-between">
           <div>
             <h1 className="text-2xl font-bold">Mes Clients</h1>
             <p className="text-muted-foreground">Gérez vos clients et prospects pour vos projets photo et vidéo</p>
@@ -454,7 +347,7 @@ export default function Contacts() {
         </div>
 
         {/* Stats Cards */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
           <Card>
             <CardContent className="p-6">
               <div className="flex items-center justify-between">
@@ -509,7 +402,7 @@ export default function Contacts() {
         </div>
 
         {/* Search and Filters */}
-        <div className="flex items-center justify-between mb-6">
+        <div className="flex items-center justify-between">
           <div className="flex items-center space-x-2 flex-1 max-w-md">
             <div className="relative flex-1">
               <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground h-4 w-4" />
@@ -615,6 +508,6 @@ export default function Contacts() {
           ))}
         </div>
       </div>
-    </div>
+    </AdminLayout>
   );
 }
