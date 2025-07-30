@@ -1,160 +1,132 @@
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { Camera, Users, Calendar, BarChart3, Star, Check, ArrowRight, Zap, Shield, Globe } from "lucide-react";
+import { Camera, Users, Calendar, BarChart3, Star, Check, ArrowRight, Menu, X, ChevronDown, Shield, Zap } from "lucide-react";
+import { useState } from "react";
 
 const Index = () => {
-  const features = [
-    {
-      icon: Camera,
-      title: "Gestion de Portfolio",
-      description: "Organisez et présentez vos photos professionnellement avec des galeries intelligentes."
-    },
-    {
-      icon: Users,
-      title: "Gestion Clients",
-      description: "Centralisez toutes les informations de vos clients et l'historique de vos collaborations."
-    },
-    {
-      icon: Calendar,
-      title: "Planification Séances",
-      description: "Calendrier intégré pour gérer vos rendez-vous et shooting photo en temps réel."
-    },
-    {
-      icon: BarChart3,
-      title: "Analyses & Rapports",
-      description: "Suivez votre performance et analysez vos revenus avec des tableaux de bord détaillés."
-    }
-  ];
-
-  const plans = [
-    {
-      name: "Gratuit",
-      price: "0€",
-      period: "/mois",
-      description: "Parfait pour débuter",
-      features: [
-        "Jusqu'à 10 clients",
-        "1 GB de stockage photo",
-        "Calendrier basique",
-        "Support email"
-      ],
-      popular: false
-    },
-    {
-      name: "Professionnel",
-      price: "29€",
-      period: "/mois",
-      description: "Pour les photographes établis",
-      features: [
-        "Clients illimités",
-        "100 GB de stockage",
-        "Site vitrine inclus",
-        "Analyses avancées",
-        "Support prioritaire",
-        "Facturation automatique"
-      ],
-      popular: true
-    },
-    {
-      name: "Studio",
-      price: "69€",
-      period: "/mois",
-      description: "Pour les équipes et studios",
-      features: [
-        "Tout du plan Pro",
-        "Stockage illimité",
-        "Multi-utilisateurs",
-        "API personnalisée",
-        "Formation dédiée",
-        "Manager de compte"
-      ],
-      popular: false
-    }
-  ];
-
-  const testimonials = [
-    {
-      name: "Marie Dubois",
-      role: "Photographe Portrait",
-      content: "Cette solution a transformé ma façon de travailler. Je gagne 3h par semaine sur la gestion administrative.",
-      rating: 5
-    },
-    {
-      name: "Thomas Martin",
-      role: "Photographe Mariage",
-      content: "L'interface est intuitive et mes clients adorent pouvoir suivre l'avancement de leurs projets en temps réel.",
-      rating: 5
-    },
-    {
-      name: "Sophie Laurent",
-      role: "Studio Photo",
-      content: "Parfait pour gérer notre équipe de 5 photographes. Les rapports nous aident à optimiser notre rentabilité.",
-      rating: 5
-    }
-  ];
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-screen bg-white">
+      {/* Header Navigation */}
+      <header className="bg-white border-b sticky top-0 z-50">
+        <div className="container mx-auto px-4">
+          <div className="flex items-center justify-between h-16">
+            {/* Logo */}
+            <div className="flex items-center gap-2">
+              <div className="w-8 h-8 bg-blue-600 rounded-lg flex items-center justify-center">
+                <Camera className="w-5 h-5 text-white" />
+              </div>
+              <span className="font-bold text-xl text-gray-900">Studio</span>
+            </div>
+
+            {/* Desktop Navigation */}
+            <nav className="hidden md:flex items-center gap-8">
+              <a href="#" className="text-gray-600 hover:text-gray-900 transition-colors">Fonctionnalités</a>
+              <a href="#" className="text-gray-600 hover:text-gray-900 transition-colors">Tarifs</a>
+              <a href="#" className="text-gray-600 hover:text-gray-900 transition-colors">À propos</a>
+              <a href="#" className="text-gray-600 hover:text-gray-900 transition-colors">Contact</a>
+            </nav>
+
+            {/* Desktop CTA */}
+            <div className="hidden md:flex items-center gap-4">
+              <Button variant="ghost" className="text-gray-600">
+                Se connecter
+              </Button>
+              <Button className="bg-blue-600 hover:bg-blue-700 text-white">
+                Essai gratuit
+              </Button>
+            </div>
+
+            {/* Mobile Menu Button */}
+            <button 
+              className="md:hidden p-2"
+              onClick={() => setIsMenuOpen(!isMenuOpen)}
+            >
+              {isMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
+            </button>
+          </div>
+
+          {/* Mobile Menu */}
+          {isMenuOpen && (
+            <div className="md:hidden py-4 border-t">
+              <nav className="flex flex-col gap-4">
+                <a href="#" className="text-gray-600 hover:text-gray-900 transition-colors">Fonctionnalités</a>
+                <a href="#" className="text-gray-600 hover:text-gray-900 transition-colors">Tarifs</a>
+                <a href="#" className="text-gray-600 hover:text-gray-900 transition-colors">À propos</a>
+                <a href="#" className="text-gray-600 hover:text-gray-900 transition-colors">Contact</a>
+                <div className="flex flex-col gap-2 pt-4">
+                  <Button variant="ghost" className="justify-start">Se connecter</Button>
+                  <Button className="bg-blue-600 hover:bg-blue-700 text-white justify-start">Essai gratuit</Button>
+                </div>
+              </nav>
+            </div>
+          )}
+        </div>
+      </header>
+
       {/* Hero Section */}
-      <section className="relative bg-gradient-to-br from-primary via-primary/90 to-primary/80 text-primary-foreground overflow-hidden">
-        <div className="absolute inset-0 bg-grid-white/10 bg-grid-pattern"></div>
-        <div className="container mx-auto px-4 py-20 lg:py-32 relative">
+      <section className="bg-gradient-to-br from-blue-600 via-blue-500 to-blue-400 text-white relative overflow-hidden">
+        {/* Background decorations */}
+        <div className="absolute inset-0 opacity-10">
+          <div className="absolute top-20 left-10 w-20 h-20 border border-white/20 rounded-full"></div>
+          <div className="absolute top-40 right-20 w-16 h-16 border border-white/20 rounded-full"></div>
+          <div className="absolute bottom-20 left-1/4 w-12 h-12 border border-white/20 rounded-full"></div>
+        </div>
+        
+        <div className="container mx-auto px-4 py-16 lg:py-24 relative">
           <div className="grid lg:grid-cols-2 gap-12 items-center">
             <div className="space-y-8">
-              <Badge variant="secondary" className="w-fit">
-                <Zap className="w-3 h-3 mr-1" />
-                Nouveau: Site vitrine inclus
-              </Badge>
               <h1 className="text-4xl lg:text-6xl font-bold leading-tight">
-                Tout ce dont les photographes ont besoin pour gérer leur
-                <span className="text-accent"> entreprise</span>
+                Tout ce dont les photographes ont
+                <span className="block">besoin pour gérer leur entreprise</span>
               </h1>
-              <p className="text-xl lg:text-2xl text-primary-foreground/90 max-w-lg">
-                De la prise de contact à la livraison finale, centralisez et automatisez votre activité photographique.
+              <p className="text-xl lg:text-2xl text-blue-100 max-w-lg">
+                De la planification à la livraison, gérez tous vos projets photographiques en un seul endroit.
               </p>
               <div className="flex flex-col sm:flex-row gap-4">
-                <Button size="lg" variant="secondary" className="text-lg px-8">
-                  Essayer gratuitement
-                  <ArrowRight className="ml-2 w-5 h-5" />
+                <Button size="lg" className="bg-white text-blue-600 hover:bg-gray-100 text-lg px-8">
+                  Commencer gratuitement
                 </Button>
-                <Button size="lg" variant="outline" className="text-lg px-8 border-primary-foreground text-primary-foreground hover:bg-primary-foreground hover:text-primary">
-                  Voir la démo
+                <Button size="lg" variant="outline" className="border-white text-white hover:bg-white hover:text-blue-600 text-lg px-8">
+                  Regarder la démo
                 </Button>
-              </div>
-              <div className="flex items-center gap-6 text-sm text-primary-foreground/80">
-                <div className="flex items-center gap-1">
-                  <Check className="w-4 h-4" />
-                  Sans engagement
-                </div>
-                <div className="flex items-center gap-1">
-                  <Check className="w-4 h-4" />
-                  Configuration en 5 min
-                </div>
-                <div className="flex items-center gap-1">
-                  <Shield className="w-4 h-4" />
-                  Données sécurisées
-                </div>
               </div>
             </div>
+            
+            {/* Dashboard Preview */}
             <div className="relative">
-              <div className="bg-white/10 backdrop-blur-lg rounded-2xl p-8 border border-white/20">
-                <div className="space-y-4">
-                  <div className="flex items-center justify-between">
-                    <div className="flex items-center gap-3">
-                      <div className="w-8 h-8 bg-accent rounded-full"></div>
-                      <span className="font-semibold">Dashboard</span>
-                    </div>
-                    <Badge variant="secondary">Live</Badge>
+              <div className="bg-white/10 backdrop-blur-lg rounded-2xl p-6 border border-white/20 shadow-2xl">
+                <div className="bg-white rounded-lg p-6 text-gray-900">
+                  <div className="flex items-center justify-between mb-6">
+                    <h3 className="font-semibold text-lg">Tableau de bord</h3>
+                    <Badge className="bg-green-100 text-green-800">En ligne</Badge>
                   </div>
-                  <div className="grid grid-cols-2 gap-4">
-                    <div className="bg-white/10 rounded-lg p-4">
-                      <div className="text-2xl font-bold">€2,340</div>
-                      <div className="text-sm text-primary-foreground/70">Ce mois</div>
+                  
+                  <div className="grid grid-cols-2 gap-4 mb-6">
+                    <div className="bg-gray-50 rounded-lg p-4">
+                      <div className="text-2xl font-bold text-blue-600">€4,250</div>
+                      <div className="text-sm text-gray-600">Revenus ce mois</div>
                     </div>
-                    <div className="bg-white/10 rounded-lg p-4">
-                      <div className="text-2xl font-bold">18</div>
-                      <div className="text-sm text-primary-foreground/70">Clients actifs</div>
+                    <div className="bg-gray-50 rounded-lg p-4">
+                      <div className="text-2xl font-bold text-green-600">12</div>
+                      <div className="text-sm text-gray-600">Projets actifs</div>
+                    </div>
+                  </div>
+                  
+                  <div className="space-y-3">
+                    <div className="flex items-center justify-between py-2 border-b">
+                      <span className="text-sm">Mariage Sophie & Marc</span>
+                      <Badge variant="outline" className="text-xs">En cours</Badge>
+                    </div>
+                    <div className="flex items-center justify-between py-2 border-b">
+                      <span className="text-sm">Portrait Corporate</span>
+                      <Badge className="bg-green-100 text-green-800 text-xs">Terminé</Badge>
+                    </div>
+                    <div className="flex items-center justify-between py-2">
+                      <span className="text-sm">Shooting Mode</span>
+                      <Badge variant="outline" className="text-xs">Planifié</Badge>
                     </div>
                   </div>
                 </div>
@@ -164,231 +136,350 @@ const Index = () => {
         </div>
       </section>
 
-      {/* Features Section */}
-      <section className="py-20 lg:py-32">
+      {/* Features Section 1 */}
+      <section className="py-16 lg:py-24">
+        <div className="container mx-auto px-4">
+          <div className="grid lg:grid-cols-2 gap-12 items-center">
+            <div>
+              <h2 className="text-3xl lg:text-4xl font-bold text-gray-900 mb-6">
+                Un logiciel adapté pour les professionnels de la photographie
+              </h2>
+              <p className="text-lg text-gray-600 mb-8">
+                Gérez vos clients, organisez vos séances, suivez vos revenus et automatisez votre facturation. 
+                Tout ce dont vous avez besoin pour faire croître votre entreprise photographique.
+              </p>
+              <Button className="bg-blue-600 hover:bg-blue-700 text-white">
+                Découvrir les fonctionnalités
+              </Button>
+            </div>
+            
+            <div className="relative">
+              <div className="bg-gray-100 rounded-2xl p-8 relative">
+                <div className="absolute top-4 right-4">
+                  <Camera className="w-16 h-16 text-blue-600 opacity-20" />
+                </div>
+                <div className="bg-white rounded-lg p-6 shadow-lg">
+                  <div className="flex items-center gap-4 mb-4">
+                    <div className="w-12 h-12 bg-blue-100 rounded-full flex items-center justify-center">
+                      <Users className="w-6 h-6 text-blue-600" />
+                    </div>
+                    <div>
+                      <h3 className="font-semibold">Gestion des clients</h3>
+                      <p className="text-sm text-gray-600">45 clients actifs</p>
+                    </div>
+                  </div>
+                  <div className="space-y-2">
+                    <div className="flex justify-between text-sm">
+                      <span>Marie Dubois</span>
+                      <span className="text-green-600">Payé</span>
+                    </div>
+                    <div className="flex justify-between text-sm">
+                      <span>Thomas Martin</span>
+                      <span className="text-orange-600">En attente</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Features Section 2 */}
+      <section className="py-16 lg:py-24 bg-gray-50">
         <div className="container mx-auto px-4">
           <div className="text-center mb-16">
-            <Badge variant="outline" className="mb-4">
-              Fonctionnalités
-            </Badge>
-            <h2 className="text-3xl lg:text-5xl font-bold mb-6">
-              Un logiciel adapté pour les professionnels de la photographie
+            <h2 className="text-3xl lg:text-4xl font-bold text-gray-900 mb-6">
+              Tout le nécessaire pour votre entreprise
             </h2>
-            <p className="text-xl text-muted-foreground max-w-3xl mx-auto">
-              Optimisez chaque aspect de votre activité avec des outils pensés spécifiquement pour les photographes professionnels.
-            </p>
           </div>
           
-          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
-            {features.map((feature, index) => (
-              <Card key={index} className="border-0 shadow-lg hover:shadow-xl transition-shadow duration-300">
-                <CardHeader className="text-center">
-                  <div className="w-16 h-16 bg-primary/10 rounded-2xl flex items-center justify-center mx-auto mb-4">
-                    <feature.icon className="w-8 h-8 text-primary" />
-                  </div>
-                  <CardTitle className="text-xl">{feature.title}</CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <CardDescription className="text-center">
-                    {feature.description}
-                  </CardDescription>
-                </CardContent>
-              </Card>
-            ))}
+          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+            <div className="bg-white rounded-lg p-6 shadow-lg">
+              <div className="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center mb-4">
+                <Calendar className="w-6 h-6 text-blue-600" />
+              </div>
+              <h3 className="font-semibold text-lg mb-2">Planification intelligente</h3>
+              <p className="text-gray-600">Gérez votre calendrier, planifiez vos séances et synchronisez avec vos clients.</p>
+            </div>
+            
+            <div className="bg-white rounded-lg p-6 shadow-lg">
+              <div className="w-12 h-12 bg-green-100 rounded-lg flex items-center justify-center mb-4">
+                <BarChart3 className="w-6 h-6 text-green-600" />
+              </div>
+              <h3 className="font-semibold text-lg mb-2">Analyses détaillées</h3>
+              <p className="text-gray-600">Suivez vos performances, analysez vos revenus et optimisez votre rentabilité.</p>
+            </div>
+            
+            <div className="bg-white rounded-lg p-6 shadow-lg">
+              <div className="w-12 h-12 bg-purple-100 rounded-lg flex items-center justify-center mb-4">
+                <Shield className="w-6 h-6 text-purple-600" />
+              </div>
+              <h3 className="font-semibold text-lg mb-2">Sécurité garantie</h3>
+              <p className="text-gray-600">Vos données et celles de vos clients sont protégées par un chiffrement de niveau bancaire.</p>
+            </div>
           </div>
         </div>
       </section>
 
       {/* Productivity Section */}
-      <section className="py-20 lg:py-32 bg-muted/50">
+      <section className="py-16 lg:py-24">
         <div className="container mx-auto px-4">
-          <div className="grid lg:grid-cols-2 gap-12 items-center">
-            <div>
-              <Badge variant="outline" className="mb-4">
-                Productivité
-              </Badge>
-              <h2 className="text-3xl lg:text-5xl font-bold mb-6">
-                Augmentez votre productivité et gagnez en temps
-              </h2>
-              <p className="text-xl text-muted-foreground mb-8">
-                Automatisez les tâches répétitives, organisez vos projets et concentrez-vous sur ce que vous faites de mieux : créer de magnifiques photos.
-              </p>
-              
-              <div className="space-y-6">
-                <div className="flex items-start gap-4">
-                  <div className="w-8 h-8 bg-primary/10 rounded-full flex items-center justify-center flex-shrink-0 mt-1">
-                    <Check className="w-4 h-4 text-primary" />
-                  </div>
-                  <div>
-                    <h3 className="font-semibold mb-2">Facturation automatique</h3>
-                    <p className="text-muted-foreground">Générez et envoyez vos factures automatiquement après chaque livraison.</p>
-                  </div>
-                </div>
-                
-                <div className="flex items-start gap-4">
-                  <div className="w-8 h-8 bg-primary/10 rounded-full flex items-center justify-center flex-shrink-0 mt-1">
-                    <Check className="w-4 h-4 text-primary" />
-                  </div>
-                  <div>
-                    <h3 className="font-semibold mb-2">Suivi des projets</h3>
-                    <p className="text-muted-foreground">Gardez un œil sur l'avancement de tous vos projets en cours depuis un seul endroit.</p>
-                  </div>
-                </div>
-                
-                <div className="flex items-start gap-4">
-                  <div className="w-8 h-8 bg-primary/10 rounded-full flex items-center justify-center flex-shrink-0 mt-1">
-                    <Check className="w-4 h-4 text-primary" />
-                  </div>
-                  <div>
-                    <h3 className="font-semibold mb-2">Rappels intelligents</h3>
-                    <p className="text-muted-foreground">Ne ratez plus jamais un rendez-vous ou une échéance importante.</p>
-                  </div>
-                </div>
+          <div className="text-center mb-16">
+            <h2 className="text-3xl lg:text-4xl font-bold text-gray-900 mb-6">
+              Augmentez votre productivité et gagnez en temps
+            </h2>
+            <p className="text-lg text-gray-600 max-w-3xl mx-auto">
+              Automatisez les tâches répétitives et concentrez-vous sur votre art. Notre plateforme vous fait gagner jusqu'à 10 heures par semaine.
+            </p>
+          </div>
+          
+          <div className="grid md:grid-cols-3 gap-8">
+            <div className="text-center">
+              <div className="w-16 h-16 bg-blue-600 rounded-full flex items-center justify-center mx-auto mb-4">
+                <Zap className="w-8 h-8 text-white" />
               </div>
+              <h3 className="font-semibold text-lg mb-2">Automatisation</h3>
+              <p className="text-gray-600">Factures, rappels et suivis automatiques pour un gain de temps maximal.</p>
             </div>
             
-            <div className="relative">
-              <div className="bg-card rounded-2xl p-8 shadow-xl border">
-                <div className="space-y-6">
-                  <div className="flex items-center justify-between">
-                    <h3 className="font-semibold">Projets en cours</h3>
-                    <Badge variant="secondary">4 actifs</Badge>
-                  </div>
-                  <div className="space-y-4">
-                    {[
-                      { name: "Mariage Sophie & Marc", progress: 75, status: "En retouche" },
-                      { name: "Shooting Corporate", progress: 100, status: "Livré" },
-                      { name: "Portrait Famille Dubois", progress: 25, status: "En cours" },
-                    ].map((project, i) => (
-                      <div key={i} className="space-y-2">
-                        <div className="flex justify-between text-sm">
-                          <span className="font-medium">{project.name}</span>
-                          <span className="text-muted-foreground">{project.progress}%</span>
-                        </div>
-                        <div className="w-full bg-muted rounded-full h-2">
-                          <div 
-                            className="bg-primary rounded-full h-2 transition-all duration-300" 
-                            style={{ width: `${project.progress}%` }}
-                          ></div>
-                        </div>
-                        <div className="text-xs text-muted-foreground">{project.status}</div>
-                      </div>
-                    ))}
-                  </div>
-                </div>
+            <div className="text-center">
+              <div className="w-16 h-16 bg-green-600 rounded-full flex items-center justify-center mx-auto mb-4">
+                <Users className="w-8 h-8 text-white" />
               </div>
+              <h3 className="font-semibold text-lg mb-2">Collaboration</h3>
+              <p className="text-gray-600">Partagez vos galeries avec vos clients et recevez leurs retours en temps réel.</p>
+            </div>
+            
+            <div className="text-center">
+              <div className="w-16 h-16 bg-purple-600 rounded-full flex items-center justify-center mx-auto mb-4">
+                <BarChart3 className="w-8 h-8 text-white" />
+              </div>
+              <h3 className="font-semibold text-lg mb-2">Optimisation</h3>
+              <p className="text-gray-600">Analyses avancées pour identifier les opportunités d'amélioration.</p>
             </div>
           </div>
         </div>
       </section>
 
       {/* Pricing Section */}
-      <section className="py-20 lg:py-32">
+      <section className="py-16 lg:py-24 bg-gradient-to-br from-slate-900 to-slate-800 text-white">
         <div className="container mx-auto px-4">
           <div className="text-center mb-16">
-            <Badge variant="outline" className="mb-4">
-              Tarifs
-            </Badge>
-            <h2 className="text-3xl lg:text-5xl font-bold mb-6">
+            <h2 className="text-3xl lg:text-4xl font-bold mb-6">
               Tarifs simples et flexibles
             </h2>
-            <p className="text-xl text-muted-foreground max-w-3xl mx-auto">
-              Choisissez le plan qui correspond à votre activité. Changez ou annulez à tout moment.
+            <p className="text-lg text-slate-300 max-w-3xl mx-auto">
+              Choisissez le plan qui correspond à vos besoins. Changez ou annulez à tout moment.
             </p>
           </div>
           
           <div className="grid md:grid-cols-3 gap-8 max-w-6xl mx-auto">
-            {plans.map((plan, index) => (
-              <Card key={index} className={`relative ${plan.popular ? 'border-2 border-primary shadow-xl scale-105' : 'border shadow-lg'}`}>
-                {plan.popular && (
-                  <Badge className="absolute -top-3 left-1/2 transform -translate-x-1/2">
-                    Le plus populaire
-                  </Badge>
-                )}
-                <CardHeader className="text-center">
-                  <CardTitle className="text-2xl">{plan.name}</CardTitle>
-                  <CardDescription>{plan.description}</CardDescription>
-                  <div className="mt-4">
-                    <span className="text-4xl font-bold">{plan.price}</span>
-                    <span className="text-muted-foreground">{plan.period}</span>
-                  </div>
-                </CardHeader>
-                <CardContent>
-                  <ul className="space-y-3 mb-8">
-                    {plan.features.map((feature, i) => (
-                      <li key={i} className="flex items-center gap-3">
-                        <Check className="w-4 h-4 text-primary flex-shrink-0" />
-                        <span className="text-sm">{feature}</span>
-                      </li>
-                    ))}
-                  </ul>
-                  <Button 
-                    className="w-full" 
-                    variant={plan.popular ? "default" : "outline"}
-                    size="lg"
-                  >
-                    {plan.name === "Gratuit" ? "Commencer gratuitement" : "Choisir ce plan"}
-                  </Button>
-                </CardContent>
-              </Card>
-            ))}
+            {/* Gratuit */}
+            <Card className="bg-white text-gray-900 border-0">
+              <CardHeader className="text-center pb-8">
+                <CardTitle className="text-xl mb-2">Gratuit</CardTitle>
+                <div className="text-4xl font-bold">0€</div>
+                <div className="text-gray-600">par mois</div>
+              </CardHeader>
+              <CardContent>
+                <ul className="space-y-3 mb-8">
+                  <li className="flex items-center gap-3">
+                    <Check className="w-4 h-4 text-green-600" />
+                    <span className="text-sm">Jusqu'à 5 clients</span>
+                  </li>
+                  <li className="flex items-center gap-3">
+                    <Check className="w-4 h-4 text-green-600" />
+                    <span className="text-sm">1 GB de stockage</span>
+                  </li>
+                  <li className="flex items-center gap-3">
+                    <Check className="w-4 h-4 text-green-600" />
+                    <span className="text-sm">Support email</span>
+                  </li>
+                  <li className="flex items-center gap-3">
+                    <Check className="w-4 h-4 text-green-600" />
+                    <span className="text-sm">Facturation basique</span>
+                  </li>
+                </ul>
+                <Button variant="outline" className="w-full">
+                  Commencer gratuitement
+                </Button>
+              </CardContent>
+            </Card>
+
+            {/* Pro */}
+            <Card className="bg-blue-600 text-white border-2 border-blue-400 transform scale-105 shadow-2xl">
+              <div className="absolute -top-4 left-1/2 transform -translate-x-1/2">
+                <Badge className="bg-orange-500 text-white px-4 py-1">
+                  Plus populaire
+                </Badge>
+              </div>
+              <CardHeader className="text-center pb-8">
+                <CardTitle className="text-xl mb-2">Pro</CardTitle>
+                <div className="text-4xl font-bold">29€</div>
+                <div className="text-blue-200">par mois</div>
+              </CardHeader>
+              <CardContent>
+                <ul className="space-y-3 mb-8">
+                  <li className="flex items-center gap-3">
+                    <Check className="w-4 h-4 text-white" />
+                    <span className="text-sm">Clients illimités</span>
+                  </li>
+                  <li className="flex items-center gap-3">
+                    <Check className="w-4 h-4 text-white" />
+                    <span className="text-sm">100 GB de stockage</span>
+                  </li>
+                  <li className="flex items-center gap-3">
+                    <Check className="w-4 h-4 text-white" />
+                    <span className="text-sm">Support prioritaire</span>
+                  </li>
+                  <li className="flex items-center gap-3">
+                    <Check className="w-4 h-4 text-white" />
+                    <span className="text-sm">Automatisation avancée</span>
+                  </li>
+                  <li className="flex items-center gap-3">
+                    <Check className="w-4 h-4 text-white" />
+                    <span className="text-sm">Analyses détaillées</span>
+                  </li>
+                </ul>
+                <Button className="w-full bg-white text-blue-600 hover:bg-gray-100">
+                  Choisir Pro
+                </Button>
+              </CardContent>
+            </Card>
+
+            {/* Enterprise */}
+            <Card className="bg-white text-gray-900 border-0">
+              <CardHeader className="text-center pb-8">
+                <CardTitle className="text-xl mb-2">Enterprise</CardTitle>
+                <div className="text-4xl font-bold">99€</div>
+                <div className="text-gray-600">par mois</div>
+              </CardHeader>
+              <CardContent>
+                <ul className="space-y-3 mb-8">
+                  <li className="flex items-center gap-3">
+                    <Check className="w-4 h-4 text-green-600" />
+                    <span className="text-sm">Tout du plan Pro</span>
+                  </li>
+                  <li className="flex items-center gap-3">
+                    <Check className="w-4 h-4 text-green-600" />
+                    <span className="text-sm">Stockage illimité</span>
+                  </li>
+                  <li className="flex items-center gap-3">
+                    <Check className="w-4 h-4 text-green-600" />
+                    <span className="text-sm">Support téléphonique</span>
+                  </li>
+                  <li className="flex items-center gap-3">
+                    <Check className="w-4 h-4 text-green-600" />
+                    <span className="text-sm">API personnalisée</span>
+                  </li>
+                  <li className="flex items-center gap-3">
+                    <Check className="w-4 h-4 text-green-600" />
+                    <span className="text-sm">Formation dédiée</span>
+                  </li>
+                </ul>
+                <Button variant="outline" className="w-full">
+                  Contacter l'équipe
+                </Button>
+              </CardContent>
+            </Card>
           </div>
         </div>
       </section>
 
       {/* Testimonials Section */}
-      <section className="py-20 lg:py-32 bg-muted/50">
+      <section className="py-16 lg:py-24">
         <div className="container mx-auto px-4">
           <div className="text-center mb-16">
-            <Badge variant="outline" className="mb-4">
-              Témoignages
-            </Badge>
-            <h2 className="text-3xl lg:text-5xl font-bold mb-6">
+            <h2 className="text-3xl lg:text-4xl font-bold text-gray-900 mb-6">
               C'est pourquoi les clients nous aiment
             </h2>
           </div>
           
           <div className="grid md:grid-cols-3 gap-8">
-            {testimonials.map((testimonial, index) => (
-              <Card key={index} className="shadow-lg">
-                <CardContent className="pt-6">
-                  <div className="flex mb-4">
-                    {[...Array(testimonial.rating)].map((_, i) => (
-                      <Star key={i} className="w-4 h-4 fill-primary text-primary" />
-                    ))}
-                  </div>
-                  <p className="text-muted-foreground mb-6">"{testimonial.content}"</p>
+            <Card className="border-0 shadow-lg">
+              <CardContent className="pt-6">
+                <div className="flex mb-4">
+                  {[...Array(5)].map((_, i) => (
+                    <Star key={i} className="w-4 h-4 fill-yellow-400 text-yellow-400" />
+                  ))}
+                </div>
+                <p className="text-gray-600 mb-6">
+                  "Cette plateforme a révolutionné ma façon de travailler. Je gagne un temps précieux sur la gestion administrative."
+                </p>
+                <div className="flex items-center gap-3">
+                  <div className="w-10 h-10 bg-gray-200 rounded-full"></div>
                   <div>
-                    <div className="font-semibold">{testimonial.name}</div>
-                    <div className="text-sm text-muted-foreground">{testimonial.role}</div>
+                    <div className="font-semibold">Marie Dubois</div>
+                    <div className="text-sm text-gray-600">Photographe Portrait</div>
                   </div>
-                </CardContent>
-              </Card>
-            ))}
+                </div>
+              </CardContent>
+            </Card>
+
+            <Card className="border-0 shadow-lg">
+              <CardContent className="pt-6">
+                <div className="flex mb-4">
+                  {[...Array(5)].map((_, i) => (
+                    <Star key={i} className="w-4 h-4 fill-yellow-400 text-yellow-400" />
+                  ))}
+                </div>
+                <p className="text-gray-600 mb-6">
+                  "L'interface est intuitive et mes clients adorent pouvoir suivre l'avancement de leurs projets en temps réel."
+                </p>
+                <div className="flex items-center gap-3">
+                  <div className="w-10 h-10 bg-gray-200 rounded-full"></div>
+                  <div>
+                    <div className="font-semibold">Thomas Martin</div>
+                    <div className="text-sm text-gray-600">Photographe Mariage</div>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+
+            <Card className="border-0 shadow-lg">
+              <CardContent className="pt-6">
+                <div className="flex mb-4">
+                  {[...Array(5)].map((_, i) => (
+                    <Star key={i} className="w-4 h-4 fill-yellow-400 text-yellow-400" />
+                  ))}
+                </div>
+                <p className="text-gray-600 mb-6">
+                  "Les analyses m'aident à comprendre quels services sont les plus rentables. Indispensable pour mon business."
+                </p>
+                <div className="flex items-center gap-3">
+                  <div className="w-10 h-10 bg-gray-200 rounded-full"></div>
+                  <div>
+                    <div className="font-semibold">Sophie Laurent</div>
+                    <div className="text-sm text-gray-600">Studio Photo</div>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
           </div>
         </div>
       </section>
 
-      {/* CTA Section */}
-      <section className="py-20 lg:py-32 bg-gradient-to-r from-primary to-primary/80 text-primary-foreground">
+      {/* Final CTA Section */}
+      <section className="py-16 lg:py-24 bg-gradient-to-br from-blue-600 to-blue-800 text-white">
         <div className="container mx-auto px-4 text-center">
           <div className="max-w-4xl mx-auto">
             <h2 className="text-3xl lg:text-5xl font-bold mb-6">
               Gérez efficacement vos prestations avec une plateforme centralisée
             </h2>
-            <p className="text-xl mb-8 text-primary-foreground/90">
-              Rejoignez plus de 2000 photographes qui font confiance à notre solution pour développer leur activité.
+            <p className="text-xl mb-8 text-blue-100">
+              Rejoignez plus de 2000 photographes qui utilisent notre solution pour développer leur activité.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <Button size="lg" variant="secondary" className="text-lg px-8">
-                Démarrer l'essai gratuit
+              <Button size="lg" className="bg-white text-blue-600 hover:bg-gray-100 text-lg px-8">
+                Commencer gratuitement
                 <ArrowRight className="ml-2 w-5 h-5" />
               </Button>
-              <Button size="lg" variant="outline" className="text-lg px-8 border-primary-foreground text-primary-foreground hover:bg-primary-foreground hover:text-primary">
-                Demander une démo
+              <Button size="lg" variant="outline" className="border-white text-white hover:bg-white hover:text-blue-600 text-lg px-8">
+                Planifier une démo
               </Button>
             </div>
-            <p className="text-sm text-primary-foreground/70 mt-6">
+            <p className="text-sm text-blue-200 mt-6">
               Aucune carte bancaire requise • Configuration en 5 minutes • Support en français
             </p>
           </div>
@@ -396,55 +487,51 @@ const Index = () => {
       </section>
 
       {/* Footer */}
-      <footer className="bg-background border-t py-12">
+      <footer className="bg-gray-900 text-white py-12">
         <div className="container mx-auto px-4">
-          <div className="grid md:grid-cols-4 gap-8">
+          <div className="grid md:grid-cols-4 gap-8 mb-8">
             <div>
               <div className="flex items-center gap-2 mb-4">
-                <Camera className="w-6 h-6 text-primary" />
-                <span className="font-bold text-xl">PhotoCRM</span>
+                <div className="w-8 h-8 bg-blue-600 rounded-lg flex items-center justify-center">
+                  <Camera className="w-5 h-5 text-white" />
+                </div>
+                <span className="font-bold text-xl">Studio</span>
               </div>
-              <p className="text-muted-foreground mb-4">
+              <p className="text-gray-400 mb-4">
                 La solution complète pour gérer votre activité de photographe professionnel.
               </p>
-              <div className="flex gap-4">
-                <Globe className="w-5 h-5 text-muted-foreground hover:text-primary cursor-pointer" />
-              </div>
             </div>
             
             <div>
               <h3 className="font-semibold mb-4">Produit</h3>
-              <ul className="space-y-2 text-sm text-muted-foreground">
-                <li><a href="#" className="hover:text-primary transition-colors">Fonctionnalités</a></li>
-                <li><a href="#" className="hover:text-primary transition-colors">Tarifs</a></li>
-                <li><a href="#" className="hover:text-primary transition-colors">Templates</a></li>
-                <li><a href="#" className="hover:text-primary transition-colors">Intégrations</a></li>
+              <ul className="space-y-2 text-sm text-gray-400">
+                <li><a href="#" className="hover:text-white transition-colors">Fonctionnalités</a></li>
+                <li><a href="#" className="hover:text-white transition-colors">Tarifs</a></li>
+                <li><a href="#" className="hover:text-white transition-colors">Intégrations</a></li>
               </ul>
             </div>
             
             <div>
               <h3 className="font-semibold mb-4">Support</h3>
-              <ul className="space-y-2 text-sm text-muted-foreground">
-                <li><a href="#" className="hover:text-primary transition-colors">Centre d'aide</a></li>
-                <li><a href="#" className="hover:text-primary transition-colors">Tutoriels</a></li>
-                <li><a href="#" className="hover:text-primary transition-colors">Contact</a></li>
-                <li><a href="#" className="hover:text-primary transition-colors">Statut</a></li>
+              <ul className="space-y-2 text-sm text-gray-400">
+                <li><a href="#" className="hover:text-white transition-colors">Centre d'aide</a></li>
+                <li><a href="#" className="hover:text-white transition-colors">Contact</a></li>
+                <li><a href="#" className="hover:text-white transition-colors">Statut</a></li>
               </ul>
             </div>
             
             <div>
               <h3 className="font-semibold mb-4">Entreprise</h3>
-              <ul className="space-y-2 text-sm text-muted-foreground">
-                <li><a href="#" className="hover:text-primary transition-colors">À propos</a></li>
-                <li><a href="#" className="hover:text-primary transition-colors">Blog</a></li>
-                <li><a href="#" className="hover:text-primary transition-colors">Carrières</a></li>
-                <li><a href="#" className="hover:text-primary transition-colors">Presse</a></li>
+              <ul className="space-y-2 text-sm text-gray-400">
+                <li><a href="#" className="hover:text-white transition-colors">À propos</a></li>
+                <li><a href="#" className="hover:text-white transition-colors">Blog</a></li>
+                <li><a href="#" className="hover:text-white transition-colors">Carrières</a></li>
               </ul>
             </div>
           </div>
           
-          <div className="border-t mt-12 pt-8 text-center text-sm text-muted-foreground">
-            <p>&copy; 2024 PhotoCRM. Tous droits réservés.</p>
+          <div className="border-t border-gray-800 pt-8 text-center text-sm text-gray-400">
+            <p>&copy; 2024 Studio. Tous droits réservés.</p>
           </div>
         </div>
       </footer>
