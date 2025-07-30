@@ -3,6 +3,7 @@ import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
+import Index from "./pages/Index";
 import Dashboard from "./pages/Dashboard";
 import UserDashboard from "./pages/UserDashboard";
 import Users from "./pages/Users";
@@ -17,7 +18,7 @@ import ClientFactures from "./pages/ClientFactures";
 import ClientDocumentation from "./pages/ClientDocumentation";
 import ClientContract from "./pages/ClientContract";
 import ClientPortal from "./pages/ClientPortal";
-import Contacts from "./pages/Contacts";
+import WebsiteBuilder from "./pages/WebsiteBuilder";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -29,17 +30,17 @@ const App = () => (
       <Sonner />
       <BrowserRouter>
         <Routes>
-          <Route path="/" element={<Dashboard />} />
-          <Route path="/user-dashboard" element={<UserDashboard />} />
-          <Route path="/users" element={<Users />} />
-          <Route path="/users/:id" element={<UserDetail />} />
-          <Route path="/transactions" element={<Transactions />} />
-          <Route path="/subscriptions" element={<Subscriptions />} />
-          <Route path="/documentation" element={<Documentation />} />
-          <Route path="/user-guide" element={<UserGuide />} />
-          <Route path="/client-guide" element={<ClientUserGuide />} />
-          <Route path="/contacts" element={<Contacts />} />
-          <Route path="/contacts/:id" element={<Contacts />} />
+          <Route path="/" element={<Index />} />
+          <Route path="/admin" element={<Dashboard />} />
+          <Route path="/admin/user-dashboard" element={<UserDashboard />} />
+          <Route path="/admin/users" element={<Users />} />
+          <Route path="/admin/users/:id" element={<UserDetail />} />
+          <Route path="/admin/transactions" element={<Transactions />} />
+          <Route path="/admin/subscriptions" element={<Subscriptions />} />
+          <Route path="/admin/documentation" element={<Documentation />} />
+          <Route path="/admin/user-guide" element={<UserGuide />} />
+          <Route path="/admin/client-guide" element={<ClientUserGuide />} />
+          <Route path="/admin/website-builder" element={<WebsiteBuilder />} />
           <Route path="/client/:clientId" element={<ClientPortal />} />
           <Route path="/client/:clientId/contract/:contractId" element={<ClientContract />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}

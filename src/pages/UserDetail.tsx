@@ -1,15 +1,11 @@
-
 import { AdminLayout } from "@/components/AdminLayout";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
-import { ArrowLeft, ChevronDown, User, Mail, MapPin, Building2, TrendingUp, TrendingDown, Calendar, FileText, CreditCard, Briefcase, ExternalLink, Copy } from "lucide-react";
+import { ArrowLeft, Share, MoreHorizontal, Mail, MessageSquare, TrendingUp, TrendingDown } from "lucide-react";
 import { Link, useParams } from "react-router-dom";
-import { useState } from "react";
-import { toast } from "sonner";
 
 const activityData = {
   clients: { value: 450, change: "+10 la semaine précédente", trend: "up" },
@@ -20,20 +16,6 @@ const activityData = {
 
 export default function UserDetail() {
   const { id } = useParams();
-  const [clientPortalLink, setClientPortalLink] = useState("");
-
-  const generateClientPortalLink = () => {
-    const link = `${window.location.origin}/client-portal/${id}`;
-    setClientPortalLink(link);
-    toast.success("Lien du portail client généré avec succès !");
-  };
-
-  const copyPortalLink = () => {
-    if (clientPortalLink) {
-      navigator.clipboard.writeText(clientPortalLink);
-      toast.success("Lien copié dans le presse-papier !");
-    }
-  };
 
   return (
     <AdminLayout>
@@ -46,43 +28,21 @@ export default function UserDetail() {
                 <ArrowLeft className="h-4 w-4" />
               </Link>
             </Button>
-            <div>
-              <h1 className="text-2xl font-bold">Joel TAMBO</h1>
-              <p className="text-muted-foreground">Voir détails</p>
+            <div className="flex items-center space-x-3">
+              <div className="p-3 bg-primary/10 rounded-full">
+                <div className="text-primary text-lg font-bold">A</div>
+              </div>
+              <h1 className="text-2xl font-bold">Information utilisateur</h1>
             </div>
           </div>
           <div className="flex items-center space-x-2">
-            <DropdownMenu>
-              <DropdownMenuTrigger asChild>
-                <Button>
-                  Actions rapides
-                  <ChevronDown className="h-4 w-4 ml-2" />
-                </Button>
-              </DropdownMenuTrigger>
-              <DropdownMenuContent align="end" className="w-48">
-                <DropdownMenuItem>
-                  <FileText className="h-4 w-4 mr-2" />
-                  Créer un devis
-                </DropdownMenuItem>
-                <DropdownMenuItem>
-                  <CreditCard className="h-4 w-4 mr-2" />
-                  Créer une facture
-                </DropdownMenuItem>
-                <DropdownMenuItem>
-                  <FileText className="h-4 w-4 mr-2" />
-                  Créer un contrat
-                </DropdownMenuItem>
-                <DropdownMenuItem>
-                  <Briefcase className="h-4 w-4 mr-2" />
-                  Créer une prestation
-                </DropdownMenuItem>
-                <DropdownMenuItem>
-                  <Calendar className="h-4 w-4 mr-2" />
-                  Planifier une séance
-                </DropdownMenuItem>
-              </DropdownMenuContent>
-            </DropdownMenu>
-            <Button variant="outline">Modifier</Button>
+            <Button variant="outline" size="sm">
+              <Share className="h-4 w-4 mr-2" />
+              Partager
+            </Button>
+            <Button variant="ghost" size="sm">
+              <MoreHorizontal className="h-4 w-4" />
+            </Button>
           </div>
         </div>
 
@@ -93,47 +53,30 @@ export default function UserDetail() {
               <div className="text-center">
                 <div className="relative mx-auto w-24 h-24 mb-4">
                   <Avatar className="w-24 h-24">
-                    <AvatarFallback className="text-lg bg-primary/10 text-primary">
-                      <User className="h-10 w-10" />
-                    </AvatarFallback>
+                    <AvatarImage src="/avatars/kristin.jpg" alt="Kristin Watson" />
+                    <AvatarFallback className="text-lg">KW</AvatarFallback>
                   </Avatar>
+                  <div className="absolute bottom-0 right-0 w-6 h-6 bg-success rounded-full border-2 border-background"></div>
                 </div>
                 
-                <h2 className="text-xl font-bold mb-1">Joel TAMBO</h2>
-                <div className="flex items-center justify-center space-x-4 mb-4">
-                  <Badge className="bg-success/10 text-success">Homme</Badge>
-                  <Badge className="bg-blue-500/10 text-blue-500">Client</Badge>
+                <h2 className="text-xl font-bold mb-1">Kristin Watson</h2>
+                <p className="text-muted-foreground mb-2">kristinwatson@mail.com</p>
+                <div className="flex items-center justify-center text-muted-foreground mb-4">
+                  <span className="text-sm">📍 Yaoundé - Douala</span>
                 </div>
 
-                {/* Stats */}
-                <div className="grid grid-cols-3 gap-4 mb-6">
-                  <div className="text-center">
-                    <div className="text-2xl font-bold text-blue-500">0</div>
-                    <div className="text-xs text-muted-foreground">Projets totaux</div>
-                  </div>
-                  <div className="text-center">
-                    <div className="text-2xl font-bold text-success">0 FCFA</div>
-                    <div className="text-xs text-muted-foreground">Chiffre d'affaires</div>
-                  </div>
-                  <div className="text-center">
-                    <div className="text-2xl font-bold text-orange-500">0</div>
-                    <div className="text-xs text-muted-foreground">Devis en attente</div>
-                  </div>
-                </div>
-
-                <div className="space-y-3 text-left">
-                  <div className="flex items-center text-sm text-muted-foreground">
+                <div className="flex justify-center space-x-2 mb-6">
+                  <Button variant="outline" size="sm">
                     <Mail className="h-4 w-4 mr-2" />
-                    aaa@y.fr
-                  </div>
-                  <div className="flex items-center text-sm text-muted-foreground">
-                    <span className="mr-2">📞</span>
-                    67676767
-                  </div>
-                  <div className="flex items-center text-sm text-muted-foreground">
-                    <MapPin className="h-4 w-4 mr-2" />
-                    Douala, Cameroon
-                  </div>
+                    Email
+                  </Button>
+                  <Button variant="outline" size="sm">
+                    <MessageSquare className="h-4 w-4 mr-2" />
+                    Message
+                  </Button>
+                  <Button variant="outline" size="sm">
+                    Plus
+                  </Button>
                 </div>
               </div>
             </CardContent>
@@ -142,184 +85,133 @@ export default function UserDetail() {
           {/* User Information */}
           <div className="lg:col-span-2">
             <Tabs defaultValue="informations" className="space-y-4">
-              <TabsList className="grid w-full grid-cols-5">
-                <TabsTrigger value="informations">Informations personnelles</TabsTrigger>
-                <TabsTrigger value="prestations">Prestations</TabsTrigger>
-                <TabsTrigger value="evenements">Événements</TabsTrigger>
-                <TabsTrigger value="documents">Documents</TabsTrigger>
-                <TabsTrigger value="portail">Portail client</TabsTrigger>
+              <TabsList>
+                <TabsTrigger value="informations">Informations</TabsTrigger>
+                <TabsTrigger value="activite">Activité</TabsTrigger>
+                <TabsTrigger value="abonnement">Abonnement</TabsTrigger>
               </TabsList>
 
               <TabsContent value="informations" className="space-y-4">
-                <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                  <Card>
-                    <CardHeader>
-                      <CardTitle className="flex items-center">
-                        <User className="h-5 w-5 mr-2" />
-                        Informations personnelles
-                      </CardTitle>
-                    </CardHeader>
-                    <CardContent className="space-y-4">
-                      <div>
-                        <label className="text-sm text-muted-foreground">Prénom</label>
-                        <p className="font-medium">Joel</p>
-                      </div>
+                <Card>
+                  <CardHeader>
+                    <CardTitle>General</CardTitle>
+                  </CardHeader>
+                  <CardContent className="space-y-4">
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                       <div>
                         <label className="text-sm text-muted-foreground">Nom</label>
-                        <p className="font-medium">TAMBO</p>
+                        <p className="font-medium">Company Studio</p>
                       </div>
                       <div>
-                        <label className="text-sm text-muted-foreground">Date de naissance</label>
-                        <p className="font-medium">1 janvier 1970</p>
+                        <label className="text-sm text-muted-foreground">Entreprise</label>
+                        <p className="font-medium">✖️ Xing</p>
                       </div>
                       <div>
-                        <label className="text-sm text-muted-foreground">Genre</label>
-                        <p className="font-medium">Homme</p>
+                        <label className="text-sm text-muted-foreground">Email</label>
+                        <p className="font-medium">kristinwatson@mail.com</p>
                       </div>
-                    </CardContent>
-                  </Card>
+                      <div>
+                        <label className="text-sm text-muted-foreground">Numéro</label>
+                        <p className="font-medium">(303) 555-0105</p>
+                      </div>
+                    </div>
+                  </CardContent>
+                </Card>
 
-                  <Card>
-                    <CardHeader>
-                      <CardTitle className="flex items-center">
-                        <Building2 className="h-5 w-5 mr-2" />
-                        Informations entreprise
-                      </CardTitle>
-                    </CardHeader>
-                    <CardContent className="space-y-4">
-                      <div>
-                        <label className="text-sm text-muted-foreground">Adresse</label>
-                        <p className="font-medium">Douala, Cameroon</p>
-                      </div>
-                    </CardContent>
-                  </Card>
-                </div>
-              </TabsContent>
-
-              <TabsContent value="prestations" className="space-y-4">
                 <Card>
                   <CardHeader>
-                    <div className="flex items-center justify-between">
-                      <CardTitle>Prestations</CardTitle>
-                      <Button size="sm">
-                        + Nouvelle prestation
-                      </Button>
-                    </div>
+                    <CardTitle>Autres informations</CardTitle>
                   </CardHeader>
-                  <CardContent>
-                    <div className="text-center py-12">
-                      <div className="text-muted-foreground mb-4">Aucune prestation</div>
-                      <p className="text-sm text-muted-foreground">
-                        Les prestations apparaîtront ici
-                      </p>
+                  <CardContent className="space-y-4">
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                      <div>
+                        <label className="text-sm text-muted-foreground">Pays</label>
+                        <p className="font-medium">Cameroun</p>
+                      </div>
+                      <div>
+                        <label className="text-sm text-muted-foreground">Ville</label>
+                        <p className="font-medium">Douala</p>
+                      </div>
                     </div>
                   </CardContent>
                 </Card>
               </TabsContent>
 
-              <TabsContent value="evenements" className="space-y-4">
-                <Card>
-                  <CardHeader>
-                    <div className="flex items-center justify-between">
-                      <CardTitle>Événements liés aux prestations</CardTitle>
-                      <Button size="sm">
-                        + Nouvel événement
-                      </Button>
-                    </div>
-                  </CardHeader>
-                  <CardContent>
-                    <div className="text-center py-12">
-                      <Calendar className="h-16 w-16 mx-auto text-muted-foreground mb-4" />
-                      <div className="font-medium mb-2">Aucun événement planifié</div>
-                      <p className="text-sm text-muted-foreground">
-                        Planifiez votre prochaine séance photo
-                      </p>
-                    </div>
-                  </CardContent>
-                </Card>
-              </TabsContent>
-
-              <TabsContent value="documents" className="space-y-4">
-                <Card>
-                  <CardHeader>
-                    <div className="flex items-center justify-between">
-                      <CardTitle>Documents du client</CardTitle>
-                      <Button size="sm">
-                        + Nouveau document
-                      </Button>
-                    </div>
-                  </CardHeader>
-                  <CardContent>
-                    <div className="text-center py-12">
-                      <FileText className="h-16 w-16 mx-auto text-muted-foreground mb-4" />
-                      <div className="font-medium mb-2">Aucun document</div>
-                      <p className="text-sm text-muted-foreground">
-                        Les devis, contrats et documents apparaîtront ici
-                      </p>
-                    </div>
-                  </CardContent>
-                </Card>
-              </TabsContent>
-
-              <TabsContent value="portail" className="space-y-4">
-                <Card>
-                  <CardHeader>
-                    <CardTitle className="flex items-center">
-                      <ExternalLink className="h-5 w-5 mr-2" />
-                      Portail client
-                    </CardTitle>
-                  </CardHeader>
-                  <CardContent className="space-y-6">
-                    <div>
-                      <p className="text-muted-foreground mb-4">
-                        Générez un lien sécurisé pour que votre client puisse accéder à son portail personnel et consulter ses projets, factures et documents.
-                      </p>
-                      
-                      {!clientPortalLink ? (
-                        <Button onClick={generateClientPortalLink} className="w-full sm:w-auto">
-                          <ExternalLink className="h-4 w-4 mr-2" />
-                          Générer le lien du portail client
-                        </Button>
-                      ) : (
-                        <div className="space-y-4">
+              <TabsContent value="activite" className="space-y-4">
+                {/* Activity Stats */}
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  {Object.entries(activityData).map(([key, data]) => (
+                    <Card key={key}>
+                      <CardContent className="p-6">
+                        <div className="flex items-start justify-between">
                           <div>
-                            <label className="text-sm font-medium text-muted-foreground">
-                              Lien du portail client
-                            </label>
-                            <div className="flex items-center space-x-2 mt-2">
-                              <div className="flex-1 p-3 bg-muted rounded-md text-sm font-mono break-all">
-                                {clientPortalLink}
-                              </div>
-                              <Button size="sm" variant="outline" onClick={copyPortalLink}>
-                                <Copy className="h-4 w-4" />
-                              </Button>
-                            </div>
+                            <p className="text-sm text-muted-foreground capitalize">
+                              Nombre de {key}
+                            </p>
+                            <p className="text-2xl font-bold mt-2">{data.value}</p>
+                            <p className="text-xs text-muted-foreground mt-1">
+                              {data.change}
+                            </p>
                           </div>
-                          
-                          <div className="flex space-x-2">
-                            <Button variant="outline" onClick={generateClientPortalLink}>
-                              Regénérer le lien
-                            </Button>
-                            <Button variant="outline" asChild>
-                              <a href={clientPortalLink} target="_blank" rel="noopener noreferrer">
-                                <ExternalLink className="h-4 w-4 mr-2" />
-                                Tester le portail
-                              </a>
-                            </Button>
+                          <div className="text-right">
+                            {data.trend === "up" ? (
+                              <TrendingUp className="h-4 w-4 text-success" />
+                            ) : (
+                              <TrendingDown className="h-4 w-4 text-destructive" />
+                            )}
                           </div>
                         </div>
-                      )}
-                    </div>
+                      </CardContent>
+                    </Card>
+                  ))}
+                </div>
 
-                    <div className="pt-4 border-t">
-                      <h4 className="font-medium mb-2">Fonctionnalités du portail client</h4>
-                      <ul className="text-sm text-muted-foreground space-y-1">
-                        <li>• Consultation des projets en cours</li>
-                        <li>• Accès aux galeries photos</li>
-                        <li>• Téléchargement des documents</li>
-                        <li>• Suivi des factures et paiements</li>
-                        <li>• Communication directe avec le photographe</li>
-                      </ul>
+                {/* Monthly Chart */}
+                <Card>
+                  <CardHeader>
+                    <CardTitle>Prestations mensuelles</CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <div className="h-64 flex items-end justify-between space-x-2">
+                      {['Jan', 'Fév', 'Mar', 'Avr', 'Mai', 'Jun', 'Jul', 'Aoû', 'Sep', 'Oct', 'Nov', 'Déc'].map((month, index) => (
+                        <div key={month} className="flex flex-col items-center flex-1">
+                          <div
+                            className={`w-full rounded-t-sm ${index === 7 ? 'bg-primary' : 'bg-primary/30'}`}
+                            style={{ 
+                              height: `${Math.random() * 100 + 50}px`,
+                              minHeight: '20px'
+                            }}
+                          ></div>
+                          <span className="text-xs text-muted-foreground mt-2">{month}</span>
+                        </div>
+                      ))}
+                    </div>
+                  </CardContent>
+                </Card>
+              </TabsContent>
+
+              <TabsContent value="abonnement" className="space-y-4">
+                <Card>
+                  <CardHeader>
+                    <CardTitle>Informations d'abonnement</CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <div className="space-y-4">
+                      <div>
+                        <label className="text-sm text-muted-foreground">Plan actuel</label>
+                        <div className="flex items-center space-x-2 mt-1">
+                          <Badge className="bg-success/10 text-success">Premium</Badge>
+                          <span className="text-sm text-muted-foreground">- Facturation mensuelle</span>
+                        </div>
+                      </div>
+                      <div>
+                        <label className="text-sm text-muted-foreground">Date d'expiration</label>
+                        <p className="font-medium">15 Décembre 2024</p>
+                      </div>
+                      <div>
+                        <label className="text-sm text-muted-foreground">Montant mensuel</label>
+                        <p className="font-medium">29 900 F CFA</p>
+                      </div>
                     </div>
                   </CardContent>
                 </Card>
