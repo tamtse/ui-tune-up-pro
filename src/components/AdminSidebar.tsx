@@ -18,7 +18,6 @@ import {
   Camera,
   Calendar,
   DollarSign,
-  Globe,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
@@ -36,7 +35,6 @@ const userMenuItems = [
   { title: "Contacts", url: "/contacts", icon: Users },
   { title: "Calendrier", url: "/calendar", icon: Calendar },
   { title: "Finances", url: "/finances", icon: DollarSign },
-  { title: "Site Vitrine", url: "/website-builder", icon: Globe },
 ];
 
 const clientMenuItems = [
