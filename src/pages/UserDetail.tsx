@@ -21,24 +21,27 @@ export default function UserDetail() {
     <AdminLayout>
       <div className="space-y-6">
         {/* Header */}
-        <div className="flex items-center justify-between">
-          <div className="flex items-center space-x-4">
+        <div className="flex flex-col space-y-4 lg:flex-row lg:items-center lg:justify-between lg:space-y-0">
+          <div className="flex items-center space-x-3 sm:space-x-4">
             <Button variant="ghost" size="sm" asChild>
               <Link to="/users">
                 <ArrowLeft className="h-4 w-4" />
               </Link>
             </Button>
             <div className="flex items-center space-x-3">
-              <div className="p-3 bg-primary/10 rounded-full">
-                <div className="text-primary text-lg font-bold">A</div>
+              <div className="p-2 sm:p-3 bg-primary/10 rounded-full">
+                <div className="text-primary text-base sm:text-lg font-bold">A</div>
               </div>
-              <h1 className="text-2xl font-bold">Information utilisateur</h1>
+              <h1 className="text-xl sm:text-2xl font-bold">Information utilisateur</h1>
             </div>
           </div>
-          <div className="flex items-center space-x-2">
-            <Button variant="outline" size="sm">
+          <div className="flex items-center space-x-2 ml-auto lg:ml-0">
+            <Button variant="outline" size="sm" className="hidden sm:flex">
               <Share className="h-4 w-4 mr-2" />
               Partager
+            </Button>
+            <Button variant="outline" size="sm" className="sm:hidden">
+              <Share className="h-4 w-4" />
             </Button>
             <Button variant="ghost" size="sm">
               <MoreHorizontal className="h-4 w-4" />
@@ -49,32 +52,33 @@ export default function UserDetail() {
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
           {/* User Profile Card */}
           <Card className="lg:col-span-1">
-            <CardContent className="p-6">
+            <CardContent className="p-4 sm:p-6">
               <div className="text-center">
-                <div className="relative mx-auto w-24 h-24 mb-4">
-                  <Avatar className="w-24 h-24">
+                <div className="relative mx-auto w-20 h-20 sm:w-24 sm:h-24 mb-4">
+                  <Avatar className="w-20 h-20 sm:w-24 sm:h-24">
                     <AvatarImage src="/avatars/kristin.jpg" alt="Kristin Watson" />
-                    <AvatarFallback className="text-lg">KW</AvatarFallback>
+                    <AvatarFallback className="text-base sm:text-lg">KW</AvatarFallback>
                   </Avatar>
-                  <div className="absolute bottom-0 right-0 w-6 h-6 bg-success rounded-full border-2 border-background"></div>
+                  <div className="absolute bottom-0 right-0 w-5 h-5 sm:w-6 sm:h-6 bg-success rounded-full border-2 border-background"></div>
                 </div>
                 
-                <h2 className="text-xl font-bold mb-1">Kristin Watson</h2>
-                <p className="text-muted-foreground mb-2">kristinwatson@mail.com</p>
+                <h2 className="text-lg sm:text-xl font-bold mb-1">Kristin Watson</h2>
+                <p className="text-muted-foreground mb-2 text-sm sm:text-base truncate">kristinwatson@mail.com</p>
                 <div className="flex items-center justify-center text-muted-foreground mb-4">
-                  <span className="text-sm">📍 Yaoundé - Douala</span>
+                  <span className="text-xs sm:text-sm text-center">📍 Yaoundé - Douala</span>
                 </div>
 
-                <div className="flex justify-center space-x-2 mb-6">
-                  <Button variant="outline" size="sm">
+                <div className="flex flex-col sm:flex-row justify-center space-y-2 sm:space-y-0 sm:space-x-2 mb-6">
+                  <Button variant="outline" size="sm" className="w-full sm:w-auto">
                     <Mail className="h-4 w-4 mr-2" />
-                    Email
+                    <span className="hidden sm:inline">Email</span>
+                    <span className="sm:hidden">Envoyer un email</span>
                   </Button>
-                  <Button variant="outline" size="sm">
+                  <Button variant="outline" size="sm" className="w-full sm:w-auto">
                     <MessageSquare className="h-4 w-4 mr-2" />
                     Message
                   </Button>
-                  <Button variant="outline" size="sm">
+                  <Button variant="outline" size="sm" className="w-full sm:w-auto">
                     Plus
                   </Button>
                 </div>
@@ -85,11 +89,20 @@ export default function UserDetail() {
           {/* User Information */}
           <div className="lg:col-span-2">
             <Tabs defaultValue="informations" className="space-y-4">
-              <TabsList>
-                <TabsTrigger value="informations">Informations</TabsTrigger>
-                <TabsTrigger value="activite">Activité</TabsTrigger>
-                <TabsTrigger value="abonnement">Abonnement</TabsTrigger>
-                <TabsTrigger value="validation">Validation Email</TabsTrigger>
+              <TabsList className="grid w-full grid-cols-2 lg:grid-cols-4 h-auto">
+                <TabsTrigger value="informations" className="text-xs sm:text-sm p-2 sm:p-3">
+                  <span className="hidden sm:inline">Informations</span>
+                  <span className="sm:hidden">Info</span>
+                </TabsTrigger>
+                <TabsTrigger value="activite" className="text-xs sm:text-sm p-2 sm:p-3">Activité</TabsTrigger>
+                <TabsTrigger value="abonnement" className="text-xs sm:text-sm p-2 sm:p-3">
+                  <span className="hidden sm:inline">Abonnement</span>
+                  <span className="sm:hidden">Abo</span>
+                </TabsTrigger>
+                <TabsTrigger value="validation" className="text-xs sm:text-sm p-2 sm:p-3">
+                  <span className="hidden sm:inline">Validation Email</span>
+                  <span className="sm:hidden">Email</span>
+                </TabsTrigger>
               </TabsList>
 
               <TabsContent value="informations" className="space-y-4">
@@ -265,19 +278,21 @@ export default function UserDetail() {
                       {/* Actions administrateur */}
                       <div className="space-y-3">
                         <h4 className="font-medium">Actions administrateur</h4>
-                        <div className="flex flex-col sm:flex-row gap-3">
-                          <Button variant="default" className="flex items-center space-x-2">
+                        <div className="flex flex-col gap-3">
+                          <Button variant="default" className="flex items-center justify-center space-x-2 w-full">
                             <CheckCircle className="h-4 w-4" />
-                            <span>Valider manuellement</span>
+                            <span className="text-sm sm:text-base">Valider manuellement</span>
                           </Button>
-                          <Button variant="outline" className="flex items-center space-x-2">
-                            <Mail className="h-4 w-4" />
-                            <span>Renvoyer email de validation</span>
-                          </Button>
-                          <Button variant="destructive" className="flex items-center space-x-2">
-                            <XCircle className="h-4 w-4" />
-                            <span>Révoquer validation</span>
-                          </Button>
+                          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                            <Button variant="outline" className="flex items-center justify-center space-x-2 w-full">
+                              <Mail className="h-4 w-4" />
+                              <span className="text-sm">Renvoyer email</span>
+                            </Button>
+                            <Button variant="destructive" className="flex items-center justify-center space-x-2 w-full">
+                              <XCircle className="h-4 w-4" />
+                              <span className="text-sm">Révoquer</span>
+                            </Button>
+                          </div>
                         </div>
                       </div>
 

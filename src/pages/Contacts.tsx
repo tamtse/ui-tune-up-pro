@@ -79,27 +79,28 @@ export default function Contacts() {
       <AdminLayout>
         <div className="space-y-6">
           {/* Header */}
-          <div className="flex items-center justify-between">
-            <div className="flex items-center space-x-4">
+          <div className="flex flex-col space-y-4 lg:flex-row lg:items-center lg:justify-between lg:space-y-0">
+            <div className="flex items-center space-x-3 sm:space-x-4">
               <Button variant="ghost" size="sm" onClick={() => setSelectedContact(null)}>
                 <ArrowLeft className="h-4 w-4" />
               </Button>
               <div className="flex items-center space-x-3">
-                <div className="p-3 bg-primary/10 rounded-full">
-                  <div className="text-primary text-lg font-bold">{selectedContact.initials}</div>
+                <div className="p-2 sm:p-3 bg-primary/10 rounded-full">
+                  <div className="text-primary text-base sm:text-lg font-bold">{selectedContact.initials}</div>
                 </div>
                 <div>
-                  <h1 className="text-2xl font-bold">{selectedContact.name}</h1>
-                  <p className="text-muted-foreground">Voir détails</p>
+                  <h1 className="text-xl sm:text-2xl font-bold">{selectedContact.name}</h1>
+                  <p className="text-muted-foreground text-sm sm:text-base">Voir détails</p>
                 </div>
               </div>
             </div>
-            <div className="flex items-center space-x-2">
+            <div className="flex flex-col sm:flex-row items-stretch sm:items-center space-y-2 sm:space-y-0 sm:space-x-2">
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
-                  <Button variant="outline">
+                  <Button variant="outline" className="w-full sm:w-auto">
                     <Plus className="h-4 w-4 mr-2" />
-                    Actions rapides
+                    <span className="hidden sm:inline">Actions rapides</span>
+                    <span className="sm:hidden">Actions</span>
                   </Button>
                 </DropdownMenuTrigger>
                   <DropdownMenuContent>
@@ -109,7 +110,7 @@ export default function Contacts() {
                     <DropdownMenuItem>Nouvelle prestation</DropdownMenuItem>
                   </DropdownMenuContent>
               </DropdownMenu>
-              <Button>
+              <Button className="w-full sm:w-auto">
                 <span className="mr-2">✏️</span>
                 Modifier
               </Button>
@@ -117,38 +118,41 @@ export default function Contacts() {
           </div>
 
           {/* Contact Info Header */}
-          <div className="bg-muted/30 rounded-lg p-6">
-            <div className="flex items-center justify-between">
-              <div className="flex items-center space-x-4">
-                <Avatar className="w-16 h-16">
-                  <AvatarFallback className="text-lg font-bold">{selectedContact.initials}</AvatarFallback>
+          <div className="bg-muted/30 rounded-lg p-4 sm:p-6">
+            <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between space-y-4 lg:space-y-0">
+              <div className="flex flex-col sm:flex-row sm:items-center space-y-3 sm:space-y-0 sm:space-x-4">
+                <Avatar className="w-12 h-12 sm:w-16 sm:h-16 mx-auto sm:mx-0">
+                  <AvatarFallback className="text-sm sm:text-lg font-bold">{selectedContact.initials}</AvatarFallback>
                 </Avatar>
-                <div>
-                  <div className="flex items-center space-x-2 mb-1">
-                    <h2 className="text-xl font-bold">{selectedContact.name}</h2>
-                    <Badge variant={selectedContact.type === "entreprise" ? "default" : "secondary"}>
+                <div className="text-center sm:text-left">
+                  <div className="flex flex-col sm:flex-row sm:items-center space-y-1 sm:space-y-0 sm:space-x-2 mb-2">
+                    <h2 className="text-lg sm:text-xl font-bold">{selectedContact.name}</h2>
+                    <Badge variant={selectedContact.type === "entreprise" ? "default" : "secondary"} className="w-fit mx-auto sm:mx-0">
                       {selectedContact.type === "entreprise" ? "Client" : "Homme"}
                     </Badge>
                   </div>
-                  <div className="flex items-center space-x-4 text-sm text-muted-foreground">
-                    <span>📧 {selectedContact.email}</span>
+                  <div className="flex flex-col sm:flex-row sm:items-center space-y-1 sm:space-y-0 sm:space-x-4 text-xs sm:text-sm text-muted-foreground">
+                    <span className="truncate">📧 {selectedContact.email}</span>
                     <span>📞 {selectedContact.phone}</span>
-                    <span>📍 {selectedContact.location}</span>
+                    <span className="hidden lg:inline">📍 {selectedContact.location}</span>
+                  </div>
+                  <div className="lg:hidden mt-1">
+                    <span className="text-xs text-muted-foreground">📍 {selectedContact.location}</span>
                   </div>
                 </div>
               </div>
-              <div className="flex space-x-6 text-center">
+              <div className="grid grid-cols-3 gap-3 sm:gap-6 text-center">
                 <div>
-                  <div className="text-2xl font-bold text-primary">{selectedContact.projectsTotal}</div>
-                  <div className="text-sm text-muted-foreground">Projets totaux</div>
+                  <div className="text-lg sm:text-2xl font-bold text-primary">{selectedContact.projectsTotal}</div>
+                  <div className="text-xs sm:text-sm text-muted-foreground">Projets totaux</div>
                 </div>
                 <div>
-                  <div className="text-2xl font-bold text-success">{selectedContact.revenue}</div>
-                  <div className="text-sm text-muted-foreground">Chiffre d'affaires</div>
+                  <div className="text-lg sm:text-2xl font-bold text-success">{selectedContact.revenue}</div>
+                  <div className="text-xs sm:text-sm text-muted-foreground">Chiffre d'affaires</div>
                 </div>
                 <div>
-                  <div className="text-2xl font-bold text-warning">{selectedContact.pendingQuotes}</div>
-                  <div className="text-sm text-muted-foreground">Devis en attente</div>
+                  <div className="text-lg sm:text-2xl font-bold text-warning">{selectedContact.pendingQuotes}</div>
+                  <div className="text-xs sm:text-sm text-muted-foreground">Devis en attente</div>
                 </div>
               </div>
             </div>
@@ -156,12 +160,24 @@ export default function Contacts() {
 
           {/* Tabs */}
           <Tabs defaultValue="informations" className="space-y-4">
-            <TabsList>
-              <TabsTrigger value="informations">Informations personnelles</TabsTrigger>
-              <TabsTrigger value="prestations">Prestations</TabsTrigger>
-              <TabsTrigger value="evenements">Événements</TabsTrigger>
-              <TabsTrigger value="documents">Documents</TabsTrigger>
-              <TabsTrigger value="portail">Portail client</TabsTrigger>
+            <TabsList className="grid w-full grid-cols-2 lg:grid-cols-5 h-auto gap-1">
+              <TabsTrigger value="informations" className="text-xs sm:text-sm p-2 sm:p-3">
+                <span className="hidden sm:inline">Informations personnelles</span>
+                <span className="sm:hidden">Info</span>
+              </TabsTrigger>
+              <TabsTrigger value="prestations" className="text-xs sm:text-sm p-2 sm:p-3">
+                <span className="hidden sm:inline">Prestations</span>
+                <span className="sm:hidden">Presta</span>
+              </TabsTrigger>
+              <TabsTrigger value="evenements" className="text-xs sm:text-sm p-2 sm:p-3">
+                <span className="hidden sm:inline">Événements</span>
+                <span className="sm:hidden">Events</span>
+              </TabsTrigger>
+              <TabsTrigger value="documents" className="text-xs sm:text-sm p-2 sm:p-3">Documents</TabsTrigger>
+              <TabsTrigger value="portail" className="text-xs sm:text-sm p-2 sm:p-3 col-span-2 lg:col-span-1">
+                <span className="hidden sm:inline">Portail client</span>
+                <span className="sm:hidden">Portail</span>
+              </TabsTrigger>
             </TabsList>
 
             <TabsContent value="informations" className="space-y-4">
