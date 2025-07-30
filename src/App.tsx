@@ -17,6 +17,7 @@ import ClientFactures from "./pages/ClientFactures";
 import ClientDocumentation from "./pages/ClientDocumentation";
 import ClientContract from "./pages/ClientContract";
 import ClientPortal from "./pages/ClientPortal";
+import Contacts from "./pages/Contacts";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -39,6 +40,7 @@ const App = () => (
           <Route path="/client-guide" element={<ClientUserGuide />} />
           <Route path="/client/:clientId" element={<ClientPortal />} />
           <Route path="/client/:clientId/contract/:contractId" element={<ClientContract />} />
+          <Route path="/contacts" element={<Contacts />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
         </Routes>
