@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { ArrowLeft, Share, MoreHorizontal, Mail, MessageSquare, TrendingUp, TrendingDown } from "lucide-react";
+import { ArrowLeft, Share, MoreHorizontal, Mail, MessageSquare, TrendingUp, TrendingDown, CheckCircle, XCircle, Shield } from "lucide-react";
 import { Link, useParams } from "react-router-dom";
 
 const activityData = {
@@ -89,6 +89,7 @@ export default function UserDetail() {
                 <TabsTrigger value="informations">Informations</TabsTrigger>
                 <TabsTrigger value="activite">Activité</TabsTrigger>
                 <TabsTrigger value="abonnement">Abonnement</TabsTrigger>
+                <TabsTrigger value="validation">Validation Email</TabsTrigger>
               </TabsList>
 
               <TabsContent value="informations" className="space-y-4">
@@ -211,6 +212,105 @@ export default function UserDetail() {
                       <div>
                         <label className="text-sm text-muted-foreground">Montant mensuel</label>
                         <p className="font-medium">29 900 F CFA</p>
+                      </div>
+                    </div>
+                  </CardContent>
+                </Card>
+              </TabsContent>
+
+              <TabsContent value="validation" className="space-y-4">
+                <Card>
+                  <CardHeader>
+                    <CardTitle className="flex items-center space-x-2">
+                      <Shield className="h-5 w-5" />
+                      <span>Validation du compte email</span>
+                    </CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <div className="space-y-6">
+                      {/* Statut de validation */}
+                      <div className="flex items-center justify-between p-4 border rounded-lg">
+                        <div className="flex items-center space-x-3">
+                          <div className="flex items-center space-x-2">
+                            <XCircle className="h-5 w-5 text-destructive" />
+                            <span className="font-medium">Email non validé</span>
+                          </div>
+                          <Badge variant="destructive">Non vérifié</Badge>
+                        </div>
+                        <div className="text-sm text-muted-foreground">
+                          kristinwatson@mail.com
+                        </div>
+                      </div>
+
+                      {/* Informations de validation */}
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div>
+                          <label className="text-sm text-muted-foreground">Date d'inscription</label>
+                          <p className="font-medium">15 Novembre 2024</p>
+                        </div>
+                        <div>
+                          <label className="text-sm text-muted-foreground">Dernier email envoyé</label>
+                          <p className="font-medium">20 Novembre 2024</p>
+                        </div>
+                        <div>
+                          <label className="text-sm text-muted-foreground">Tentatives de validation</label>
+                          <p className="font-medium">3 tentatives</p>
+                        </div>
+                        <div>
+                          <label className="text-sm text-muted-foreground">Statut du compte</label>
+                          <Badge variant="outline">En attente de validation</Badge>
+                        </div>
+                      </div>
+
+                      {/* Actions administrateur */}
+                      <div className="space-y-3">
+                        <h4 className="font-medium">Actions administrateur</h4>
+                        <div className="flex flex-col sm:flex-row gap-3">
+                          <Button variant="default" className="flex items-center space-x-2">
+                            <CheckCircle className="h-4 w-4" />
+                            <span>Valider manuellement</span>
+                          </Button>
+                          <Button variant="outline" className="flex items-center space-x-2">
+                            <Mail className="h-4 w-4" />
+                            <span>Renvoyer email de validation</span>
+                          </Button>
+                          <Button variant="destructive" className="flex items-center space-x-2">
+                            <XCircle className="h-4 w-4" />
+                            <span>Révoquer validation</span>
+                          </Button>
+                        </div>
+                      </div>
+
+                      {/* Historique */}
+                      <div className="space-y-3">
+                        <h4 className="font-medium">Historique de validation</h4>
+                        <Card>
+                          <CardContent className="p-4">
+                            <div className="space-y-3">
+                              <div className="flex items-center justify-between text-sm">
+                                <div className="flex items-center space-x-2">
+                                  <div className="w-2 h-2 bg-primary rounded-full"></div>
+                                  <span>Email de validation envoyé</span>
+                                </div>
+                                <span className="text-muted-foreground">20 Nov 2024, 14:30</span>
+                              </div>
+                              <div className="flex items-center justify-between text-sm">
+                                <div className="flex items-center space-x-2">
+                                  <div className="w-2 h-2 bg-muted rounded-full"></div>
+                                  <span>Email de validation envoyé</span>
+                                </div>
+                                <span className="text-muted-foreground">18 Nov 2024, 09:15</span>
+                              </div>
+                              <div className="flex items-center justify-between text-sm">
+                                <div className="flex items-center space-x-2">
+                                  <div className="w-2 h-2 bg-muted rounded-full"></div>
+                                  <span>Inscription du compte</span>
+                                </div>
+                                <span className="text-muted-foreground">15 Nov 2024, 16:45</span>
+                              </div>
+                            </div>
+                          </CardContent>
+                        </Card>
                       </div>
                     </div>
                   </CardContent>
