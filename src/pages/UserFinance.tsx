@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { AdminLayout } from "@/components/AdminLayout";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -10,7 +11,6 @@ import {
   TrendingUp, 
   TrendingDown, 
   FileText,
-  Calendar,
   Download,
   Filter
 } from "lucide-react";
@@ -121,8 +121,9 @@ export default function UserFinance() {
   ];
 
   return (
-    <div className="space-y-6 p-4 max-w-7xl mx-auto">
-      <div className="flex flex-col space-y-4">
+    <AdminLayout>
+      <div className="space-y-6">
+        {/* Header */}
         <div className="flex items-center justify-between">
           <div>
             <h1 className="text-2xl font-bold tracking-tight">Finances</h1>
@@ -349,6 +350,6 @@ export default function UserFinance() {
           </CardContent>
         </Card>
       </div>
-    </div>
+    </AdminLayout>
   );
 }
