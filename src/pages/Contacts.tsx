@@ -6,8 +6,9 @@ import { Badge } from "@/components/ui/badge";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
-import { ArrowLeft, Search, Filter, Grid, List, Plus, MoreHorizontal, Users, Building, User, TrendingUp, Download, Upload, Copy, CheckIcon } from "lucide-react";
+import { ArrowLeft, Search, Filter, Grid, List, Plus, MoreHorizontal, Users, Building, User, TrendingUp, Download, Upload, Copy, CheckIcon, StickyNote, Trash2 } from "lucide-react";
 
 const contactsData = [
   {
@@ -57,6 +58,11 @@ export default function Contacts() {
   const [isGridView, setIsGridView] = useState(true);
   const [portalLink, setPortalLink] = useState("");
   const [linkCopied, setLinkCopied] = useState(false);
+  const [notes, setNotes] = useState([
+    { id: 1, content: "Client très satisfait de la dernière séance photo. Souhaite programmer une nouvelle séance pour l'été.", date: "2024-07-20", author: "Admin" },
+    { id: 2, content: "Préfère être contacté par téléphone plutôt que par email.", date: "2024-07-15", author: "Admin" }
+  ]);
+  const [newNote, setNewNote] = useState("");
 
   const totalContacts = contactsData.length;
   const enterprises = contactsData.filter(c => c.type === "entreprise").length;
@@ -72,6 +78,23 @@ export default function Contacts() {
     navigator.clipboard.writeText(portalLink);
     setLinkCopied(true);
     setTimeout(() => setLinkCopied(false), 2000);
+  };
+
+  const addNote = () => {
+    if (newNote.trim()) {
+      const note = {
+        id: Date.now(),
+        content: newNote.trim(),
+        date: new Date().toISOString().split('T')[0],
+        author: "Admin"
+      };
+      setNotes([note, ...notes]);
+      setNewNote("");
+    }
+  };
+
+  const deleteNote = (noteId: number) => {
+    setNotes(notes.filter(note => note.id !== noteId));
   };
 
   if (selectedContact) {
@@ -160,7 +183,7 @@ export default function Contacts() {
 
           {/* Tabs */}
           <Tabs defaultValue="informations" className="space-y-4">
-            <TabsList className="grid w-full grid-cols-2 lg:grid-cols-5 h-auto gap-1">
+            <TabsList className="grid w-full grid-cols-3 lg:grid-cols-6 h-auto gap-1">
               <TabsTrigger value="informations" className="text-xs sm:text-sm p-2 sm:p-3">
                 <span className="hidden sm:inline">Informations personnelles</span>
                 <span className="sm:hidden">Info</span>
@@ -174,7 +197,8 @@ export default function Contacts() {
                 <span className="sm:hidden">Events</span>
               </TabsTrigger>
               <TabsTrigger value="documents" className="text-xs sm:text-sm p-2 sm:p-3">Documents</TabsTrigger>
-              <TabsTrigger value="portail" className="text-xs sm:text-sm p-2 sm:p-3 col-span-2 lg:col-span-1">
+              <TabsTrigger value="notes" className="text-xs sm:text-sm p-2 sm:p-3">Notes</TabsTrigger>
+              <TabsTrigger value="portail" className="text-xs sm:text-sm p-2 sm:p-3 col-span-3 lg:col-span-1">
                 <span className="hidden sm:inline">Portail client</span>
                 <span className="sm:hidden">Portail</span>
               </TabsTrigger>
@@ -376,6 +400,78 @@ export default function Contacts() {
                         </Button>
                       </div>
                     </div>
+                  </div>
+                </CardContent>
+              </Card>
+            </TabsContent>
+
+            <TabsContent value="notes" className="space-y-4">
+              <Card>
+                <CardHeader>
+                  <div className="flex items-center justify-between">
+                    <CardTitle className="flex items-center space-x-2">
+                      <StickyNote className="h-5 w-5" />
+                      <span>Notes client</span>
+                    </CardTitle>
+                    <Badge variant="outline">{notes.length} note{notes.length !== 1 ? 's' : ''}</Badge>
+                  </div>
+                </CardHeader>
+                <CardContent className="space-y-4">
+                  {/* Ajouter une nouvelle note */}
+                  <div className="space-y-3 p-4 border rounded-lg bg-muted/30">
+                    <h4 className="font-medium">Ajouter une note</h4>
+                    <Textarea
+                      placeholder="Saisir une note concernant ce client..."
+                      value={newNote}
+                      onChange={(e) => setNewNote(e.target.value)}
+                      className="min-h-[80px]"
+                    />
+                    <div className="flex justify-end">
+                      <Button 
+                        onClick={addNote}
+                        disabled={!newNote.trim()}
+                        size="sm"
+                      >
+                        <Plus className="h-4 w-4 mr-2" />
+                        Ajouter la note
+                      </Button>
+                    </div>
+                  </div>
+
+                  {/* Liste des notes */}
+                  <div className="space-y-3">
+                    {notes.length === 0 ? (
+                      <div className="text-center py-8 text-muted-foreground">
+                        <StickyNote className="h-12 w-12 mx-auto mb-4 opacity-50" />
+                        <p>Aucune note pour ce client</p>
+                        <p className="text-sm">Ajoutez votre première note ci-dessus</p>
+                      </div>
+                    ) : (
+                      notes.map((note) => (
+                        <div key={note.id} className="border rounded-lg p-4 bg-background">
+                          <div className="flex items-start justify-between mb-3">
+                            <div className="flex items-center space-x-2 text-sm text-muted-foreground">
+                              <span>📝 {note.author}</span>
+                              <span>•</span>
+                              <span>{new Date(note.date).toLocaleDateString('fr-FR', { 
+                                day: 'numeric', 
+                                month: 'long', 
+                                year: 'numeric' 
+                              })}</span>
+                            </div>
+                            <Button
+                              variant="ghost"
+                              size="sm"
+                              onClick={() => deleteNote(note.id)}
+                              className="text-destructive hover:text-destructive h-8 w-8 p-0"
+                            >
+                              <Trash2 className="h-4 w-4" />
+                            </Button>
+                          </div>
+                          <p className="text-sm leading-relaxed">{note.content}</p>
+                        </div>
+                      ))
+                    )}
                   </div>
                 </CardContent>
               </Card>
