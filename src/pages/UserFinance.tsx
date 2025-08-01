@@ -6,13 +6,16 @@ import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { StatCard } from "@/components/StatCard";
 import { useCommonGrids } from "@/hooks/use-responsive-grid";
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 import { 
   Euro, 
   TrendingUp, 
   TrendingDown, 
   FileText,
   Download,
-  Filter
+  Filter,
+  Info,
+  HelpCircle
 } from "lucide-react";
 import {
   ChartContainer,
@@ -129,24 +132,49 @@ export default function UserFinance() {
 
   return (
     <AdminLayout>
-      <div className="space-y-6">
+      <TooltipProvider>
+        <div className="space-y-6">
         {/* Header */}
         <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between space-y-4 lg:space-y-0">
-          <div>
-            <h1 className="text-2xl font-bold tracking-tight">Finances</h1>
-            <p className="text-muted-foreground">
-              Tableau de bord financier pour piloter votre activité photographe
-            </p>
+          <div className="flex items-center space-x-2">
+            <div>
+              <h1 className="text-2xl font-bold tracking-tight">Finances</h1>
+              <p className="text-muted-foreground">
+                Tableau de bord financier pour piloter votre activité photographe
+              </p>
+            </div>
+            <Tooltip>
+              <TooltipTrigger>
+                <HelpCircle className="w-5 h-5 text-muted-foreground" />
+              </TooltipTrigger>
+              <TooltipContent>
+                <p>Vue d'ensemble de vos performances financières avec KPIs, graphiques et métriques de pilotage</p>
+              </TooltipContent>
+            </Tooltip>
           </div>
           
           {/* Navigation des sous-menus */}
           <div className="flex space-x-2">
-            <Button variant="outline" asChild>
-              <a href="/finances/depenses">Dépenses</a>
-            </Button>
-            <Button variant="outline" asChild>
-              <a href="/finances/paiements">Paiements</a>
-            </Button>
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <Button variant="outline" asChild>
+                  <a href="/finances/depenses">Dépenses</a>
+                </Button>
+              </TooltipTrigger>
+              <TooltipContent>
+                <p>Gérer et suivre toutes vos dépenses professionnelles</p>
+              </TooltipContent>
+            </Tooltip>
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <Button variant="outline" asChild>
+                  <a href="/finances/paiements">Paiements</a>
+                </Button>
+              </TooltipTrigger>
+              <TooltipContent>
+                <p>Suivre les paiements reçus et les encaissements</p>
+              </TooltipContent>
+            </Tooltip>
           </div>
         </div>
 
@@ -155,7 +183,17 @@ export default function UserFinance() {
           <CardContent className="p-3 sm:p-4 lg:p-6">
             <div className="space-y-4 lg:space-y-0 lg:flex lg:flex-wrap lg:gap-4 lg:items-end">
               <div className="flex flex-col space-y-2 lg:min-w-0">
-                <label className="text-sm font-medium">Filtrer par</label>
+                <div className="flex items-center space-x-2">
+                  <label className="text-sm font-medium">Filtrer par</label>
+                  <Tooltip>
+                    <TooltipTrigger>
+                      <Info className="w-4 h-4 text-muted-foreground" />
+                    </TooltipTrigger>
+                    <TooltipContent>
+                      <p>Filtrez vos données par période et type de shooting pour analyser vos performances</p>
+                    </TooltipContent>
+                  </Tooltip>
+                </div>
                 <div className="flex items-center space-x-2">
                   <Filter className="w-4 h-4 text-muted-foreground flex-shrink-0" />
                   <span className="text-sm text-muted-foreground">2 critères</span>
@@ -223,7 +261,17 @@ export default function UserFinance() {
           {/* Chiffre d'affaires */}
           <Card className="lg:col-span-1">
             <CardHeader className="pb-2">
-              <CardTitle className="text-base sm:text-lg">Chiffre d'affaires (HT)</CardTitle>
+              <div className="flex items-center justify-between">
+                <CardTitle className="text-base sm:text-lg">Chiffre d'affaires (HT)</CardTitle>
+                <Tooltip>
+                  <TooltipTrigger>
+                    <Info className="w-4 h-4 text-muted-foreground" />
+                  </TooltipTrigger>
+                  <TooltipContent>
+                    <p>Évolution mensuelle de vos revenus hors taxes générés par vos prestations photo</p>
+                  </TooltipContent>
+                </Tooltip>
+              </div>
             </CardHeader>
             <CardContent className="p-3 sm:p-6">
               <ChartContainer config={chartConfig} className="h-[180px] sm:h-[200px]">
@@ -254,7 +302,17 @@ export default function UserFinance() {
           {/* Bénéfices */}
           <Card className="lg:col-span-1">
             <CardHeader className="pb-2">
-              <CardTitle className="text-base sm:text-lg">Bénéfices</CardTitle>
+              <div className="flex items-center justify-between">
+                <CardTitle className="text-base sm:text-lg">Bénéfices</CardTitle>
+                <Tooltip>
+                  <TooltipTrigger>
+                    <Info className="w-4 h-4 text-muted-foreground" />
+                  </TooltipTrigger>
+                  <TooltipContent>
+                    <p>Profit net après déduction de toutes les dépenses professionnelles</p>
+                  </TooltipContent>
+                </Tooltip>
+              </div>
             </CardHeader>
             <CardContent className="p-3 sm:p-6">
               <ChartContainer config={chartConfig} className="h-[180px] sm:h-[200px]">
@@ -285,7 +343,17 @@ export default function UserFinance() {
           {/* Dépenses */}
           <Card className="lg:col-span-1">
             <CardHeader className="pb-2">
-              <CardTitle className="text-base sm:text-lg">Dépenses (HT)</CardTitle>
+              <div className="flex items-center justify-between">
+                <CardTitle className="text-base sm:text-lg">Dépenses (HT)</CardTitle>
+                <Tooltip>
+                  <TooltipTrigger>
+                    <Info className="w-4 h-4 text-muted-foreground" />
+                  </TooltipTrigger>
+                  <TooltipContent>
+                    <p>Évolution de vos charges professionnelles (équipement, transport, marketing...)</p>
+                  </TooltipContent>
+                </Tooltip>
+              </div>
             </CardHeader>
             <CardContent className="p-3 sm:p-6">
               <ChartContainer config={chartConfig} className="h-[180px] sm:h-[200px]">
@@ -316,7 +384,17 @@ export default function UserFinance() {
           {/* Dépenses par type */}
           <Card className="lg:col-span-1">
             <CardHeader className="pb-2">
-              <CardTitle className="text-base sm:text-lg">Dépenses par type</CardTitle>
+              <div className="flex items-center justify-between">
+                <CardTitle className="text-base sm:text-lg">Dépenses par type</CardTitle>
+                <Tooltip>
+                  <TooltipTrigger>
+                    <Info className="w-4 h-4 text-muted-foreground" />
+                  </TooltipTrigger>
+                  <TooltipContent>
+                    <p>Répartition de vos dépenses par catégorie pour optimiser vos coûts</p>
+                  </TooltipContent>
+                </Tooltip>
+              </div>
             </CardHeader>
             <CardContent className="p-3 sm:p-6">
               <ChartContainer config={chartConfig} className="h-[180px] sm:h-[200px]">
@@ -348,30 +426,61 @@ export default function UserFinance() {
         {/* Métriques calculées */}
         <Card>
           <CardHeader className="pb-2">
-            <CardTitle className="text-base sm:text-lg">Métriques de performance</CardTitle>
+            <div className="flex items-center justify-between">
+              <CardTitle className="text-base sm:text-lg">Métriques de performance</CardTitle>
+              <Tooltip>
+                <TooltipTrigger>
+                  <Info className="w-4 h-4 text-muted-foreground" />
+                </TooltipTrigger>
+                <TooltipContent>
+                  <p>Indicateurs clés pour mesurer la rentabilité et l'efficacité de votre activité</p>
+                </TooltipContent>
+              </Tooltip>
+            </div>
           </CardHeader>
           <CardContent className="p-3 sm:p-6">
             <div className="grid gap-3 sm:gap-4 grid-cols-2 lg:grid-cols-4">
-              <div className="text-center space-y-1 sm:space-y-2">
-                <div className="text-lg sm:text-2xl font-bold text-primary">32%</div>
-                <div className="text-xs sm:text-sm text-muted-foreground">Marge bénéficiaire</div>
-              </div>
-              <div className="text-center space-y-1 sm:space-y-2">
-                <div className="text-lg sm:text-2xl font-bold text-secondary">126 600 FCFA</div>
-                <div className="text-xs sm:text-sm text-muted-foreground">Prix moyen/shooting</div>
-              </div>
-              <div className="text-center space-y-1 sm:space-y-2">
-                <div className="text-lg sm:text-2xl font-bold text-accent">8</div>
-                <div className="text-xs sm:text-sm text-muted-foreground">Projets ce mois</div>
-              </div>
-              <div className="text-center space-y-1 sm:space-y-2">
-                <div className="text-lg sm:text-2xl font-bold text-success">24j</div>
-                <div className="text-xs sm:text-sm text-muted-foreground">Délai paiement moyen</div>
-              </div>
+              <Tooltip>
+                <TooltipTrigger className="text-center space-y-1 sm:space-y-2">
+                  <div className="text-lg sm:text-2xl font-bold text-primary">32%</div>
+                  <div className="text-xs sm:text-sm text-muted-foreground">Marge bénéficiaire</div>
+                </TooltipTrigger>
+                <TooltipContent>
+                  <p>Pourcentage de profit par rapport au chiffre d'affaires (Bénéfice/CA x 100)</p>
+                </TooltipContent>
+              </Tooltip>
+              <Tooltip>
+                <TooltipTrigger className="text-center space-y-1 sm:space-y-2">
+                  <div className="text-lg sm:text-2xl font-bold text-secondary">126 600 FCFA</div>
+                  <div className="text-xs sm:text-sm text-muted-foreground">Prix moyen/shooting</div>
+                </TooltipTrigger>
+                <TooltipContent>
+                  <p>Montant moyen facturé par prestation photographique</p>
+                </TooltipContent>
+              </Tooltip>
+              <Tooltip>
+                <TooltipTrigger className="text-center space-y-1 sm:space-y-2">
+                  <div className="text-lg sm:text-2xl font-bold text-accent">8</div>
+                  <div className="text-xs sm:text-sm text-muted-foreground">Projets ce mois</div>
+                </TooltipTrigger>
+                <TooltipContent>
+                  <p>Nombre de projets photographiques réalisés ce mois</p>
+                </TooltipContent>
+              </Tooltip>
+              <Tooltip>
+                <TooltipTrigger className="text-center space-y-1 sm:space-y-2">
+                  <div className="text-lg sm:text-2xl font-bold text-success">24j</div>
+                  <div className="text-xs sm:text-sm text-muted-foreground">Délai paiement moyen</div>
+                </TooltipTrigger>
+                <TooltipContent>
+                  <p>Temps moyen entre l'envoi de facture et le paiement client</p>
+                </TooltipContent>
+              </Tooltip>
             </div>
           </CardContent>
         </Card>
-      </div>
+        </div>
+      </TooltipProvider>
     </AdminLayout>
   );
 }
