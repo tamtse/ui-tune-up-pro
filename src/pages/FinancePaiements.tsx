@@ -55,7 +55,7 @@ export default function FinancePaiements() {
       date: "2024-07-15",
       description: "Séance portrait en studio",
       client: "Marie Dubois",
-      amount: 350,
+      amount: 210000,
       type: "invoice",
       status: "received",
       reference: "FAC-2024-015",
@@ -66,7 +66,7 @@ export default function FinancePaiements() {
       date: "2024-07-18",
       description: "Shooting mariage - Acompte",
       client: "Pierre & Julie Martin",
-      amount: 800,
+      amount: 480000,
       type: "deposit",
       status: "received",
       reference: "DEP-2024-003",
@@ -77,7 +77,7 @@ export default function FinancePaiements() {
       date: "2024-07-22",
       description: "Photos corporate entreprise",
       client: "Tech Solutions SARL",
-      amount: 1200,
+      amount: 720000,
       type: "invoice",
       status: "pending",
       reference: "FAC-2024-018",
@@ -234,11 +234,11 @@ export default function FinancePaiements() {
                     />
                   </div>
                   <div>
-                    <Label htmlFor="amount">Montant (€)</Label>
+                    <Label htmlFor="amount">Montant (FCFA)</Label>
                     <Input
                       id="amount"
                       type="number"
-                      step="0.01"
+                      step="1"
                       value={formData.amount}
                       onChange={(e) => setFormData({...formData, amount: e.target.value})}
                       required
@@ -343,36 +343,36 @@ export default function FinancePaiements() {
         </div>
 
         {/* Stats */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 sm:gap-4">
           <Card>
-            <CardContent className="p-4">
+            <CardContent className="p-3 sm:p-4">
               <div className="flex items-center space-x-2">
-                <Euro className="h-8 w-8 text-primary" />
-                <div>
-                  <p className="text-2xl font-bold">{totalPayments.toFixed(2)}€</p>
-                  <p className="text-sm text-muted-foreground">Total paiements</p>
+                <Euro className="h-6 w-6 sm:h-8 sm:w-8 text-primary flex-shrink-0" />
+                <div className="min-w-0">
+                  <p className="text-lg sm:text-2xl font-bold truncate">{totalPayments.toLocaleString()} FCFA</p>
+                  <p className="text-xs sm:text-sm text-muted-foreground">Total paiements</p>
                 </div>
               </div>
             </CardContent>
           </Card>
           <Card>
-            <CardContent className="p-4">
+            <CardContent className="p-3 sm:p-4">
               <div className="flex items-center space-x-2">
-                <CheckCircle className="h-8 w-8 text-success" />
-                <div>
-                  <p className="text-2xl font-bold">{receivedPayments.toFixed(2)}€</p>
-                  <p className="text-sm text-muted-foreground">Reçus</p>
+                <CheckCircle className="h-6 w-6 sm:h-8 sm:w-8 text-success flex-shrink-0" />
+                <div className="min-w-0">
+                  <p className="text-lg sm:text-2xl font-bold truncate">{receivedPayments.toLocaleString()} FCFA</p>
+                  <p className="text-xs sm:text-sm text-muted-foreground">Reçus</p>
                 </div>
               </div>
             </CardContent>
           </Card>
           <Card>
-            <CardContent className="p-4">
+            <CardContent className="p-3 sm:p-4">
               <div className="flex items-center space-x-2">
-                <Calendar className="h-8 w-8 text-warning" />
-                <div>
-                  <p className="text-2xl font-bold">{pendingPayments.toFixed(2)}€</p>
-                  <p className="text-sm text-muted-foreground">En attente</p>
+                <Calendar className="h-6 w-6 sm:h-8 sm:w-8 text-warning flex-shrink-0" />
+                <div className="min-w-0">
+                  <p className="text-lg sm:text-2xl font-bold truncate">{pendingPayments.toLocaleString()} FCFA</p>
+                  <p className="text-xs sm:text-sm text-muted-foreground">En attente</p>
                 </div>
               </div>
             </CardContent>
@@ -381,22 +381,23 @@ export default function FinancePaiements() {
 
         {/* Filtres */}
         <Card>
-          <CardContent className="p-4">
-            <div className="flex flex-wrap gap-4">
-              <div className="flex items-center space-x-2">
-                <Search className="w-4 h-4 text-muted-foreground" />
+          <CardContent className="p-3 sm:p-4">
+            <div className="flex flex-col sm:flex-row flex-wrap gap-3 sm:gap-4">
+              <div className="flex items-center space-x-2 flex-1 min-w-0">
+                <Search className="w-4 h-4 text-muted-foreground flex-shrink-0" />
                 <Input
                   placeholder="Rechercher..."
                   value={searchTerm}
                   onChange={(e) => setSearchTerm(e.target.value)}
-                  className="w-64"
+                  className="min-w-0 flex-1"
                 />
               </div>
               
-              <Select value={statusFilter} onValueChange={setStatusFilter}>
-                <SelectTrigger className="w-40">
-                  <SelectValue placeholder="Statut" />
-                </SelectTrigger>
+              <div className="flex flex-col sm:flex-row gap-3 sm:gap-4">
+                <Select value={statusFilter} onValueChange={setStatusFilter}>
+                  <SelectTrigger className="w-full sm:w-40">
+                    <SelectValue placeholder="Statut" />
+                  </SelectTrigger>
                 <SelectContent>
                   <SelectItem value="all">Tous les statuts</SelectItem>
                   <SelectItem value="received">Reçu</SelectItem>
@@ -405,17 +406,18 @@ export default function FinancePaiements() {
                 </SelectContent>
               </Select>
 
-              <Select value={typeFilter} onValueChange={setTypeFilter}>
-                <SelectTrigger className="w-40">
-                  <SelectValue placeholder="Type" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="all">Tous les types</SelectItem>
-                  {paymentTypes.map(type => (
-                    <SelectItem key={type.value} value={type.value}>{type.label}</SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
+                <Select value={typeFilter} onValueChange={setTypeFilter}>
+                  <SelectTrigger className="w-full sm:w-40">
+                    <SelectValue placeholder="Type" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="all">Tous les types</SelectItem>
+                    {paymentTypes.map(type => (
+                      <SelectItem key={type.value} value={type.value}>{type.label}</SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
             </div>
           </CardContent>
         </Card>
@@ -428,14 +430,16 @@ export default function FinancePaiements() {
           <CardContent>
             <div className="space-y-3">
               {filteredPayments.map((payment) => (
-                <div key={payment.id} className="flex items-center justify-between p-4 border rounded-lg">
-                  <div className="flex-1 space-y-1">
-                    <div className="flex items-center space-x-3">
-                      <p className="font-medium">{payment.description}</p>
-                      {getStatusBadge(payment.status)}
-                      {getTypeBadge(payment.type)}
+                <div key={payment.id} className="flex flex-col sm:flex-row sm:items-center justify-between p-3 sm:p-4 border rounded-lg space-y-3 sm:space-y-0">
+                  <div className="flex-1 space-y-1 min-w-0">
+                    <div className="flex flex-col sm:flex-row sm:items-center space-y-2 sm:space-y-0 sm:space-x-3">
+                      <p className="font-medium truncate">{payment.description}</p>
+                      <div className="flex flex-wrap gap-2">
+                        {getStatusBadge(payment.status)}
+                        {getTypeBadge(payment.type)}
+                      </div>
                     </div>
-                    <div className="text-sm text-muted-foreground space-x-4">
+                    <div className="text-sm text-muted-foreground flex flex-wrap gap-x-4 gap-y-1">
                       <span>{payment.date}</span>
                       <span>{payment.client}</span>
                       <span>{getMethodLabel(payment.method)}</span>
@@ -443,9 +447,9 @@ export default function FinancePaiements() {
                     </div>
                   </div>
                   
-                  <div className="flex items-center space-x-3">
+                  <div className="flex items-center justify-between sm:justify-end space-x-3">
                     <div className="text-right">
-                      <p className="font-bold text-success">{payment.amount.toFixed(2)}€</p>
+                      <p className="font-bold text-success text-lg sm:text-base">{payment.amount.toLocaleString()} FCFA</p>
                     </div>
                     
                     <DropdownMenu>

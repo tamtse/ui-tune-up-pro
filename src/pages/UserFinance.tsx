@@ -91,35 +91,35 @@ export default function UserFinance() {
 
   const statistiques = [
     {
-      title: "Nombre de factures",
+      title: "Factures",
       value: "16",
       change: "+2 ce mois",
       changeType: "positive" as const,
       icon: <FileText className="w-full h-full" />,
     },
     {
-      title: "Chiffre d'affaires HT",
-      value: "3370 €",
-      change: "+15% vs mois dernier",
+      title: "CA HT",
+      value: "2 022 000 FCFA",
+      change: "+15%",
       changeType: "positive" as const,
       icon: <Euro className="w-full h-full" />,
     },
     {
-      title: "Bénéfice TTC",
-      value: "1090 €",
-      change: "+8% vs mois dernier", 
+      title: "Bénéfices",
+      value: "654 000 FCFA",
+      change: "+8%", 
       changeType: "positive" as const,
       icon: <TrendingUp className="w-full h-full" />,
     },
     {
-      title: "Dépenses TTC",
-      value: "2838 €",
-      change: "+12% vs mois dernier",
+      title: "Dépenses",
+      value: "1 702 800 FCFA",
+      change: "+12%",
       changeType: "negative" as const,
       icon: <TrendingDown className="w-full h-full" />,
     },
     {
-      title: "Factures non payées",
+      title: "Impayés",
       value: "3",
       change: "À relancer",
       changeType: "negative" as const,
@@ -152,76 +152,81 @@ export default function UserFinance() {
 
         {/* Filtres */}
         <Card>
-          <CardContent className="p-4">
-            <div className="flex flex-wrap gap-4 items-end">
-              <div className="flex flex-col space-y-2">
+          <CardContent className="p-3 sm:p-4 lg:p-6">
+            <div className="space-y-4 lg:space-y-0 lg:flex lg:flex-wrap lg:gap-4 lg:items-end">
+              <div className="flex flex-col space-y-2 lg:min-w-0">
                 <label className="text-sm font-medium">Filtrer par</label>
                 <div className="flex items-center space-x-2">
-                  <Filter className="w-4 h-4 text-muted-foreground" />
+                  <Filter className="w-4 h-4 text-muted-foreground flex-shrink-0" />
                   <span className="text-sm text-muted-foreground">2 critères</span>
                 </div>
               </div>
               
-              <div className="flex flex-col space-y-2">
-                <label className="text-sm font-medium">Date de début</label>
-                <Input
-                  type="date"
-                  value={dateFrom}
-                  onChange={(e) => setDateFrom(e.target.value)}
-                  className="w-40"
-                />
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 lg:flex-1">
+                <div className="flex flex-col space-y-2">
+                  <label className="text-sm font-medium">Date début</label>
+                  <Input
+                    type="date"
+                    value={dateFrom}
+                    onChange={(e) => setDateFrom(e.target.value)}
+                    className="w-full"
+                  />
+                </div>
+                
+                <div className="flex flex-col space-y-2">
+                  <label className="text-sm font-medium">Date fin</label>
+                  <Input
+                    type="date"
+                    value={dateTo}
+                    onChange={(e) => setDateTo(e.target.value)}
+                    className="w-full"
+                  />
+                </div>
+                
+                <div className="flex flex-col space-y-2">
+                  <label className="text-sm font-medium">Type shooting</label>
+                  <Select value={shootingType} onValueChange={setShootingType}>
+                    <SelectTrigger className="w-full">
+                      <SelectValue />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="all">Tout</SelectItem>
+                      <SelectItem value="wedding">Mariage</SelectItem>
+                      <SelectItem value="portrait">Portrait</SelectItem>
+                      <SelectItem value="event">Événement</SelectItem>
+                      <SelectItem value="corporate">Corporate</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+                
+                <div className="flex flex-col space-y-2">
+                  <label className="text-sm font-medium lg:invisible">Action</label>
+                  <Button variant="outline" size="default" className="w-full">
+                    <Download className="w-4 h-4 mr-2" />
+                    Exporter
+                  </Button>
+                </div>
               </div>
-              
-              <div className="flex flex-col space-y-2">
-                <label className="text-sm font-medium">Date de fin</label>
-                <Input
-                  type="date"
-                  value={dateTo}
-                  onChange={(e) => setDateTo(e.target.value)}
-                  className="w-40"
-                />
-              </div>
-              
-              <div className="flex flex-col space-y-2">
-                <label className="text-sm font-medium">Type de shooting</label>
-                <Select value={shootingType} onValueChange={setShootingType}>
-                  <SelectTrigger className="w-40">
-                    <SelectValue />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="all">Tout</SelectItem>
-                    <SelectItem value="wedding">Mariage</SelectItem>
-                    <SelectItem value="portrait">Portrait</SelectItem>
-                    <SelectItem value="event">Événement</SelectItem>
-                    <SelectItem value="corporate">Corporate</SelectItem>
-                  </SelectContent>
-                </Select>
-              </div>
-              
-              <Button variant="outline" size="sm">
-                <Download className="w-4 h-4 mr-2" />
-                Exporter
-              </Button>
             </div>
           </CardContent>
         </Card>
 
         {/* KPIs */}
-        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4">
+        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3 sm:gap-4">
           {statistiques.map((stat, index) => (
             <StatCard key={index} {...stat} />
           ))}
         </div>
 
         {/* Graphiques */}
-        <div className="grid gap-6 lg:grid-cols-2">
+        <div className="grid gap-4 sm:gap-6 lg:grid-cols-2">
           {/* Chiffre d'affaires */}
-          <Card>
-            <CardHeader>
-              <CardTitle className="text-lg">Chiffre d'affaires (HT)</CardTitle>
+          <Card className="lg:col-span-1">
+            <CardHeader className="pb-2">
+              <CardTitle className="text-base sm:text-lg">Chiffre d'affaires (HT)</CardTitle>
             </CardHeader>
-            <CardContent>
-              <ChartContainer config={chartConfig} className="h-[200px]">
+            <CardContent className="p-3 sm:p-6">
+              <ChartContainer config={chartConfig} className="h-[180px] sm:h-[200px]">
                 <ResponsiveContainer width="100%" height="100%">
                   <AreaChart data={revenueData}>
                     <defs>
@@ -247,12 +252,12 @@ export default function UserFinance() {
           </Card>
 
           {/* Bénéfices */}
-          <Card>
-            <CardHeader>
-              <CardTitle className="text-lg">Bénéfices</CardTitle>
+          <Card className="lg:col-span-1">
+            <CardHeader className="pb-2">
+              <CardTitle className="text-base sm:text-lg">Bénéfices</CardTitle>
             </CardHeader>
-            <CardContent>
-              <ChartContainer config={chartConfig} className="h-[200px]">
+            <CardContent className="p-3 sm:p-6">
+              <ChartContainer config={chartConfig} className="h-[180px] sm:h-[200px]">
                 <ResponsiveContainer width="100%" height="100%">
                   <AreaChart data={profitData}>
                     <defs>
@@ -278,12 +283,12 @@ export default function UserFinance() {
           </Card>
 
           {/* Dépenses */}
-          <Card>
-            <CardHeader>
-              <CardTitle className="text-lg">Dépenses (HT)</CardTitle>
+          <Card className="lg:col-span-1">
+            <CardHeader className="pb-2">
+              <CardTitle className="text-base sm:text-lg">Dépenses (HT)</CardTitle>
             </CardHeader>
-            <CardContent>
-              <ChartContainer config={chartConfig} className="h-[200px]">
+            <CardContent className="p-3 sm:p-6">
+              <ChartContainer config={chartConfig} className="h-[180px] sm:h-[200px]">
                 <ResponsiveContainer width="100%" height="100%">
                   <AreaChart data={expensesData}>
                     <defs>
@@ -309,12 +314,12 @@ export default function UserFinance() {
           </Card>
 
           {/* Dépenses par type */}
-          <Card>
-            <CardHeader>
-              <CardTitle className="text-lg">Dépenses par type</CardTitle>
+          <Card className="lg:col-span-1">
+            <CardHeader className="pb-2">
+              <CardTitle className="text-base sm:text-lg">Dépenses par type</CardTitle>
             </CardHeader>
-            <CardContent>
-              <ChartContainer config={chartConfig} className="h-[200px]">
+            <CardContent className="p-3 sm:p-6">
+              <ChartContainer config={chartConfig} className="h-[180px] sm:h-[200px]">
                 <ResponsiveContainer width="100%" height="100%">
                   <PieChart>
                     <Pie
@@ -330,7 +335,7 @@ export default function UserFinance() {
                     </Pie>
                     <ChartTooltip 
                       content={<ChartTooltipContent />}
-                      formatter={(value: any) => [`${value}€`, "Montant"]}
+                      formatter={(value: any) => [`${value} FCFA`, "Montant"]}
                     />
                     <ChartLegend content={<ChartLegendContent />} />
                   </PieChart>
@@ -342,26 +347,26 @@ export default function UserFinance() {
 
         {/* Métriques calculées */}
         <Card>
-          <CardHeader>
-            <CardTitle className="text-lg">Métriques de performance</CardTitle>
+          <CardHeader className="pb-2">
+            <CardTitle className="text-base sm:text-lg">Métriques de performance</CardTitle>
           </CardHeader>
-          <CardContent>
-            <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
-              <div className="text-center space-y-2">
-                <div className="text-2xl font-bold text-primary">32%</div>
-                <div className="text-sm text-muted-foreground">Marge bénéficiaire</div>
+          <CardContent className="p-3 sm:p-6">
+            <div className="grid gap-3 sm:gap-4 grid-cols-2 lg:grid-cols-4">
+              <div className="text-center space-y-1 sm:space-y-2">
+                <div className="text-lg sm:text-2xl font-bold text-primary">32%</div>
+                <div className="text-xs sm:text-sm text-muted-foreground">Marge bénéficiaire</div>
               </div>
-              <div className="text-center space-y-2">
-                <div className="text-2xl font-bold text-secondary">211€</div>
-                <div className="text-sm text-muted-foreground">Prix moyen/shooting</div>
+              <div className="text-center space-y-1 sm:space-y-2">
+                <div className="text-lg sm:text-2xl font-bold text-secondary">126 600 FCFA</div>
+                <div className="text-xs sm:text-sm text-muted-foreground">Prix moyen/shooting</div>
               </div>
-              <div className="text-center space-y-2">
-                <div className="text-2xl font-bold text-accent">8</div>
-                <div className="text-sm text-muted-foreground">Projets ce mois</div>
+              <div className="text-center space-y-1 sm:space-y-2">
+                <div className="text-lg sm:text-2xl font-bold text-accent">8</div>
+                <div className="text-xs sm:text-sm text-muted-foreground">Projets ce mois</div>
               </div>
-              <div className="text-center space-y-2">
-                <div className="text-2xl font-bold text-success">24j</div>
-                <div className="text-sm text-muted-foreground">Délai paiement moyen</div>
+              <div className="text-center space-y-1 sm:space-y-2">
+                <div className="text-lg sm:text-2xl font-bold text-success">24j</div>
+                <div className="text-xs sm:text-sm text-muted-foreground">Délai paiement moyen</div>
               </div>
             </div>
           </CardContent>

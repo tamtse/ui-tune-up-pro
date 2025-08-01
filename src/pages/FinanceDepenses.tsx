@@ -49,7 +49,7 @@ export default function FinanceDepenses() {
       date: "2024-07-15",
       description: "Achat objectif Canon 85mm",
       category: "Équipement",
-      amount: 1200,
+      amount: 720000,
       status: "paid",
       reference: "FAC-2024-001"
     },
@@ -58,7 +58,7 @@ export default function FinanceDepenses() {
       date: "2024-07-20",
       description: "Essence déplacement mariage",
       category: "Transport",
-      amount: 45,
+      amount: 27000,
       status: "pending"
     },
     {
@@ -66,7 +66,7 @@ export default function FinanceDepenses() {
       date: "2024-07-22",
       description: "Abonnement Adobe Creative",
       category: "Logiciels",
-      amount: 60,
+      amount: 36000,
       status: "paid",
       reference: "SUB-2024-002"
     }
@@ -192,11 +192,11 @@ export default function FinanceDepenses() {
                     />
                   </div>
                   <div>
-                    <Label htmlFor="amount">Montant (€)</Label>
+                    <Label htmlFor="amount">Montant (FCFA)</Label>
                     <Input
                       id="amount"
                       type="number"
-                      step="0.01"
+                      step="1"
                       value={formData.amount}
                       onChange={(e) => setFormData({...formData, amount: e.target.value})}
                       required
@@ -272,36 +272,36 @@ export default function FinanceDepenses() {
         </div>
 
         {/* Stats */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 sm:gap-4">
           <Card>
-            <CardContent className="p-4">
+            <CardContent className="p-3 sm:p-4">
               <div className="flex items-center space-x-2">
-                <Euro className="h-8 w-8 text-primary" />
-                <div>
-                  <p className="text-2xl font-bold">{totalExpenses.toFixed(2)}€</p>
-                  <p className="text-sm text-muted-foreground">Total dépenses</p>
+                <Euro className="h-6 w-6 sm:h-8 sm:w-8 text-primary flex-shrink-0" />
+                <div className="min-w-0">
+                  <p className="text-lg sm:text-2xl font-bold truncate">{totalExpenses.toLocaleString()} FCFA</p>
+                  <p className="text-xs sm:text-sm text-muted-foreground">Total dépenses</p>
                 </div>
               </div>
             </CardContent>
           </Card>
           <Card>
-            <CardContent className="p-4">
+            <CardContent className="p-3 sm:p-4">
               <div className="flex items-center space-x-2">
-                <Calendar className="h-8 w-8 text-success" />
-                <div>
-                  <p className="text-2xl font-bold">{paidExpenses.toFixed(2)}€</p>
-                  <p className="text-sm text-muted-foreground">Payées</p>
+                <Calendar className="h-6 w-6 sm:h-8 sm:w-8 text-success flex-shrink-0" />
+                <div className="min-w-0">
+                  <p className="text-lg sm:text-2xl font-bold truncate">{paidExpenses.toLocaleString()} FCFA</p>
+                  <p className="text-xs sm:text-sm text-muted-foreground">Payées</p>
                 </div>
               </div>
             </CardContent>
           </Card>
           <Card>
-            <CardContent className="p-4">
+            <CardContent className="p-3 sm:p-4">
               <div className="flex items-center space-x-2">
-                <Calendar className="h-8 w-8 text-warning" />
-                <div>
-                  <p className="text-2xl font-bold">{pendingExpenses.toFixed(2)}€</p>
-                  <p className="text-sm text-muted-foreground">En attente</p>
+                <Calendar className="h-6 w-6 sm:h-8 sm:w-8 text-warning flex-shrink-0" />
+                <div className="min-w-0">
+                  <p className="text-lg sm:text-2xl font-bold truncate">{pendingExpenses.toLocaleString()} FCFA</p>
+                  <p className="text-xs sm:text-sm text-muted-foreground">En attente</p>
                 </div>
               </div>
             </CardContent>
@@ -310,22 +310,23 @@ export default function FinanceDepenses() {
 
         {/* Filtres */}
         <Card>
-          <CardContent className="p-4">
-            <div className="flex flex-wrap gap-4">
-              <div className="flex items-center space-x-2">
-                <Search className="w-4 h-4 text-muted-foreground" />
+          <CardContent className="p-3 sm:p-4">
+            <div className="flex flex-col sm:flex-row flex-wrap gap-3 sm:gap-4">
+              <div className="flex items-center space-x-2 flex-1 min-w-0">
+                <Search className="w-4 h-4 text-muted-foreground flex-shrink-0" />
                 <Input
                   placeholder="Rechercher..."
                   value={searchTerm}
                   onChange={(e) => setSearchTerm(e.target.value)}
-                  className="w-64"
+                  className="min-w-0 flex-1"
                 />
               </div>
               
-              <Select value={statusFilter} onValueChange={setStatusFilter}>
-                <SelectTrigger className="w-40">
-                  <SelectValue placeholder="Statut" />
-                </SelectTrigger>
+              <div className="flex flex-col sm:flex-row gap-3 sm:gap-4">
+                <Select value={statusFilter} onValueChange={setStatusFilter}>
+                  <SelectTrigger className="w-full sm:w-40">
+                    <SelectValue placeholder="Statut" />
+                  </SelectTrigger>
                 <SelectContent>
                   <SelectItem value="all">Tous les statuts</SelectItem>
                   <SelectItem value="paid">Payé</SelectItem>
@@ -333,17 +334,18 @@ export default function FinanceDepenses() {
                 </SelectContent>
               </Select>
 
-              <Select value={categoryFilter} onValueChange={setCategoryFilter}>
-                <SelectTrigger className="w-40">
-                  <SelectValue placeholder="Catégorie" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="all">Toutes catégories</SelectItem>
-                  {expenseCategories.map(cat => (
-                    <SelectItem key={cat} value={cat}>{cat}</SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
+                <Select value={categoryFilter} onValueChange={setCategoryFilter}>
+                  <SelectTrigger className="w-full sm:w-40">
+                    <SelectValue placeholder="Catégorie" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="all">Toutes catégories</SelectItem>
+                    {expenseCategories.map(cat => (
+                      <SelectItem key={cat} value={cat}>{cat}</SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
             </div>
           </CardContent>
         </Card>
@@ -356,24 +358,24 @@ export default function FinanceDepenses() {
           <CardContent>
             <div className="space-y-3">
               {filteredExpenses.map((expense) => (
-                <div key={expense.id} className="flex items-center justify-between p-4 border rounded-lg">
-                  <div className="flex-1 space-y-1">
-                    <div className="flex items-center space-x-3">
-                      <p className="font-medium">{expense.description}</p>
-                      <Badge variant={expense.status === "paid" ? "default" : "secondary"}>
+                <div key={expense.id} className="flex flex-col sm:flex-row sm:items-center justify-between p-3 sm:p-4 border rounded-lg space-y-3 sm:space-y-0">
+                  <div className="flex-1 space-y-1 min-w-0">
+                    <div className="flex flex-col sm:flex-row sm:items-center space-y-2 sm:space-y-0 sm:space-x-3">
+                      <p className="font-medium truncate">{expense.description}</p>
+                      <Badge variant={expense.status === "paid" ? "default" : "secondary"} className="w-fit">
                         {expense.status === "paid" ? "Payé" : "En attente"}
                       </Badge>
                     </div>
-                    <div className="text-sm text-muted-foreground space-x-4">
+                    <div className="text-sm text-muted-foreground flex flex-wrap gap-x-4 gap-y-1">
                       <span>{expense.date}</span>
                       <span>{expense.category}</span>
                       {expense.reference && <span>Réf: {expense.reference}</span>}
                     </div>
                   </div>
                   
-                  <div className="flex items-center space-x-3">
+                  <div className="flex items-center justify-between sm:justify-end space-x-3">
                     <div className="text-right">
-                      <p className="font-bold">{expense.amount.toFixed(2)}€</p>
+                      <p className="font-bold text-lg sm:text-base">{expense.amount.toLocaleString()} FCFA</p>
                     </div>
                     
                     <DropdownMenu>
