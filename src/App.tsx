@@ -19,6 +19,8 @@ import ClientContract from "./pages/ClientContract";
 import ClientPortal from "./pages/ClientPortal";
 import Contacts from "./pages/Contacts";
 import UserFinance from "./pages/UserFinance";
+import FinanceDepenses from "./pages/FinanceDepenses";
+import FinancePaiements from "./pages/FinancePaiements";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -43,6 +45,8 @@ const App = () => (
           <Route path="/client/:clientId/contract/:contractId" element={<ClientContract />} />
           <Route path="/contacts" element={<Contacts />} />
           <Route path="/finances" element={<UserFinance />} />
+          <Route path="/finances/depenses" element={<FinanceDepenses />} />
+          <Route path="/finances/paiements" element={<FinancePaiements />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
         </Routes>

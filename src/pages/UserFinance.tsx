@@ -118,18 +118,35 @@ export default function UserFinance() {
       changeType: "negative" as const,
       icon: <TrendingDown className="w-full h-full" />,
     },
+    {
+      title: "Factures non payées",
+      value: "3",
+      change: "À relancer",
+      changeType: "negative" as const,
+      icon: <FileText className="w-full h-full" />,
+    },
   ];
 
   return (
     <AdminLayout>
       <div className="space-y-6">
         {/* Header */}
-        <div className="flex items-center justify-between">
+        <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between space-y-4 lg:space-y-0">
           <div>
             <h1 className="text-2xl font-bold tracking-tight">Finances</h1>
             <p className="text-muted-foreground">
               Tableau de bord financier pour piloter votre activité photographe
             </p>
+          </div>
+          
+          {/* Navigation des sous-menus */}
+          <div className="flex space-x-2">
+            <Button variant="outline" asChild>
+              <a href="/finances/depenses">Dépenses</a>
+            </Button>
+            <Button variant="outline" asChild>
+              <a href="/finances/paiements">Paiements</a>
+            </Button>
           </div>
         </div>
 
@@ -190,7 +207,7 @@ export default function UserFinance() {
         </Card>
 
         {/* KPIs */}
-        <div className={`grid gap-4 ${stats.gridClasses}`}>
+        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4">
           {statistiques.map((stat, index) => (
             <StatCard key={index} {...stat} />
           ))}
