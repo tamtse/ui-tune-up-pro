@@ -201,7 +201,7 @@ export default function UserFinance() {
                 
                 <div className="flex flex-col space-y-2">
                   <label className="text-sm font-medium lg:invisible">Action</label>
-                  <Button variant="outline" size="default" className="w-full">
+                  <Button variant="outline" size="default" className="w-full" disabled>
                     <Download className="w-4 h-4 mr-2" />
                     Exporter
                   </Button>
