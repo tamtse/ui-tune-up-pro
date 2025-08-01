@@ -2,9 +2,9 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { CheckIcon, StarIcon } from "lucide-react";
-import dashboardInterface from "@/assets/dashboard-interface.jpg";
-import photographerWorkspace from "@/assets/photographer-workspace.jpg";
-import mobileInterface from "@/assets/mobile-interface.jpg";
+import adminDashboardReal from "@/assets/admin-dashboard-real.jpg";
+import userDashboardReal from "@/assets/user-dashboard-real.jpg";
+import financeDashboardReal from "@/assets/finance-dashboard-real.jpg";
 
 export default function LandingPage() {
   return (
@@ -57,25 +57,25 @@ export default function LandingPage() {
             <div className="bg-white rounded-lg shadow-2xl p-6">
               <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
                 <div className="bg-gray-50 p-4 rounded-lg">
-                  <div className="text-2xl font-bold text-blue-600">147</div>
-                  <div className="text-sm text-gray-600">Clients actifs</div>
+                  <div className="text-2xl font-bold text-blue-600">3,120</div>
+                  <div className="text-sm text-gray-600">Total Utilisateurs</div>
                 </div>
                 <div className="bg-gray-50 p-4 rounded-lg">
-                  <div className="text-2xl font-bold text-green-600">€12,450</div>
-                  <div className="text-sm text-gray-600">Revenus ce mois</div>
+                  <div className="text-2xl font-bold text-green-600">156</div>
+                  <div className="text-sm text-gray-600">Nouveaux Utilisateurs</div>
                 </div>
                 <div className="bg-gray-50 p-4 rounded-lg">
-                  <div className="text-2xl font-bold text-orange-600">23</div>
-                  <div className="text-sm text-gray-600">Séances à venir</div>
+                  <div className="text-2xl font-bold text-orange-600">847</div>
+                  <div className="text-sm text-gray-600">Transactions</div>
                 </div>
                 <div className="bg-gray-50 p-4 rounded-lg">
-                  <div className="text-2xl font-bold text-purple-600">89%</div>
-                  <div className="text-sm text-gray-600">Satisfaction client</div>
+                  <div className="text-2xl font-bold text-purple-600">1,602</div>
+                  <div className="text-sm text-gray-600">Plans Premium</div>
                 </div>
               </div>
               <img 
-                src={dashboardInterface} 
-                alt="Interface tableau de bord"
+                src={adminDashboardReal} 
+                alt="Interface tableau de bord admin"
                 className="w-full rounded-lg"
               />
             </div>
@@ -102,8 +102,8 @@ export default function LandingPage() {
             </div>
             <div className="relative">
               <img 
-                src={photographerWorkspace} 
-                alt="Photographe professionnel au travail"
+                src={userDashboardReal} 
+                alt="Dashboard utilisateur photographe"
                 className="rounded-lg shadow-lg w-full"
               />
             </div>
@@ -199,8 +199,8 @@ export default function LandingPage() {
 
           <div className="text-center">
             <img 
-              src={mobileInterface} 
-              alt="Interface mobile de l'application"
+              src={financeDashboardReal} 
+              alt="Interface des finances et graphiques analytiques"
               className="mx-auto rounded-lg shadow-lg max-w-4xl w-full"
             />
           </div>
