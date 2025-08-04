@@ -22,6 +22,10 @@ import UserFinance from "./pages/UserFinance";
 import FinanceDepenses from "./pages/FinanceDepenses";
 import FinancePaiements from "./pages/FinancePaiements";
 import LandingPage from "./pages/LandingPage";
+import SiteWeb from "./pages/SiteWeb";
+import SiteWebCreate from "./pages/SiteWebCreate";
+import SiteWebEdit from "./pages/SiteWebEdit";
+import VitrineDocumentation from "./pages/VitrineDocumentation";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -48,6 +52,10 @@ const App = () => (
           <Route path="/finances" element={<UserFinance />} />
           <Route path="/finances/depenses" element={<FinanceDepenses />} />
           <Route path="/finances/paiements" element={<FinancePaiements />} />
+          <Route path="/site-web" element={<SiteWeb />} />
+          <Route path="/site-web/create" element={<SiteWebCreate />} />
+          <Route path="/site-web/edit/:id" element={<SiteWebEdit />} />
+          <Route path="/vitrine-documentation" element={<VitrineDocumentation />} />
           <Route path="/landing" element={<LandingPage />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
