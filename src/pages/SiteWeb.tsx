@@ -208,26 +208,35 @@ export default function SiteWeb() {
                     </div>
                   </div>
                   
-                  <div className="flex gap-2">
-                    <Button
-                      variant="outline"
-                      size="sm"
-                      onClick={handleEditVitrine}
-                      className="flex-1"
-                    >
-                      <Edit className="mr-2 h-4 w-4" />
-                      Éditer
-                    </Button>
-                    {vitrine.statut === 'publié' && (
-                      <Button
-                        variant="outline"
-                        size="sm"
-                        onClick={() => handleViewVitrine(vitrine.url)}
-                      >
-                        <ExternalLink className="h-4 w-4" />
-                      </Button>
-                    )}
-                  </div>
+                   <div className="flex gap-2">
+                     <Button
+                       variant="outline"
+                       size="sm"
+                       onClick={() => navigate('/site-web/preview')}
+                       className="flex-1"
+                     >
+                       <Eye className="mr-2 h-4 w-4" />
+                       Prévisualiser
+                     </Button>
+                     <Button
+                       variant="outline"
+                       size="sm"
+                       onClick={handleEditVitrine}
+                       className="flex-1"
+                     >
+                       <Edit className="mr-2 h-4 w-4" />
+                       Éditer
+                     </Button>
+                     {vitrine.statut === 'publié' && (
+                       <Button
+                         variant="outline"
+                         size="sm"
+                         onClick={() => handleViewVitrine(vitrine.url)}
+                       >
+                         <ExternalLink className="h-4 w-4" />
+                       </Button>
+                     )}
+                   </div>
                 </CardContent>
               </Card>
             ) : (

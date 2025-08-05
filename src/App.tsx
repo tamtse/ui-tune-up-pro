@@ -26,6 +26,7 @@ import SiteWeb from "./pages/SiteWeb";
 import SiteWebCreate from "./pages/SiteWebCreate";
 import SiteWebEdit from "./pages/SiteWebEdit";
 import VitrineDocumentation from "./pages/VitrineDocumentation";
+import VitrinePreview from "./pages/VitrinePreview";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -55,6 +56,7 @@ const App = () => (
           <Route path="/site-web" element={<SiteWeb />} />
           <Route path="/site-web/create" element={<SiteWebCreate />} />
           <Route path="/site-web/edit/:id" element={<SiteWebEdit />} />
+          <Route path="/site-web/preview" element={<VitrinePreview />} />
           <Route path="/vitrine-documentation" element={<VitrineDocumentation />} />
           <Route path="/landing" element={<LandingPage />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
