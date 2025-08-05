@@ -28,6 +28,9 @@ import SiteWebEdit from "./pages/SiteWebEdit";
 import VitrineDocumentation from "./pages/VitrineDocumentation";
 import VitrinePreview from "./pages/VitrinePreview";
 import ThemePreview from "./pages/ThemePreview";
+import Prestations from "./pages/Prestations";
+import PrestationNew from "./pages/PrestationNew";
+import PrestationEdit from "./pages/PrestationEdit";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -60,6 +63,9 @@ const App = () => (
           <Route path="/site-web/preview" element={<VitrinePreview />} />
           <Route path="/preview/theme/:themeId" element={<ThemePreview />} />
           <Route path="/vitrine-documentation" element={<VitrineDocumentation />} />
+          <Route path="/prestations" element={<Prestations />} />
+          <Route path="/prestations/new" element={<PrestationNew />} />
+          <Route path="/prestations/:id/edit" element={<PrestationEdit />} />
           <Route path="/landing" element={<LandingPage />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
