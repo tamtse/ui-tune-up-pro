@@ -25,7 +25,9 @@ interface VitrineForm {
   nom: string;
   sousDomaine: string;
   description: string;
-  theme: string;
+  couleurPrimaire: string;
+  couleurSecondaire: string;
+  couleurAccent: string;
   logo: File | null;
   imageCouverture: File | null;
   biographie: string;
@@ -43,36 +45,42 @@ interface VitrineForm {
   };
 }
 
-const themes = [
+const palettesCouleurs = [
   {
-    id: "moderne",
-    nom: "Moderne",
-    description: "Design épuré et contemporain",
-    preview: "bg-gradient-to-br from-blue-500 to-purple-600"
+    nom: "Bleu Professionnel",
+    primaire: "#2563eb",
+    secondaire: "#1e40af", 
+    accent: "#3b82f6"
   },
   {
-    id: "elegant",
-    nom: "Élégant", 
-    description: "Style raffiné et sophistiqué",
-    preview: "bg-gradient-to-br from-gray-800 to-gray-600"
+    nom: "Vert Nature",
+    primaire: "#16a34a",
+    secondaire: "#15803d",
+    accent: "#22c55e"
   },
   {
-    id: "minimal",
-    nom: "Minimal",
-    description: "Simplicité et clarté",
-    preview: "bg-gradient-to-br from-gray-100 to-white border"
+    nom: "Violet Créatif",
+    primaire: "#9333ea",
+    secondaire: "#7c3aed",
+    accent: "#a855f7"
   },
   {
-    id: "artistique",
-    nom: "Artistique",
-    description: "Créatif et expressif",
-    preview: "bg-gradient-to-br from-pink-500 to-orange-500"
+    nom: "Orange Énergique",
+    primaire: "#ea580c",
+    secondaire: "#dc2626",
+    accent: "#f97316"
   },
   {
-    id: "professionnel",
-    nom: "Professionnel",
-    description: "Sobre et corporate",
-    preview: "bg-gradient-to-br from-slate-700 to-slate-900"
+    nom: "Rose Élégant",
+    primaire: "#e11d48",
+    secondaire: "#be185d",
+    accent: "#f43f5e"
+  },
+  {
+    nom: "Gris Minimaliste",
+    primaire: "#374151",
+    secondaire: "#1f2937",
+    accent: "#6b7280"
   }
 ];
 
@@ -85,7 +93,9 @@ export default function SiteWebCreate() {
     nom: "",
     sousDomaine: "",
     description: "",
-    theme: "",
+    couleurPrimaire: "#2563eb",
+    couleurSecondaire: "#1e40af",
+    couleurAccent: "#3b82f6",
     logo: null,
     imageCouverture: null,
     biographie: "",
@@ -154,7 +164,7 @@ export default function SiteWebCreate() {
   };
 
   const handleSave = (publier = false) => {
-    if (!form.nom || !form.sousDomaine || !form.theme) {
+    if (!form.nom || !form.sousDomaine) {
       toast.error("Veuillez remplir les champs obligatoires");
       return;
     }
@@ -214,11 +224,10 @@ export default function SiteWebCreate() {
           {/* Formulaire */}
           <div className="lg:col-span-2">
             <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-4">
-              <TabsList className="grid w-full grid-cols-4">
+              <TabsList className="grid w-full grid-cols-3">
                 <TabsTrigger value="general">Général</TabsTrigger>
-                <TabsTrigger value="design">Design</TabsTrigger>
+                <TabsTrigger value="design">Couleurs</TabsTrigger>
                 <TabsTrigger value="contenu">Contenu</TabsTrigger>
-                <TabsTrigger value="contact">Contact</TabsTrigger>
               </TabsList>
 
               <TabsContent value="general" className="space-y-4">
@@ -279,28 +288,141 @@ export default function SiteWebCreate() {
               <TabsContent value="design" className="space-y-4">
                 <Card>
                   <CardHeader>
-                    <CardTitle>Choisir un thème</CardTitle>
+                    <CardTitle>Personnalisation des couleurs</CardTitle>
                     <CardDescription>
-                      Sélectionnez le style de votre vitrine
+                      Choisissez la palette de couleurs de votre vitrine
                     </CardDescription>
                   </CardHeader>
-                  <CardContent>
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                      {themes.map((theme) => (
-                        <div
-                          key={theme.id}
-                          className={`border rounded-lg p-4 cursor-pointer transition-all ${
-                            form.theme === theme.id 
-                              ? 'border-primary ring-2 ring-primary/20' 
-                              : 'hover:border-primary/50'
-                          }`}
-                          onClick={() => setForm(prev => ({ ...prev, theme: theme.id }))}
-                        >
-                          <div className={`aspect-video rounded mb-3 ${theme.preview}`}></div>
-                          <h4 className="font-medium">{theme.nom}</h4>
-                          <p className="text-sm text-muted-foreground">{theme.description}</p>
+                  <CardContent className="space-y-6">
+                    {/* Palettes prédéfinies */}
+                    <div className="space-y-3">
+                      <Label>Palettes prédéfinies</Label>
+                      <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
+                        {palettesCouleurs.map((palette) => (
+                          <div
+                            key={palette.nom}
+                            className={`border rounded-lg p-3 cursor-pointer transition-all ${
+                              form.couleurPrimaire === palette.primaire 
+                                ? 'border-primary ring-2 ring-primary/20' 
+                                : 'hover:border-primary/50'
+                            }`}
+                            onClick={() => setForm(prev => ({
+                              ...prev,
+                              couleurPrimaire: palette.primaire,
+                              couleurSecondaire: palette.secondaire,
+                              couleurAccent: palette.accent
+                            }))}
+                          >
+                            <div className="flex gap-1 mb-2">
+                              <div 
+                                className="w-4 h-4 rounded-full"
+                                style={{ backgroundColor: palette.primaire }}
+                              ></div>
+                              <div 
+                                className="w-4 h-4 rounded-full"
+                                style={{ backgroundColor: palette.secondaire }}
+                              ></div>
+                              <div 
+                                className="w-4 h-4 rounded-full"
+                                style={{ backgroundColor: palette.accent }}
+                              ></div>
+                            </div>
+                            <p className="text-sm font-medium">{palette.nom}</p>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+
+                    {/* Couleurs personnalisées */}
+                    <div className="space-y-4">
+                      <Label>Couleurs personnalisées</Label>
+                      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                        <div className="space-y-2">
+                          <Label htmlFor="couleurPrimaire">Couleur principale</Label>
+                          <div className="flex gap-2">
+                            <Input
+                              id="couleurPrimaire"
+                              type="color"
+                              value={form.couleurPrimaire}
+                              onChange={(e) => setForm(prev => ({ ...prev, couleurPrimaire: e.target.value }))}
+                              className="w-12 h-10 p-1 border rounded"
+                            />
+                            <Input
+                              value={form.couleurPrimaire}
+                              onChange={(e) => setForm(prev => ({ ...prev, couleurPrimaire: e.target.value }))}
+                              placeholder="#2563eb"
+                              className="flex-1"
+                            />
+                          </div>
                         </div>
-                      ))}
+
+                        <div className="space-y-2">
+                          <Label htmlFor="couleurSecondaire">Couleur secondaire</Label>
+                          <div className="flex gap-2">
+                            <Input
+                              id="couleurSecondaire"
+                              type="color"
+                              value={form.couleurSecondaire}
+                              onChange={(e) => setForm(prev => ({ ...prev, couleurSecondaire: e.target.value }))}
+                              className="w-12 h-10 p-1 border rounded"
+                            />
+                            <Input
+                              value={form.couleurSecondaire}
+                              onChange={(e) => setForm(prev => ({ ...prev, couleurSecondaire: e.target.value }))}
+                              placeholder="#1e40af"
+                              className="flex-1"
+                            />
+                          </div>
+                        </div>
+
+                        <div className="space-y-2">
+                          <Label htmlFor="couleurAccent">Couleur d'accent</Label>
+                          <div className="flex gap-2">
+                            <Input
+                              id="couleurAccent"
+                              type="color"
+                              value={form.couleurAccent}
+                              onChange={(e) => setForm(prev => ({ ...prev, couleurAccent: e.target.value }))}
+                              className="w-12 h-10 p-1 border rounded"
+                            />
+                            <Input
+                              value={form.couleurAccent}
+                              onChange={(e) => setForm(prev => ({ ...prev, couleurAccent: e.target.value }))}
+                              placeholder="#3b82f6"
+                              className="flex-1"
+                            />
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* Aperçu des couleurs */}
+                    <div className="space-y-3">
+                      <Label>Aperçu de votre palette</Label>
+                      <div className="p-4 border rounded-lg" style={{ 
+                        background: `linear-gradient(135deg, ${form.couleurPrimaire}20, ${form.couleurAccent}20)` 
+                      }}>
+                        <div className="space-y-3">
+                          <div 
+                            className="px-4 py-2 rounded text-white text-sm font-medium"
+                            style={{ backgroundColor: form.couleurPrimaire }}
+                          >
+                            Bouton principal
+                          </div>
+                          <div 
+                            className="px-4 py-2 rounded text-white text-sm"
+                            style={{ backgroundColor: form.couleurSecondaire }}
+                          >
+                            Bouton secondaire
+                          </div>
+                          <div 
+                            className="px-3 py-1 rounded text-white text-xs inline-block"
+                            style={{ backgroundColor: form.couleurAccent }}
+                          >
+                            Badge d'accent
+                          </div>
+                        </div>
+                      </div>
                     </div>
                   </CardContent>
                 </Card>
@@ -489,9 +611,7 @@ export default function SiteWebCreate() {
                     </div>
                   </CardContent>
                 </Card>
-              </TabsContent>
 
-              <TabsContent value="contact" className="space-y-4">
                 <Card>
                   <CardHeader>
                     <CardTitle>Coordonnées</CardTitle>
@@ -536,7 +656,7 @@ export default function SiteWebCreate() {
                           ...prev,
                           contact: { ...prev.contact, adresse: e.target.value }
                         }))}
-                        placeholder="123 Rue de la Photo, 75001 Paris"
+                        placeholder="123 Rue de la Photo&#10;75001 Paris&#10;France"
                         rows={3}
                       />
                     </div>
@@ -564,7 +684,7 @@ export default function SiteWebCreate() {
                     <div className="text-center space-y-2">
                       <Globe className="mx-auto h-8 w-8 text-muted-foreground" />
                       <p className="text-sm text-muted-foreground">
-                        {form.theme ? `Thème: ${themes.find(t => t.id === form.theme)?.nom}` : "Sélectionnez un thème"}
+                        Vitrine avec palette personnalisée
                       </p>
                     </div>
                   </div>
@@ -600,7 +720,7 @@ export default function SiteWebCreate() {
                     <Button 
                       size="sm" 
                       onClick={() => handleSave(true)}
-                      disabled={!form.nom || !form.sousDomaine || !form.theme || sousDomaineStatus !== 'available'}
+                      disabled={!form.nom || !form.sousDomaine || sousDomaineStatus !== 'available'}
                     >
                       Publier
                     </Button>

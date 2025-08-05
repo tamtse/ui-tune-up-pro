@@ -27,7 +27,9 @@ interface VitrineData {
   nom: string;
   sousDomaine: string;
   description: string;
-  theme: string;
+  couleurPrimaire: string;
+  couleurSecondaire: string;
+  couleurAccent: string;
   statut: 'publié' | 'brouillon' | 'hors-ligne';
   logo: string | null;
   imageCouverture: string | null;
@@ -55,7 +57,9 @@ const mockVitrine: VitrineData = {
   nom: "Studio Photo Lumière",
   sousDomaine: "studio-lumiere",
   description: "Studio photo professionnel spécialisé dans les portraits et événements",
-  theme: "moderne",
+  couleurPrimaire: "#2563eb",
+  couleurSecondaire: "#1e40af",
+  couleurAccent: "#3b82f6",
   statut: "publié",
   logo: null,
   imageCouverture: null,
@@ -78,12 +82,13 @@ const mockVitrine: VitrineData = {
   url: "https://studio-lumiere.mondomaine.com"
 };
 
-const themes = [
-  { id: "moderne", nom: "Moderne", preview: "bg-gradient-to-br from-blue-500 to-purple-600" },
-  { id: "elegant", nom: "Élégant", preview: "bg-gradient-to-br from-gray-800 to-gray-600" },
-  { id: "minimal", nom: "Minimal", preview: "bg-gradient-to-br from-gray-100 to-white border" },
-  { id: "artistique", nom: "Artistique", preview: "bg-gradient-to-br from-pink-500 to-orange-500" },
-  { id: "professionnel", nom: "Professionnel", preview: "bg-gradient-to-br from-slate-700 to-slate-900" }
+const palettesCouleurs = [
+  { nom: "Bleu Professionnel", primaire: "#2563eb", secondaire: "#1e40af", accent: "#3b82f6" },
+  { nom: "Vert Nature", primaire: "#16a34a", secondaire: "#15803d", accent: "#22c55e" },
+  { nom: "Violet Créatif", primaire: "#9333ea", secondaire: "#7c3aed", accent: "#a855f7" },
+  { nom: "Orange Énergique", primaire: "#ea580c", secondaire: "#dc2626", accent: "#f97316" },
+  { nom: "Rose Élégant", primaire: "#e11d48", secondaire: "#be185d", accent: "#f43f5e" },
+  { nom: "Gris Minimaliste", primaire: "#374151", secondaire: "#1f2937", accent: "#6b7280" }
 ];
 
 export default function SiteWebEdit() {
@@ -232,8 +237,8 @@ export default function SiteWebEdit() {
           </Card>
           <Card>
             <CardContent className="pt-6">
-              <div className="text-2xl font-bold">{themes.find(t => t.id === vitrine.theme)?.nom}</div>
-              <p className="text-xs text-muted-foreground">Thème actuel</p>
+              <div className="text-2xl font-bold">Personnalisée</div>
+              <p className="text-xs text-muted-foreground">Palette de couleurs</p>
             </CardContent>
           </Card>
           <Card>
@@ -250,11 +255,10 @@ export default function SiteWebEdit() {
           {/* Formulaire */}
           <div className="lg:col-span-2">
             <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-4">
-              <TabsList className="grid w-full grid-cols-4">
+              <TabsList className="grid w-full grid-cols-3">
                 <TabsTrigger value="general">Général</TabsTrigger>
-                <TabsTrigger value="design">Design</TabsTrigger>
+                <TabsTrigger value="design">Couleurs</TabsTrigger>
                 <TabsTrigger value="contenu">Contenu</TabsTrigger>
-                <TabsTrigger value="contact">Contact</TabsTrigger>
               </TabsList>
 
               <TabsContent value="general" className="space-y-4">
@@ -306,27 +310,137 @@ export default function SiteWebEdit() {
               <TabsContent value="design" className="space-y-4">
                 <Card>
                   <CardHeader>
-                    <CardTitle>Thème</CardTitle>
+                    <CardTitle>Personnalisation des couleurs</CardTitle>
                     <CardDescription>
-                      Changez l'apparence de votre vitrine
+                      Modifiez la palette de couleurs de votre vitrine
                     </CardDescription>
                   </CardHeader>
-                  <CardContent>
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                      {themes.map((theme) => (
-                        <div
-                          key={theme.id}
-                          className={`border rounded-lg p-4 cursor-pointer transition-all ${
-                            vitrine.theme === theme.id 
-                              ? 'border-primary ring-2 ring-primary/20' 
-                              : 'hover:border-primary/50'
-                          }`}
-                          onClick={() => handleChange('theme', theme.id)}
-                        >
-                          <div className={`aspect-video rounded mb-3 ${theme.preview}`}></div>
-                          <h4 className="font-medium">{theme.nom}</h4>
+                  <CardContent className="space-y-6">
+                    {/* Palettes prédéfinies */}
+                    <div className="space-y-3">
+                      <Label>Palettes prédéfinies</Label>
+                      <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
+                        {palettesCouleurs.map((palette) => (
+                          <div
+                            key={palette.nom}
+                            className={`border rounded-lg p-3 cursor-pointer transition-all ${
+                              vitrine.couleurPrimaire === palette.primaire 
+                                ? 'border-primary ring-2 ring-primary/20' 
+                                : 'hover:border-primary/50'
+                            }`}
+                            onClick={() => {
+                              handleChange('couleurPrimaire', palette.primaire);
+                              handleChange('couleurSecondaire', palette.secondaire);
+                              handleChange('couleurAccent', palette.accent);
+                            }}
+                          >
+                            <div className="flex gap-1 mb-2">
+                              <div 
+                                className="w-4 h-4 rounded-full"
+                                style={{ backgroundColor: palette.primaire }}
+                              ></div>
+                              <div 
+                                className="w-4 h-4 rounded-full"
+                                style={{ backgroundColor: palette.secondaire }}
+                              ></div>
+                              <div 
+                                className="w-4 h-4 rounded-full"
+                                style={{ backgroundColor: palette.accent }}
+                              ></div>
+                            </div>
+                            <p className="text-sm font-medium">{palette.nom}</p>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+
+                    {/* Couleurs personnalisées */}
+                    <div className="space-y-4">
+                      <Label>Couleurs personnalisées</Label>
+                      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                        <div className="space-y-2">
+                          <Label htmlFor="couleurPrimaire">Couleur principale</Label>
+                          <div className="flex gap-2">
+                            <Input
+                              id="couleurPrimaire"
+                              type="color"
+                              value={vitrine.couleurPrimaire}
+                              onChange={(e) => handleChange('couleurPrimaire', e.target.value)}
+                              className="w-12 h-10 p-1 border rounded"
+                            />
+                            <Input
+                              value={vitrine.couleurPrimaire}
+                              onChange={(e) => handleChange('couleurPrimaire', e.target.value)}
+                              className="flex-1"
+                            />
+                          </div>
                         </div>
-                      ))}
+
+                        <div className="space-y-2">
+                          <Label htmlFor="couleurSecondaire">Couleur secondaire</Label>
+                          <div className="flex gap-2">
+                            <Input
+                              id="couleurSecondaire"
+                              type="color"
+                              value={vitrine.couleurSecondaire}
+                              onChange={(e) => handleChange('couleurSecondaire', e.target.value)}
+                              className="w-12 h-10 p-1 border rounded"
+                            />
+                            <Input
+                              value={vitrine.couleurSecondaire}
+                              onChange={(e) => handleChange('couleurSecondaire', e.target.value)}
+                              className="flex-1"
+                            />
+                          </div>
+                        </div>
+
+                        <div className="space-y-2">
+                          <Label htmlFor="couleurAccent">Couleur d'accent</Label>
+                          <div className="flex gap-2">
+                            <Input
+                              id="couleurAccent"
+                              type="color"
+                              value={vitrine.couleurAccent}
+                              onChange={(e) => handleChange('couleurAccent', e.target.value)}
+                              className="w-12 h-10 p-1 border rounded"
+                            />
+                            <Input
+                              value={vitrine.couleurAccent}
+                              onChange={(e) => handleChange('couleurAccent', e.target.value)}
+                              className="flex-1"
+                            />
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* Aperçu des couleurs */}
+                    <div className="space-y-3">
+                      <Label>Aperçu de votre palette</Label>
+                      <div className="p-4 border rounded-lg" style={{ 
+                        background: `linear-gradient(135deg, ${vitrine.couleurPrimaire}20, ${vitrine.couleurAccent}20)` 
+                      }}>
+                        <div className="space-y-3">
+                          <div 
+                            className="px-4 py-2 rounded text-white text-sm font-medium"
+                            style={{ backgroundColor: vitrine.couleurPrimaire }}
+                          >
+                            Bouton principal
+                          </div>
+                          <div 
+                            className="px-4 py-2 rounded text-white text-sm"
+                            style={{ backgroundColor: vitrine.couleurSecondaire }}
+                          >
+                            Bouton secondaire
+                          </div>
+                          <div 
+                            className="px-3 py-1 rounded text-white text-xs inline-block"
+                            style={{ backgroundColor: vitrine.couleurAccent }}
+                          >
+                            Badge d'accent
+                          </div>
+                        </div>
+                      </div>
                     </div>
                   </CardContent>
                 </Card>
@@ -436,9 +550,7 @@ export default function SiteWebEdit() {
                     </div>
                   </CardContent>
                 </Card>
-              </TabsContent>
 
-              <TabsContent value="contact" className="space-y-4">
                 <Card>
                   <CardHeader>
                     <CardTitle>Coordonnées</CardTitle>
@@ -499,7 +611,7 @@ export default function SiteWebEdit() {
                     <div className="text-center space-y-2">
                       <Globe className="mx-auto h-8 w-8 text-muted-foreground" />
                       <p className="text-sm text-muted-foreground">
-                        Thème: {themes.find(t => t.id === vitrine.theme)?.nom}
+                        Vitrine avec palette personnalisée
                       </p>
                     </div>
                   </div>
