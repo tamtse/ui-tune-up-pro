@@ -18,8 +18,10 @@ import {
   Power,
   PowerOff,
   Trash2,
-  X
+  X,
+  Settings
 } from "lucide-react";
+import { Switch } from "@/components/ui/switch";
 import { toast } from "sonner";
 
 interface VitrineData {
@@ -45,6 +47,20 @@ interface VitrineData {
     email: string;
     telephone: string;
     adresse: string;
+  };
+  customPages?: {
+    about?: {
+      enabled: boolean;
+      content?: string;
+    };
+    contact?: {
+      enabled: boolean;
+      content?: string;
+    };
+    gallery?: {
+      enabled: boolean;
+      images?: string[];
+    };
   };
   dateCreation: string;
   derniereModification: string;
@@ -447,6 +463,48 @@ export default function SiteWebEdit() {
 
                 <Card>
                   <CardHeader>
+                    <CardTitle>Aperçu du thème</CardTitle>
+                    <CardDescription>
+                      Prévisualisation de votre site vitrine
+                    </CardDescription>
+                  </CardHeader>
+                  <CardContent>
+                    <div className="bg-gray-100 rounded-lg p-4 mb-6">
+                      <div className="bg-white rounded shadow-sm p-4">
+                        <div className="flex items-center justify-between mb-4">
+                          <div className="flex items-center space-x-2">
+                            <div 
+                              className="w-8 h-8 rounded-full flex items-center justify-center text-white font-bold text-sm"
+                              style={{ backgroundColor: vitrine.couleurPrimaire }}
+                            >
+                              {vitrine.nom?.charAt(0) || 'L'}
+                            </div>
+                            <span className="font-semibold text-sm">{vitrine.nom || 'Mon Studio'}</span>
+                          </div>
+                          <div className="flex space-x-4 text-xs">
+                            <span style={{ color: vitrine.couleurPrimaire }}>GALERIE</span>
+                            <span className="text-gray-500">À PROPOS</span>
+                            <span className="text-gray-500">CONTACT</span>
+                          </div>
+                        </div>
+                        <div className="text-center py-6">
+                          <h2 className="text-2xl font-light mb-2" style={{ color: vitrine.couleurPrimaire }}>
+                            Photo Gallery
+                          </h2>
+                          <p className="text-sm text-gray-600">- SHARING MOMENTS -</p>
+                        </div>
+                        <div className="grid grid-cols-4 gap-2">
+                          {[1,2,3,4].map((i) => (
+                            <div key={i} className="aspect-square bg-gray-200 rounded"></div>
+                          ))}
+                        </div>
+                      </div>
+                    </div>
+                  </CardContent>
+                </Card>
+
+                <Card>
+                  <CardHeader>
                     <CardTitle>Images</CardTitle>
                     <CardDescription>
                       Logo et image de couverture
@@ -482,6 +540,125 @@ export default function SiteWebEdit() {
                         </div>
                       </div>
                     </div>
+                  </CardContent>
+                </Card>
+
+                <Card>
+                  <CardHeader>
+                    <CardTitle>Galerie d'images</CardTitle>
+                    <CardDescription>
+                      Maximum 30 images autorisées
+                    </CardDescription>
+                  </CardHeader>
+                  <CardContent className="space-y-4">
+                    <div className="flex items-center gap-4">
+                      <label className="cursor-pointer">
+                        <input
+                          type="file"
+                          multiple
+                          accept="image/*"
+                          className="hidden"
+                          onChange={(e) => {
+                            const files = Array.from(e.target.files || []);
+                            console.log(`${files.length} fichiers sélectionnés`);
+                            // TODO: Upload vers S3
+                          }}
+                        />
+                        <Button variant="outline" className="flex items-center gap-2">
+                          <Upload className="w-4 h-4" />
+                          Ajouter des images
+                        </Button>
+                      </label>
+                      <span className="text-sm text-gray-500">
+                        {vitrine.galerie?.length || 0}/30 images
+                      </span>
+                    </div>
+                    
+                    {vitrine.galerie && vitrine.galerie.length > 0 && (
+                      <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                        {vitrine.galerie.slice(0, 8).map((image, index) => (
+                          <div key={index} className="relative group">
+                            <div className="aspect-square bg-gray-200 rounded-lg overflow-hidden">
+                              <img 
+                                src={image} 
+                                alt={`Image ${index + 1}`}
+                                className="w-full h-full object-cover"
+                              />
+                            </div>
+                            <button
+                              onClick={() => {
+                                const newImages = vitrine.galerie.filter((_, i) => i !== index);
+                                handleChange('galerie', newImages);
+                              }}
+                              className="absolute top-2 right-2 p-1 bg-red-500 text-white rounded-full opacity-0 group-hover:opacity-100 transition-opacity"
+                            >
+                              <X className="w-3 h-3" />
+                            </button>
+                          </div>
+                        ))}
+                        {vitrine.galerie.length > 8 && (
+                          <div className="aspect-square bg-gray-100 rounded-lg flex items-center justify-center">
+                            <span className="text-sm text-gray-500">
+                              +{vitrine.galerie.length - 8} autres
+                            </span>
+                          </div>
+                        )}
+                      </div>
+                    )}
+                  </CardContent>
+                </Card>
+
+                <Card>
+                  <CardHeader>
+                    <CardTitle>Pages personnalisées</CardTitle>
+                    <CardDescription>
+                      Maximum 3 pages personnalisées
+                    </CardDescription>
+                  </CardHeader>
+                  <CardContent className="space-y-4">
+                    {['about', 'contact', 'gallery'].map((pageType) => {
+                      const pageNames = {
+                        about: 'À propos',
+                        contact: 'Contact',
+                        gallery: 'Galerie supplémentaire'
+                      };
+                      
+                      const isEnabled = vitrine.customPages?.[pageType as keyof typeof vitrine.customPages]?.enabled || false;
+                      
+                      return (
+                        <div key={pageType} className="flex items-center justify-between p-4 border rounded-lg">
+                          <div className="flex items-center space-x-3">
+                            <Switch
+                              checked={isEnabled}
+                              onCheckedChange={(checked) => {
+                                const currentPages = vitrine.customPages || {};
+                                handleChange('customPages', {
+                                  ...currentPages,
+                                  [pageType]: {
+                                    ...currentPages[pageType as keyof typeof currentPages],
+                                    enabled: checked
+                                  }
+                                });
+                              }}
+                            />
+                            <div>
+                              <Label className="font-medium">{pageNames[pageType as keyof typeof pageNames]}</Label>
+                              <p className="text-sm text-gray-500">
+                                {pageType === 'about' && 'Page de présentation de votre activité'}
+                                {pageType === 'contact' && 'Formulaire de contact et informations'}
+                                {pageType === 'gallery' && 'Galerie d\'images supplémentaire'}
+                              </p>
+                            </div>
+                          </div>
+                          {isEnabled && (
+                            <Button variant="outline" size="sm">
+                              <Settings className="w-4 h-4 mr-2" />
+                              Configurer
+                            </Button>
+                          )}
+                        </div>
+                      );
+                    })}
                   </CardContent>
                 </Card>
               </TabsContent>

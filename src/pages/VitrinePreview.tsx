@@ -5,17 +5,32 @@ import { ArrowLeft, Upload, Edit, Trash2 } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 
 interface VitrineData {
-  title: string;
+  nom: string;
   subtitle: string;
-  primaryColor: string;
-  secondaryColor: string;
-  accentColor: string;
-  images: string[];
-  about: string;
+  couleurPrimaire: string;
+  couleurSecondaire: string;
+  couleurAccent: string;
+  logo: string | null;
+  galerie: string[];
+  biographie: string;
   contact: {
     email: string;
-    phone: string;
-    address: string;
+    telephone: string;
+    adresse: string;
+  };
+  customPages?: {
+    about?: {
+      enabled: boolean;
+      content?: string;
+    };
+    contact?: {
+      enabled: boolean;
+      content?: string;
+    };
+    gallery?: {
+      enabled: boolean;
+      images?: string[];
+    };
   };
 }
 
@@ -25,12 +40,13 @@ const VitrinePreview = () => {
   
   // Mock data - en production cela viendrait de la base de données
   const [vitrineData] = useState<VitrineData>({
-    title: "Deep Wedding",
+    nom: "Deep Wedding",
     subtitle: "SHARING MOMENTS",
-    primaryColor: "#e91e63",
-    secondaryColor: "#f8bbd9",
-    accentColor: "#ad1457",
-    images: [
+    couleurPrimaire: "#e91e63",
+    couleurSecondaire: "#f8bbd9",
+    couleurAccent: "#ad1457",
+    logo: null,
+    galerie: [
       "/lovable-uploads/7285260e-899b-4817-9f82-90b6507e5c8d.png",
       // Placeholder images pour la démo
       "https://images.unsplash.com/photo-1519741497674-611481863552?w=400",
@@ -41,16 +57,21 @@ const VitrinePreview = () => {
       "https://images.unsplash.com/photo-1537633552985-df8429e8048b?w=400",
       "https://images.unsplash.com/photo-1522673607200-164d1b6ce486?w=400"
     ],
-    about: "Nous sommes spécialisés dans la photographie de mariage, capturant vos moments les plus précieux avec passion et créativité. Notre approche combine l'élégance classique avec une touche moderne pour créer des souvenirs intemporels.",
+    biographie: "Nous sommes spécialisés dans la photographie de mariage, capturant vos moments les plus précieux avec passion et créativité. Notre approche combine l'élégance classique avec une touche moderne pour créer des souvenirs intemporels.",
     contact: {
       email: "contact@deepwedding.com",
-      phone: "+33 1 23 45 67 89",
-      address: "123 Rue de la Photographie, 75001 Paris"
+      telephone: "+33 1 23 45 67 89",
+      adresse: "123 Rue de la Photographie, 75001 Paris"
+    },
+    customPages: {
+      about: { enabled: true },
+      contact: { enabled: true },
+      gallery: { enabled: false }
     }
   });
 
   const [isEditMode, setIsEditMode] = useState(false);
-  const [uploadedImages, setUploadedImages] = useState<string[]>(vitrineData.images);
+  const [uploadedImages, setUploadedImages] = useState<string[]>(vitrineData.galerie);
 
   const handleImageUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
     const files = event.target.files;
@@ -76,11 +97,11 @@ const VitrinePreview = () => {
       <div className="flex items-center space-x-2">
         <div 
           className="w-8 h-8 rounded-full flex items-center justify-center text-white font-bold"
-          style={{ backgroundColor: vitrineData.primaryColor }}
+          style={{ backgroundColor: vitrineData.couleurPrimaire }}
         >
-          D
+          {vitrineData.nom.charAt(0)}
         </div>
-        <span className="text-xl font-semibold text-gray-800">{vitrineData.title}</span>
+        <span className="text-xl font-semibold text-gray-800">{vitrineData.nom}</span>
       </div>
       
       <div className="flex space-x-8">
@@ -89,7 +110,7 @@ const VitrinePreview = () => {
           className={`font-medium transition-colors ${
             currentPage === 'gallery' ? 'text-primary' : 'text-gray-600 hover:text-gray-800'
           }`}
-          style={{ color: currentPage === 'gallery' ? vitrineData.primaryColor : undefined }}
+          style={{ color: currentPage === 'gallery' ? vitrineData.couleurPrimaire : undefined }}
         >
           GALERIE
         </button>
@@ -98,7 +119,7 @@ const VitrinePreview = () => {
           className={`font-medium transition-colors ${
             currentPage === 'about' ? 'text-primary' : 'text-gray-600 hover:text-gray-800'
           }`}
-          style={{ color: currentPage === 'about' ? vitrineData.primaryColor : undefined }}
+          style={{ color: currentPage === 'about' ? vitrineData.couleurPrimaire : undefined }}
         >
           À PROPOS
         </button>
@@ -107,7 +128,7 @@ const VitrinePreview = () => {
           className={`font-medium transition-colors ${
             currentPage === 'contact' ? 'text-primary' : 'text-gray-600 hover:text-gray-800'
           }`}
-          style={{ color: currentPage === 'contact' ? vitrineData.primaryColor : undefined }}
+          style={{ color: currentPage === 'contact' ? vitrineData.couleurPrimaire : undefined }}
         >
           CONTACT
         </button>
@@ -117,7 +138,7 @@ const VitrinePreview = () => {
         <span className="text-sm text-gray-500">Sunday, August 26, 2018</span>
         <div 
           className="w-8 h-8 rounded-full flex items-center justify-center"
-          style={{ backgroundColor: vitrineData.secondaryColor }}
+          style={{ backgroundColor: vitrineData.couleurSecondaire }}
         >
           <div className="w-4 h-4 bg-white rounded-full"></div>
         </div>
@@ -130,7 +151,7 @@ const VitrinePreview = () => {
       <div className="text-center py-20">
         <h1 
           className="text-6xl font-light mb-4"
-          style={{ color: vitrineData.primaryColor }}
+          style={{ color: vitrineData.couleurPrimaire }}
         >
           Photo Gallery
         </h1>
@@ -193,7 +214,7 @@ const VitrinePreview = () => {
         <div className="text-center mb-16">
           <h1 
             className="text-5xl font-light mb-4"
-            style={{ color: vitrineData.primaryColor }}
+            style={{ color: vitrineData.couleurPrimaire }}
           >
             À Propos
           </h1>
@@ -202,7 +223,7 @@ const VitrinePreview = () => {
         
         <Card className="p-8">
           <p className="text-lg text-gray-700 leading-relaxed text-center">
-            {vitrineData.about}
+            {vitrineData.biographie}
           </p>
         </Card>
       </div>
@@ -215,7 +236,7 @@ const VitrinePreview = () => {
         <div className="text-center mb-16">
           <h1 
             className="text-5xl font-light mb-4"
-            style={{ color: vitrineData.primaryColor }}
+            style={{ color: vitrineData.couleurPrimaire }}
           >
             Contact
           </h1>
@@ -225,22 +246,22 @@ const VitrinePreview = () => {
         <Card className="p-8">
           <div className="grid md:grid-cols-3 gap-8 text-center">
             <div>
-              <h3 className="text-xl font-semibold mb-2" style={{ color: vitrineData.primaryColor }}>
+              <h3 className="text-xl font-semibold mb-2" style={{ color: vitrineData.couleurPrimaire }}>
                 Email
               </h3>
               <p className="text-gray-700">{vitrineData.contact.email}</p>
             </div>
             <div>
-              <h3 className="text-xl font-semibold mb-2" style={{ color: vitrineData.primaryColor }}>
+              <h3 className="text-xl font-semibold mb-2" style={{ color: vitrineData.couleurPrimaire }}>
                 Téléphone
               </h3>
-              <p className="text-gray-700">{vitrineData.contact.phone}</p>
+              <p className="text-gray-700">{vitrineData.contact.telephone}</p>
             </div>
             <div>
-              <h3 className="text-xl font-semibold mb-2" style={{ color: vitrineData.primaryColor }}>
+              <h3 className="text-xl font-semibold mb-2" style={{ color: vitrineData.couleurPrimaire }}>
                 Adresse
               </h3>
-              <p className="text-gray-700">{vitrineData.contact.address}</p>
+              <p className="text-gray-700">{vitrineData.contact.adresse}</p>
             </div>
           </div>
         </Card>
