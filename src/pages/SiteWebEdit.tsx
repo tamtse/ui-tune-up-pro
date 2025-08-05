@@ -73,24 +73,54 @@ const mockVitrine: VitrineData = {
   nom: "Studio Photo Lumière",
   sousDomaine: "studio-lumiere",
   description: "Studio photo professionnel spécialisé dans les portraits et événements",
-  couleurPrimaire: "#2563eb",
-  couleurSecondaire: "#1e40af",
-  couleurAccent: "#3b82f6",
+  couleurPrimaire: "#e91e63",
+  couleurSecondaire: "#f8bbd9",
+  couleurAccent: "#ad1457",
   statut: "publié",
-  logo: null,
-  imageCouverture: null,
+  logo: "/lovable-uploads/7285260e-899b-4817-9f82-90b6507e5c8d.png",
+  imageCouverture: "https://images.unsplash.com/photo-1606216794074-735e91aa2c92?w=800",
   biographie: "Photographe professionnel depuis 10 ans, je me spécialise dans les portraits, mariages et événements corporate. Mon approche artistique combine technique moderne et sensibilité créative pour capturer vos moments les plus précieux.",
-  galerie: [],
+  galerie: [
+    "https://images.unsplash.com/photo-1519741497674-611481863552?w=400",
+    "https://images.unsplash.com/photo-1465495976277-4387d4b0e4a6?w=400", 
+    "https://images.unsplash.com/photo-1511285560929-80b456fea0bc?w=400",
+    "https://images.unsplash.com/photo-1606216794074-735e91aa2c92?w=400",
+    "https://images.unsplash.com/photo-1583939003579-730e3918a45a?w=400",
+    "https://images.unsplash.com/photo-1537633552985-df8429e8048b?w=400",
+    "https://images.unsplash.com/photo-1522673607200-164d1b6ce486?w=400",
+    "https://images.unsplash.com/photo-1515934751635-c81c6bc9a2d8?w=400",
+    "https://images.unsplash.com/photo-1594736797933-d0d29a65a3d0?w=400",
+    "https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?w=400",
+    "https://images.unsplash.com/photo-1460723237483-7a6dc9d0b212?w=400",
+    "https://images.unsplash.com/photo-1549417229-aa67d3263c09?w=400"
+  ],
   reseauxSociaux: {
     facebook: "https://facebook.com/studiolumiere",
     instagram: "https://instagram.com/studiolumiere",
-    linkedin: "",
+    linkedin: "https://linkedin.com/company/studiolumiere",
     website: "https://studiolumiere.com"
   },
   contact: {
     email: "contact@studiolumiere.com",
     telephone: "+33 1 23 45 67 89",
     adresse: "123 Rue de la Photo\n75001 Paris\nFrance"
+  },
+  customPages: {
+    about: { 
+      enabled: true,
+      content: "Notre studio existe depuis 2014 et a réalisé plus de 500 séances photo. Nous nous spécialisons dans la photographie de mariage, portrait et événementiel."
+    },
+    contact: { 
+      enabled: true,
+      content: "N'hésitez pas à nous contacter pour discuter de votre projet photo. Nous offrons une consultation gratuite."
+    },
+    gallery: { 
+      enabled: true,
+      images: [
+        "https://images.unsplash.com/photo-1500375592092-40eb2168fd21?w=400",
+        "https://images.unsplash.com/photo-1542435503-956c469947f6?w=400"
+      ]
+    }
   },
   dateCreation: "2024-01-15",
   derniereModification: "2024-01-20",
