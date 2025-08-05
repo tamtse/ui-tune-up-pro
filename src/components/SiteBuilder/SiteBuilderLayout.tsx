@@ -4,6 +4,8 @@ import { BuilderSidebar } from "./BuilderSidebar";
 import { DesignSection } from "./sections/DesignSection";
 import { ContentSection } from "./sections/ContentSection";
 import { MediaSection } from "./sections/MediaSection";
+import { PagesSection } from "./sections/PagesSection";
+import { SettingsSection } from "./sections/SettingsSection";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { toast } from "sonner";
 
@@ -32,6 +34,15 @@ interface SiteData {
     adresse: string;
   };
   theme: string;
+  url: string;
+  customPages?: Array<{
+    id: string;
+    name: string;
+    slug: string;
+    enabled: boolean;
+    content: string;
+    type: 'about' | 'contact' | 'gallery' | 'custom';
+  }>;
 }
 
 interface SiteBuilderLayoutProps {
@@ -121,17 +132,17 @@ export function SiteBuilderLayout({
         );
       case 'pages':
         return (
-          <div className="p-6 text-center">
-            <h3 className="text-lg font-semibold mb-2">Gestion des pages</h3>
-            <p className="text-muted-foreground">Section en cours de développement</p>
-          </div>
+          <PagesSection
+            customPages={siteData.customPages || []}
+            onPagesChange={(pages) => handleFieldChange('customPages', pages)}
+          />
         );
       case 'settings':
         return (
-          <div className="p-6 text-center">
-            <h3 className="text-lg font-semibold mb-2">Paramètres</h3>
-            <p className="text-muted-foreground">Section en cours de développement</p>
-          </div>
+          <SettingsSection
+            siteData={siteData}
+            onSettingsChange={handleFieldChange}
+          />
         );
       default:
         return null;

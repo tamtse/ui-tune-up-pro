@@ -28,6 +28,14 @@ interface SiteData {
     adresse: string;
   };
   theme: string;
+  customPages?: Array<{
+    id: string;
+    name: string;
+    slug: string;
+    enabled: boolean;
+    content: string;
+    type: 'about' | 'contact' | 'gallery' | 'custom';
+  }>;
   dateCreation: string;
   derniereModification: string;
   visites: number;
@@ -72,6 +80,24 @@ const mockSiteData: SiteData = {
     adresse: "123 Rue de la Photo\n75001 Paris\nFrance"
   },
   theme: "gallery",
+  customPages: [
+    {
+      id: "about-1",
+      name: "À propos",
+      slug: "about",
+      type: "about",
+      enabled: true,
+      content: "Notre studio existe depuis 2014 et a réalisé plus de 500 séances photo..."
+    },
+    {
+      id: "contact-1", 
+      name: "Contact",
+      slug: "contact",
+      type: "contact",
+      enabled: true,
+      content: "N'hésitez pas à nous contacter pour discuter de votre projet photo..."
+    }
+  ],
   dateCreation: "2024-01-15",
   derniereModification: "2024-01-20",
   visites: 1247,

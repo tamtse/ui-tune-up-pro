@@ -1,7 +1,7 @@
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { Check } from "lucide-react";
+import { Check, Eye } from "lucide-react";
 
 interface Theme {
   id: string;
@@ -135,7 +135,18 @@ export function DesignSection({
                         <Badge variant="secondary" className="text-xs">PRO</Badge>
                       )}
                     </div>
-                    <p className="text-sm text-muted-foreground">{theme.description}</p>
+                    <p className="text-sm text-muted-foreground mb-2">{theme.description}</p>
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        window.open(`/preview/theme/${theme.id}`, '_blank');
+                      }}
+                    >
+                      <Eye className="w-3 h-3 mr-1" />
+                      Aperçu
+                    </Button>
                   </div>
                   {selectedTheme === theme.id && (
                     <div className="shrink-0">
