@@ -323,12 +323,107 @@ export default function SiteWebEdit() {
                 </Card>
               </TabsContent>
 
-              <TabsContent value="design" className="space-y-4">
+              <TabsContent value="design" className="space-y-6">
+                <Card>
+                  <CardHeader>
+                    <CardTitle>Choix du thème</CardTitle>
+                    <CardDescription>
+                      Sélectionnez le design de votre site vitrine
+                    </CardDescription>
+                  </CardHeader>
+                  <CardContent>
+                    <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                      {/* Thème 1 - Galerie simple */}
+                      <div className={`cursor-pointer p-4 border-2 rounded-lg transition-all ${
+                        true ? 'border-primary ring-2 ring-primary/20' : 'border-gray-200 hover:border-gray-300'
+                      }`}>
+                        <div className="bg-gray-100 rounded-lg p-3 mb-3">
+                          <div className="bg-white rounded shadow-sm p-3">
+                            <div className="flex items-center justify-between mb-2">
+                              <div className="flex items-center space-x-1">
+                                <div className="w-4 h-4 rounded-full bg-primary"></div>
+                                <span className="text-xs font-medium">Studio</span>
+                              </div>
+                              <div className="flex space-x-2 text-xs">
+                                <span className="text-primary">GALERIE</span>
+                                <span className="text-gray-400">CONTACT</span>
+                              </div>
+                            </div>
+                            <div className="text-center py-2">
+                              <h3 className="text-sm font-light text-primary mb-1">Photo Gallery</h3>
+                              <p className="text-xs text-gray-500">- SHARING MOMENTS -</p>
+                            </div>
+                            <div className="grid grid-cols-4 gap-1">
+                              {[1,2,3,4].map((i) => (
+                                <div key={i} className="aspect-square bg-gray-200 rounded-sm"></div>
+                              ))}
+                            </div>
+                          </div>
+                        </div>
+                        <h4 className="font-medium text-sm">Thème Galerie Simple</h4>
+                        <p className="text-xs text-gray-500">Design épuré avec focus sur les images</p>
+                      </div>
+
+                      {/* Thème 2 - Masonry */}
+                      <div className="cursor-pointer p-4 border-2 rounded-lg transition-all border-gray-200 hover:border-gray-300">
+                        <div className="bg-gray-100 rounded-lg p-3 mb-3">
+                          <div className="bg-white rounded shadow-sm p-3">
+                            <div className="flex items-center justify-between mb-2">
+                              <div className="flex items-center space-x-1">
+                                <div className="w-4 h-4 rounded-full bg-emerald-500"></div>
+                                <span className="text-xs font-medium">Portfolio</span>
+                              </div>
+                              <div className="flex space-x-2 text-xs">
+                                <span className="text-emerald-500">WORKS</span>
+                                <span className="text-gray-400">ABOUT</span>
+                              </div>
+                            </div>
+                            <div className="text-center py-2">
+                              <h3 className="text-sm font-light text-emerald-500 mb-1">My Portfolio</h3>
+                              <p className="text-xs text-gray-500">Creative Works</p>
+                            </div>
+                            <div className="grid grid-cols-3 gap-1">
+                              <div className="aspect-square bg-gray-200 rounded-sm"></div>
+                              <div className="aspect-[3/4] bg-gray-200 rounded-sm"></div>
+                              <div className="aspect-square bg-gray-200 rounded-sm"></div>
+                            </div>
+                          </div>
+                        </div>
+                        <h4 className="font-medium text-sm">Thème Masonry</h4>
+                        <p className="text-xs text-gray-500">Layout créatif avec grille dynamique</p>
+                      </div>
+
+                      {/* Thème 3 - Minimal */}
+                      <div className="cursor-pointer p-4 border-2 rounded-lg transition-all border-gray-200 hover:border-gray-300">
+                        <div className="bg-gray-100 rounded-lg p-3 mb-3">
+                          <div className="bg-white rounded shadow-sm p-3">
+                            <div className="text-center mb-2">
+                              <div className="w-6 h-6 rounded-full bg-gray-800 mx-auto mb-1"></div>
+                              <span className="text-xs font-light tracking-wider">MINIMAL STUDIO</span>
+                            </div>
+                            <div className="text-center py-2">
+                              <h3 className="text-xs font-light text-gray-800 mb-1">Photography</h3>
+                              <div className="w-8 h-px bg-gray-300 mx-auto"></div>
+                            </div>
+                            <div className="grid grid-cols-2 gap-2">
+                              {[1,2].map((i) => (
+                                <div key={i} className="aspect-[4/5] bg-gray-200 rounded-sm"></div>
+                              ))}
+                            </div>
+                          </div>
+                        </div>
+                        <h4 className="font-medium text-sm">Thème Minimal</h4>
+                        <p className="text-xs text-gray-500">Design épuré et sophistiqué</p>
+                      </div>
+                    </div>
+                  </CardContent>
+                </Card>
+
                 <Card>
                   <CardHeader>
                     <CardTitle>Personnalisation des couleurs</CardTitle>
                     <CardDescription>
-                      Modifiez la palette de couleurs de votre vitrine
+                      Adaptez les couleurs du thème sélectionné
                     </CardDescription>
                   </CardHeader>
                   <CardContent className="space-y-6">
