@@ -198,10 +198,15 @@ export default function SiteWebCreate() {
             Retour
           </Button>
           <div>
-            <h1 className="text-2xl font-bold text-foreground">Créer une vitrine</h1>
+            <h1 className="text-2xl font-bold text-foreground">Créer ma vitrine</h1>
             <p className="text-muted-foreground">
-              Configurez votre vitrine publique avec sous-domaine
+              Configurez votre vitrine publique avec sous-domaine personnalisé
             </p>
+            <div className="mt-2 p-2 bg-blue-50 border border-blue-200 rounded-lg">
+              <p className="text-sm text-blue-800">
+                <strong>Important:</strong> Vous ne pouvez avoir qu'une seule vitrine par compte.
+              </p>
+            </div>
           </div>
         </div>
 

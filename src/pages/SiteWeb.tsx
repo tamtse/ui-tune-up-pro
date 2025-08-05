@@ -17,6 +17,7 @@ import {
   BarChart3
 } from "lucide-react";
 import { useNavigate } from "react-router-dom";
+import { toast } from "sonner";
 
 interface Vitrine {
   id: string;
@@ -30,44 +31,20 @@ interface Vitrine {
   url: string;
 }
 
-const mockVitrines: Vitrine[] = [
-  {
-    id: "1",
-    nom: "Studio Photo Lumière",
-    sousDomaine: "studio-lumiere",
-    theme: "Moderne",
-    statut: "publié",
-    dateCreation: "2024-01-15",
-    derniereModification: "2024-01-20",
-    visites: 1247,
-    url: "https://studio-lumiere.mondomaine.com"
-  },
-  {
-    id: "2", 
-    nom: "Photographe Mariage",
-    sousDomaine: "mariage-photo",
-    theme: "Élégant",
-    statut: "brouillon",
-    dateCreation: "2024-01-10",
-    derniereModification: "2024-01-18",
-    visites: 0,
-    url: "https://mariage-photo.mondomaine.com"
-  },
-  {
-    id: "3",
-    nom: "Portfolio Nature",
-    sousDomaine: "nature-portfolio",
-    theme: "Minimal",
-    statut: "hors-ligne",
-    dateCreation: "2023-12-20",
-    derniereModification: "2024-01-05",
-    visites: 856,
-    url: "https://nature-portfolio.mondomaine.com"
-  }
-];
+const mockVitrine: Vitrine | null = {
+  id: "1",
+  nom: "Studio Photo Lumière",
+  sousDomaine: "studio-lumiere",
+  theme: "Moderne",
+  statut: "publié",
+  dateCreation: "2024-01-15",
+  derniereModification: "2024-01-20",
+  visites: 1247,
+  url: "https://studio-lumiere.mondomaine.com"
+};
 
 export default function SiteWeb() {
-  const [vitrines] = useState<Vitrine[]>(mockVitrines);
+  const [vitrine] = useState<Vitrine | null>(mockVitrine);
   const navigate = useNavigate();
 
   const getStatutBadge = (statut: Vitrine['statut']) => {
@@ -84,41 +61,72 @@ export default function SiteWeb() {
   };
 
   const handleCreateVitrine = () => {
+    if (vitrine) {
+      toast.error("Vous avez déjà une vitrine. Modifiez-la ou supprimez-la pour en créer une nouvelle.");
+      return;
+    }
     navigate("/site-web/create");
   };
 
-  const handleEditVitrine = (vitrineId: string) => {
-    navigate(`/site-web/edit/${vitrineId}`);
+  const handleEditVitrine = () => {
+    if (vitrine) {
+      navigate(`/site-web/edit/${vitrine.id}`);
+    }
   };
 
   const handleViewVitrine = (url: string) => {
     window.open(url, '_blank');
   };
 
-  const statsCards = [
+  const statsCards = vitrine ? [
     {
-      title: "Total Vitrines",
-      value: vitrines.length.toString(),
+      title: "Ma Vitrine",
+      value: "1",
       icon: Globe,
-      description: "Vitrines créées"
+      description: "Site créé"
     },
     {
-      title: "En ligne",
-      value: vitrines.filter(v => v.statut === 'publié').length.toString(),
+      title: "Statut",
+      value: vitrine.statut === 'publié' ? "En ligne" : vitrine.statut === 'brouillon' ? "Brouillon" : "Hors ligne",
       icon: Power,
-      description: "Vitrines actives"
+      description: "État actuel"
     },
     {
       title: "Visites totales",
-      value: vitrines.reduce((acc, v) => acc + v.visites, 0).toLocaleString(),
+      value: vitrine.visites.toLocaleString(),
       icon: BarChart3,
       description: "Ce mois-ci"
     },
     {
-      title: "Brouillons",
-      value: vitrines.filter(v => v.statut === 'brouillon').length.toString(),
+      title: "Dernière modif",
+      value: new Date(vitrine.derniereModification).toLocaleDateString(),
       icon: Edit,
-      description: "En cours"
+      description: "Mise à jour"
+    }
+  ] : [
+    {
+      title: "Ma Vitrine",
+      value: "0",
+      icon: Globe,
+      description: "Aucun site"
+    },
+    {
+      title: "Statut",
+      value: "Aucun",
+      icon: PowerOff,
+      description: "Pas de site"
+    },
+    {
+      title: "Visites totales",
+      value: "0",
+      icon: BarChart3,
+      description: "Aucune visite"
+    },
+    {
+      title: "Action",
+      value: "Créer",
+      icon: Plus,
+      description: "Commencer"
     }
   ];
 
@@ -128,15 +136,22 @@ export default function SiteWeb() {
         {/* Header */}
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
           <div>
-            <h1 className="text-2xl font-bold text-foreground">Site Web</h1>
+            <h1 className="text-2xl font-bold text-foreground">Ma Vitrine</h1>
             <p className="text-muted-foreground">
-              Gérez vos vitrines publiques et sous-domaines
+              Gérez votre vitrine publique et sous-domaine personnalisé
             </p>
           </div>
-          <Button onClick={handleCreateVitrine} className="sm:w-auto">
-            <Plus className="mr-2 h-4 w-4" />
-            Créer une vitrine
-          </Button>
+          {!vitrine ? (
+            <Button onClick={handleCreateVitrine} className="sm:w-auto">
+              <Plus className="mr-2 h-4 w-4" />
+              Créer ma vitrine
+            </Button>
+          ) : (
+            <Button onClick={handleEditVitrine} variant="outline" className="sm:w-auto">
+              <Edit className="mr-2 h-4 w-4" />
+              Modifier ma vitrine
+            </Button>
+          )}
         </div>
 
         {/* Stats */}
@@ -156,80 +171,76 @@ export default function SiteWeb() {
         </div>
 
         {/* Tabs */}
-        <Tabs defaultValue="vitrines" className="space-y-4">
+        <Tabs defaultValue="vitrine" className="space-y-4">
           <TabsList>
-            <TabsTrigger value="vitrines">Mes Vitrines</TabsTrigger>
+            <TabsTrigger value="vitrine">Ma Vitrine</TabsTrigger>
             <TabsTrigger value="themes">Thèmes</TabsTrigger>
             <TabsTrigger value="settings">Paramètres</TabsTrigger>
           </TabsList>
 
-          <TabsContent value="vitrines" className="space-y-4">
-            {vitrines.length > 0 ? (
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                {vitrines.map((vitrine) => (
-                  <Card key={vitrine.id} className="hover:shadow-lg transition-shadow">
-                    <CardHeader>
-                      <div className="flex items-start justify-between">
-                        <div className="space-y-1">
-                          <CardTitle className="text-lg">{vitrine.nom}</CardTitle>
-                          <CardDescription>
-                            {vitrine.sousDomaine}.mondomaine.com
-                          </CardDescription>
-                        </div>
-                        {getStatutBadge(vitrine.statut)}
-                      </div>
-                    </CardHeader>
-                    <CardContent className="space-y-4">
-                      <div className="space-y-2 text-sm">
-                        <div className="flex justify-between">
-                          <span className="text-muted-foreground">Thème:</span>
-                          <span>{vitrine.theme}</span>
-                        </div>
-                        <div className="flex justify-between">
-                          <span className="text-muted-foreground">Visites:</span>
-                          <span>{vitrine.visites.toLocaleString()}</span>
-                        </div>
-                        <div className="flex justify-between">
-                          <span className="text-muted-foreground">Modifié:</span>
-                          <span>{new Date(vitrine.derniereModification).toLocaleDateString()}</span>
-                        </div>
-                      </div>
-                      
-                      <div className="flex gap-2">
-                        <Button
-                          variant="outline"
-                          size="sm"
-                          onClick={() => handleEditVitrine(vitrine.id)}
-                          className="flex-1"
-                        >
-                          <Edit className="mr-2 h-4 w-4" />
-                          Éditer
-                        </Button>
-                        {vitrine.statut === 'publié' && (
-                          <Button
-                            variant="outline"
-                            size="sm"
-                            onClick={() => handleViewVitrine(vitrine.url)}
-                          >
-                            <ExternalLink className="h-4 w-4" />
-                          </Button>
-                        )}
-                      </div>
-                    </CardContent>
-                  </Card>
-                ))}
-              </div>
+          <TabsContent value="vitrine" className="space-y-4">
+            {vitrine ? (
+              <Card className="hover:shadow-lg transition-shadow">
+                <CardHeader>
+                  <div className="flex items-start justify-between">
+                    <div className="space-y-1">
+                      <CardTitle className="text-lg">{vitrine.nom}</CardTitle>
+                      <CardDescription>
+                        {vitrine.sousDomaine}.mondomaine.com
+                      </CardDescription>
+                    </div>
+                    {getStatutBadge(vitrine.statut)}
+                  </div>
+                </CardHeader>
+                <CardContent className="space-y-4">
+                  <div className="space-y-2 text-sm">
+                    <div className="flex justify-between">
+                      <span className="text-muted-foreground">Thème:</span>
+                      <span>{vitrine.theme}</span>
+                    </div>
+                    <div className="flex justify-between">
+                      <span className="text-muted-foreground">Visites:</span>
+                      <span>{vitrine.visites.toLocaleString()}</span>
+                    </div>
+                    <div className="flex justify-between">
+                      <span className="text-muted-foreground">Modifié:</span>
+                      <span>{new Date(vitrine.derniereModification).toLocaleDateString()}</span>
+                    </div>
+                  </div>
+                  
+                  <div className="flex gap-2">
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      onClick={handleEditVitrine}
+                      className="flex-1"
+                    >
+                      <Edit className="mr-2 h-4 w-4" />
+                      Éditer
+                    </Button>
+                    {vitrine.statut === 'publié' && (
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        onClick={() => handleViewVitrine(vitrine.url)}
+                      >
+                        <ExternalLink className="h-4 w-4" />
+                      </Button>
+                    )}
+                  </div>
+                </CardContent>
+              </Card>
             ) : (
               <Card>
                 <CardContent className="py-12 text-center">
                   <Globe className="mx-auto h-12 w-12 text-muted-foreground mb-4" />
                   <h3 className="text-lg font-medium mb-2">Aucune vitrine</h3>
                   <p className="text-muted-foreground mb-4">
-                    Créez votre première vitrine pour commencer.
+                    Créez votre vitrine personnalisée avec sous-domaine dédié pour présenter votre activité en ligne.
                   </p>
                   <Button onClick={handleCreateVitrine}>
                     <Plus className="mr-2 h-4 w-4" />
-                    Créer une vitrine
+                    Créer ma vitrine
                   </Button>
                 </CardContent>
               </Card>

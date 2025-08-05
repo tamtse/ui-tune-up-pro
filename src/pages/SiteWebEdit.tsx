@@ -175,7 +175,7 @@ export default function SiteWebEdit() {
           </Button>
           <div className="flex-1">
             <div className="flex items-center gap-2">
-              <h1 className="text-2xl font-bold text-foreground">{vitrine.nom}</h1>
+              <h1 className="text-2xl font-bold text-foreground">Ma vitrine - {vitrine.nom}</h1>
               {getStatutBadge(vitrine.statut)}
             </div>
             <p className="text-muted-foreground">
