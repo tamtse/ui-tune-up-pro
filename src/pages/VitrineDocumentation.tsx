@@ -156,11 +156,17 @@ export default function VitrineDocumentation() {
 
                 <div className="space-y-4">
                   <h3 className="text-lg font-semibold">Table: vitrines</h3>
+                  <div className="bg-yellow-50 border border-yellow-200 p-3 rounded-lg mb-4">
+                    <p className="text-sm text-yellow-800">
+                      <strong>Contrainte importante:</strong> Un utilisateur ne peut avoir qu'une seule vitrine. 
+                      La contrainte UNIQUE sur user_id garantit cette règle métier.
+                    </p>
+                  </div>
                   <div className="bg-muted p-4 rounded-lg overflow-x-auto">
                     <pre className="text-sm">
 {`CREATE TABLE vitrines (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-  user_id UUID REFERENCES users(id) ON DELETE CASCADE,
+  user_id UUID UNIQUE REFERENCES users(id) ON DELETE CASCADE,
   nom VARCHAR(255) NOT NULL,
   sous_domaine VARCHAR(100) UNIQUE NOT NULL,
   description TEXT,
@@ -185,7 +191,6 @@ export default function VitrineDocumentation() {
 
 -- Index pour performances
 CREATE INDEX idx_vitrines_sous_domaine ON vitrines(sous_domaine);
-CREATE INDEX idx_vitrines_user_id ON vitrines(user_id);
 CREATE INDEX idx_vitrines_statut ON vitrines(statut);`}
                     </pre>
                   </div>
@@ -267,36 +272,43 @@ CREATE INDEX idx_analytics_vitrine_date ON vitrine_analytics(vitrine_id, date);`
                 <div className="space-y-4">
                   <h3 className="text-lg font-semibold text-green-600">Gestion des vitrines</h3>
                   
+                  <div className="bg-blue-50 border border-blue-200 p-3 rounded-lg mb-4">
+                    <p className="text-sm text-blue-800">
+                      <strong>Règle métier:</strong> Un utilisateur ne peut avoir qu'une seule vitrine. 
+                      L'API doit gérer cette contrainte (erreur si tentative de création multiple).
+                    </p>
+                  </div>
+                  
                   <div className="space-y-3">
                     <div className="border-l-4 border-green-500 pl-4">
                       <Badge variant="outline" className="bg-green-50 text-green-700">GET</Badge>
-                      <code className="ml-2 text-sm">/api/vitrines</code>
+                      <code className="ml-2 text-sm">/api/vitrine</code>
                       <p className="text-sm text-muted-foreground mt-1">
-                        Liste les vitrines de l'utilisateur connecté
+                        Récupère la vitrine de l'utilisateur connecté (une seule possible)
                       </p>
                     </div>
 
                     <div className="border-l-4 border-blue-500 pl-4">
                       <Badge variant="outline" className="bg-blue-50 text-blue-700">POST</Badge>
-                      <code className="ml-2 text-sm">/api/vitrines</code>
+                      <code className="ml-2 text-sm">/api/vitrine</code>
                       <p className="text-sm text-muted-foreground mt-1">
-                        Crée une nouvelle vitrine
+                        Crée la vitrine de l'utilisateur (erreur si existe déjà)
                       </p>
                     </div>
 
                     <div className="border-l-4 border-orange-500 pl-4">
                       <Badge variant="outline" className="bg-orange-50 text-orange-700">PUT</Badge>
-                      <code className="ml-2 text-sm">/api/vitrines/:id</code>
+                      <code className="ml-2 text-sm">/api/vitrine</code>
                       <p className="text-sm text-muted-foreground mt-1">
-                        Met à jour une vitrine existante
+                        Met à jour la vitrine de l'utilisateur
                       </p>
                     </div>
 
                     <div className="border-l-4 border-red-500 pl-4">
                       <Badge variant="outline" className="bg-red-50 text-red-700">DELETE</Badge>
-                      <code className="ml-2 text-sm">/api/vitrines/:id</code>
+                      <code className="ml-2 text-sm">/api/vitrine</code>
                       <p className="text-sm text-muted-foreground mt-1">
-                        Supprime une vitrine
+                        Supprime la vitrine de l'utilisateur
                       </p>
                     </div>
                   </div>
