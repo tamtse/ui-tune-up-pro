@@ -8,7 +8,8 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Separator } from "@/components/ui/separator";
 import { 
   Globe, 
-  Eye
+  Eye,
+  BarChart3
 } from "lucide-react";
 import { toast } from "sonner";
 
@@ -82,6 +83,36 @@ export function SettingsSection({ siteData, onSettingsChange }: SettingsSectionP
                 </Button>
               )}
             </div>
+          </div>
+        </CardContent>
+      </Card>
+
+      {/* Analytics et statistiques */}
+      <Card>
+        <CardHeader>
+          <CardTitle className="flex items-center gap-2">
+            <BarChart3 className="h-5 w-5" />
+            Analytics et statistiques
+          </CardTitle>
+          <CardDescription>
+            Suivez les performances de votre site
+          </CardDescription>
+        </CardHeader>
+        <CardContent className="space-y-4">
+          <div>
+            <Label htmlFor="google-analytics">Google Analytics ID</Label>
+            <Input
+              id="google-analytics"
+              placeholder="G-XXXXXXXXXX"
+            />
+          </div>
+
+          <div>
+            <Label htmlFor="facebook-pixel">Facebook Pixel ID</Label>
+            <Input
+              id="facebook-pixel"
+              placeholder="123456789012345"
+            />
           </div>
         </CardContent>
       </Card>
