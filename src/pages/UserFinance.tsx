@@ -12,7 +12,6 @@ import {
   TrendingUp, 
   TrendingDown, 
   FileText,
-  Download,
   Filter,
   Info,
   HelpCircle
@@ -200,7 +199,7 @@ export default function UserFinance() {
                 </div>
               </div>
               
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 lg:flex-1">
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 lg:flex-1">
                 <div className="flex flex-col space-y-2">
                   <label className="text-sm font-medium">Date début</label>
                   <Input
@@ -237,13 +236,6 @@ export default function UserFinance() {
                   </Select>
                 </div>
                 
-                <div className="flex flex-col space-y-2">
-                  <label className="text-sm font-medium lg:invisible">Action</label>
-                  <Button variant="outline" size="default" className="w-full" disabled>
-                    <Download className="w-4 h-4 mr-2" />
-                    Exporter
-                  </Button>
-                </div>
               </div>
             </div>
           </CardContent>
