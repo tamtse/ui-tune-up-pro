@@ -3,12 +3,16 @@ import { AdminLayout } from "@/components/AdminLayout";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
+
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Badge } from "@/components/ui/badge";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { Label } from "@/components/ui/label";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
+import { Calendar as CalendarUI } from "@/components/ui/calendar";
+import { cn } from "@/lib/utils";
+import { format } from "date-fns";
 import { 
   Plus, 
   Search, 
@@ -83,6 +87,7 @@ export default function FinanceDepenses() {
     description: "",
     category: "",
     amount: "",
+    time: "",
     status: "pending" as "paid" | "pending",
     reference: ""
   });
@@ -93,6 +98,7 @@ export default function FinanceDepenses() {
       description: "",
       category: "",
       amount: "",
+      time: "",
       status: "pending" as "paid" | "pending",
       reference: ""
     });
@@ -127,6 +133,7 @@ export default function FinanceDepenses() {
       description: expense.description,
       category: expense.category,
       amount: expense.amount.toString(),
+      time: "",
       status: expense.status,
       reference: expense.reference || ""
     });
@@ -180,38 +187,69 @@ export default function FinanceDepenses() {
                 </DialogTitle>
               </DialogHeader>
               <form onSubmit={handleSubmit} className="space-y-4">
-                <div className="grid grid-cols-2 gap-4">
-                  <div>
-                    <Label htmlFor="date">Date</Label>
-                    <Input
-                      id="date"
-                      type="date"
-                      value={formData.date}
-                      onChange={(e) => setFormData({...formData, date: e.target.value})}
-                      required
-                    />
-                  </div>
-                  <div>
-                    <Label htmlFor="amount">Montant (FCFA)</Label>
-                    <Input
-                      id="amount"
-                      type="number"
-                      step="1"
-                      value={formData.amount}
-                      onChange={(e) => setFormData({...formData, amount: e.target.value})}
-                      required
-                    />
-                  </div>
+                <div>
+                  <Label htmlFor="description">Nom de la dépense</Label>
+                  <Input
+                    id="description"
+                    value={formData.description}
+                    onChange={(e) => setFormData({ ...formData, description: e.target.value })}
+                    required
+                  />
                 </div>
 
                 <div>
-                  <Label htmlFor="description">Description</Label>
-                  <Textarea
-                    id="description"
-                    value={formData.description}
-                    onChange={(e) => setFormData({...formData, description: e.target.value})}
+                  <Label htmlFor="amount">Montant (FCFA)</Label>
+                  <Input
+                    id="amount"
+                    type="number"
+                    step="1"
+                    value={formData.amount}
+                    onChange={(e) => setFormData({ ...formData, amount: e.target.value })}
                     required
                   />
+                </div>
+
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  <div className="flex flex-col">
+                    <Label>Date</Label>
+                    <Popover>
+                      <PopoverTrigger asChild>
+                        <Button
+                          variant={"outline"}
+                          className={cn(
+                            "w-full justify-start pl-3 text-left font-normal",
+                            !formData.date && "text-muted-foreground"
+                          )}
+                          type="button"
+                        >
+                          {formData.date ? (
+                            format(new Date(formData.date), "dd-MM-yyyy")
+                          ) : (
+                            <span>Choisir une date</span>
+                          )}
+                          <Calendar className="ml-auto h-4 w-4 opacity-50" />
+                        </Button>
+                      </PopoverTrigger>
+                      <PopoverContent className="w-auto p-0" align="start">
+                        <CalendarUI
+                          mode="single"
+                          selected={formData.date ? new Date(formData.date) : undefined}
+                          onSelect={(d) => setFormData({ ...formData, date: d ? format(d, "yyyy-MM-dd") : "" })}
+                          initialFocus
+                          className={cn("p-3 pointer-events-auto")}
+                        />
+                      </PopoverContent>
+                    </Popover>
+                  </div>
+                  <div>
+                    <Label htmlFor="time">Heure</Label>
+                    <Input
+                      id="time"
+                      type="time"
+                      value={formData.time}
+                      onChange={(e) => setFormData({ ...formData, time: e.target.value })}
+                    />
+                  </div>
                 </div>
 
                 <div className="grid grid-cols-2 gap-4">
@@ -219,7 +257,7 @@ export default function FinanceDepenses() {
                     <Label htmlFor="category">Catégorie</Label>
                     <Select 
                       value={formData.category} 
-                      onValueChange={(value) => setFormData({...formData, category: value})}
+                      onValueChange={(value) => setFormData({ ...formData, category: value })}
                     >
                       <SelectTrigger>
                         <SelectValue placeholder="Sélectionner une catégorie" />
@@ -235,7 +273,7 @@ export default function FinanceDepenses() {
                     <Label htmlFor="status">Statut</Label>
                     <Select 
                       value={formData.status} 
-                      onValueChange={(value) => setFormData({...formData, status: value as "paid" | "pending"})}
+                      onValueChange={(value) => setFormData({ ...formData, status: value as "paid" | "pending" })}
                     >
                       <SelectTrigger>
                         <SelectValue />
@@ -253,7 +291,7 @@ export default function FinanceDepenses() {
                   <Input
                     id="reference"
                     value={formData.reference}
-                    onChange={(e) => setFormData({...formData, reference: e.target.value})}
+                    onChange={(e) => setFormData({ ...formData, reference: e.target.value })}
                     placeholder="Numéro de facture, référence..."
                   />
                 </div>

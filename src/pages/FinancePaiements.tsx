@@ -3,12 +3,15 @@ import { AdminLayout } from "@/components/AdminLayout";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Badge } from "@/components/ui/badge";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { Label } from "@/components/ui/label";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
+import { Calendar as CalendarUI } from "@/components/ui/calendar";
+import { cn } from "@/lib/utils";
+import { format } from "date-fns";
 import { 
   Plus, 
   Search, 
@@ -46,6 +49,14 @@ const paymentMethods = [
   { value: "bank_transfer", label: "Virement" },
   { value: "check", label: "Chèque" },
   { value: "card", label: "Carte bancaire" }
+];
+
+const prestationOptions = [
+  "Mariage",
+  "Portrait",
+  "Corporate",
+  "Événement",
+  "Autre"
 ];
 
 export default function FinancePaiements() {
@@ -99,7 +110,8 @@ export default function FinancePaiements() {
     type: "invoice" as "invoice" | "quote" | "deposit" | "other",
     status: "pending" as "received" | "pending" | "partial",
     reference: "",
-    method: "bank_transfer" as "cash" | "bank_transfer" | "check" | "card"
+    method: "bank_transfer" as "cash" | "bank_transfer" | "check" | "card",
+    time: ""
   });
 
   const resetForm = () => {
@@ -111,7 +123,8 @@ export default function FinancePaiements() {
       type: "invoice" as "invoice" | "quote" | "deposit" | "other",
       status: "pending" as "received" | "pending" | "partial",
       reference: "",
-      method: "bank_transfer" as "cash" | "bank_transfer" | "check" | "card"
+      method: "bank_transfer" as "cash" | "bank_transfer" | "check" | "card",
+      time: ""
     });
     setSelectedPayment(null);
   };
@@ -147,7 +160,8 @@ export default function FinancePaiements() {
       type: payment.type,
       status: payment.status,
       reference: payment.reference || "",
-      method: payment.method
+      method: payment.method,
+      time: ""
     });
     setIsDialogOpen(true);
   };
@@ -222,48 +236,86 @@ export default function FinancePaiements() {
                 </DialogTitle>
               </DialogHeader>
               <form onSubmit={handleSubmit} className="space-y-4">
-                <div className="grid grid-cols-2 gap-4">
-                  <div>
-                    <Label htmlFor="date">Date</Label>
-                    <Input
-                      id="date"
-                      type="date"
-                      value={formData.date}
-                      onChange={(e) => setFormData({...formData, date: e.target.value})}
-                      required
-                    />
-                  </div>
-                  <div>
-                    <Label htmlFor="amount">Montant (FCFA)</Label>
-                    <Input
-                      id="amount"
-                      type="number"
-                      step="1"
-                      value={formData.amount}
-                      onChange={(e) => setFormData({...formData, amount: e.target.value})}
-                      required
-                    />
-                  </div>
-                </div>
-
                 <div>
-                  <Label htmlFor="client">Client</Label>
+                  <Label htmlFor="client">Contact (client)</Label>
                   <Input
                     id="client"
                     value={formData.client}
-                    onChange={(e) => setFormData({...formData, client: e.target.value})}
+                    onChange={(e) => setFormData({ ...formData, client: e.target.value })}
                     required
                   />
                 </div>
 
                 <div>
-                  <Label htmlFor="description">Description</Label>
-                  <Textarea
-                    id="description"
-                    value={formData.description}
-                    onChange={(e) => setFormData({...formData, description: e.target.value})}
+                  <Label htmlFor="prestation">Prestation (Sélectionner le projet)</Label>
+                  <Select 
+                    value={(prestationOptions.includes(formData.description) ? formData.description : undefined) as any}
+                    onValueChange={(value) => setFormData({ ...formData, description: value })}
+                  >
+                    <SelectTrigger>
+                      <SelectValue placeholder="Sélectionner" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {prestationOptions.map((opt) => (
+                        <SelectItem key={opt} value={opt}>{opt}</SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                </div>
+
+                <div>
+                  <Label htmlFor="amount">Montant (FCFA)</Label>
+                  <Input
+                    id="amount"
+                    type="number"
+                    step="1"
+                    value={formData.amount}
+                    onChange={(e) => setFormData({ ...formData, amount: e.target.value })}
                     required
                   />
+                </div>
+
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  <div className="flex flex-col">
+                    <Label>Date de paiement</Label>
+                    <Popover>
+                      <PopoverTrigger asChild>
+                        <Button
+                          variant={"outline"}
+                          className={cn(
+                            "w-full justify-start pl-3 text-left font-normal",
+                            !formData.date && "text-muted-foreground"
+                          )}
+                          type="button"
+                        >
+                          {formData.date ? (
+                            format(new Date(formData.date), "dd-MM-yyyy")
+                          ) : (
+                            <span>Choisir une date</span>
+                          )}
+                          <Calendar className="ml-auto h-4 w-4 opacity-50" />
+                        </Button>
+                      </PopoverTrigger>
+                      <PopoverContent className="w-auto p-0" align="start">
+                        <CalendarUI
+                          mode="single"
+                          selected={formData.date ? new Date(formData.date) : undefined}
+                          onSelect={(d) => setFormData({ ...formData, date: d ? format(d, "yyyy-MM-dd") : "" })}
+                          initialFocus
+                          className={cn("p-3 pointer-events-auto")}
+                        />
+                      </PopoverContent>
+                    </Popover>
+                  </div>
+                  <div>
+                    <Label htmlFor="time">Heure de paiement</Label>
+                    <Input
+                      id="time"
+                      type="time"
+                      value={formData.time}
+                      onChange={(e) => setFormData({ ...formData, time: e.target.value })}
+                    />
+                  </div>
                 </div>
 
                 <div className="grid grid-cols-2 gap-4">
@@ -271,7 +323,7 @@ export default function FinancePaiements() {
                     <Label htmlFor="type">Type</Label>
                     <Select 
                       value={formData.type} 
-                      onValueChange={(value) => setFormData({...formData, type: value as any})}
+                      onValueChange={(value) => setFormData({ ...formData, type: value as any })}
                     >
                       <SelectTrigger>
                         <SelectValue />
@@ -287,7 +339,7 @@ export default function FinancePaiements() {
                     <Label htmlFor="method">Méthode de paiement</Label>
                     <Select 
                       value={formData.method} 
-                      onValueChange={(value) => setFormData({...formData, method: value as any})}
+                      onValueChange={(value) => setFormData({ ...formData, method: value as any })}
                     >
                       <SelectTrigger>
                         <SelectValue />
@@ -306,7 +358,7 @@ export default function FinancePaiements() {
                     <Label htmlFor="status">Statut</Label>
                     <Select 
                       value={formData.status} 
-                      onValueChange={(value) => setFormData({...formData, status: value as any})}
+                      onValueChange={(value) => setFormData({ ...formData, status: value as any })}
                     >
                       <SelectTrigger>
                         <SelectValue />
@@ -323,7 +375,7 @@ export default function FinancePaiements() {
                     <Input
                       id="reference"
                       value={formData.reference}
-                      onChange={(e) => setFormData({...formData, reference: e.target.value})}
+                      onChange={(e) => setFormData({ ...formData, reference: e.target.value })}
                       placeholder="Numéro de facture, devis..."
                     />
                   </div>
