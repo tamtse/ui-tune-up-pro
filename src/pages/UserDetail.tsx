@@ -4,10 +4,13 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { ArrowLeft, Share, MoreHorizontal, Mail, MessageSquare, TrendingUp, TrendingDown, CheckCircle, XCircle, Shield } from "lucide-react";
+import { ArrowLeft, Share, MoreHorizontal, Mail, MessageSquare, TrendingUp, TrendingDown, CheckCircle, XCircle, Shield, Edit, Trash2, Eye } from "lucide-react";
 import { Link, useParams } from "react-router-dom";
 import { SubscriptionActionDialog } from "@/components/SubscriptionActionDialog";
 import { useState } from "react";
+import { toast } from "sonner";
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
+import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from "@/components/ui/alert-dialog";
 
 const activityData = {
   clients: { value: 450, change: "+10 la semaine précédente", trend: "up" },
@@ -20,6 +23,35 @@ export default function UserDetail() {
   const { id } = useParams();
   const [isExtendDialogOpen, setIsExtendDialogOpen] = useState(false);
   const [isCancelDialogOpen, setIsCancelDialogOpen] = useState(false);
+  const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
+  const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
+
+  const handleEditUser = () => {
+    setIsEditDialogOpen(true);
+    toast.success("Fonction d'édition - En développement");
+  };
+
+  const handleDeleteUser = () => {
+    setIsDeleteDialogOpen(true);
+  };
+
+  const confirmDeleteUser = () => {
+    toast.success("Utilisateur supprimé avec succès");
+    setIsDeleteDialogOpen(false);
+    // Redirection vers la liste des utilisateurs
+  };
+
+  const handleValidateEmail = () => {
+    toast.success("Email validé manuellement avec succès");
+  };
+
+  const handleResendEmail = () => {
+    toast.success("Email de validation renvoyé");
+  };
+
+  const handleRevokeEmail = () => {
+    toast.error("Validation d'email révoquée");
+  };
 
   return (
     <AdminLayout>
@@ -41,15 +73,32 @@ export default function UserDetail() {
           </div>
           <div className="flex items-center space-x-2 ml-auto lg:ml-0">
             <Button variant="outline" size="sm" className="hidden sm:flex">
-              <Share className="h-4 w-4 mr-2" />
-              Partager
+              <Eye className="h-4 w-4 mr-2" />
+              Voir
             </Button>
             <Button variant="outline" size="sm" className="sm:hidden">
-              <Share className="h-4 w-4" />
+              <Eye className="h-4 w-4" />
             </Button>
-            <Button variant="ghost" size="sm">
-              <MoreHorizontal className="h-4 w-4" />
-            </Button>
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button variant="ghost" size="sm">
+                  <MoreHorizontal className="h-4 w-4" />
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="end">
+                <DropdownMenuItem onClick={handleEditUser}>
+                  <Edit className="mr-2 h-4 w-4" />
+                  Modifier
+                </DropdownMenuItem>
+                <DropdownMenuItem 
+                  onClick={handleDeleteUser}
+                  className="text-destructive focus:text-destructive"
+                >
+                  <Trash2 className="mr-2 h-4 w-4" />
+                  Supprimer
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
           </div>
         </div>
 
@@ -304,16 +353,16 @@ export default function UserDetail() {
                       <div className="space-y-3">
                         <h4 className="font-medium">Actions administrateur</h4>
                         <div className="flex flex-col gap-3">
-                          <Button variant="default" className="flex items-center justify-center space-x-2 w-full">
+                          <Button variant="default" className="flex items-center justify-center space-x-2 w-full" onClick={handleValidateEmail}>
                             <CheckCircle className="h-4 w-4" />
                             <span className="text-sm sm:text-base">Valider manuellement</span>
                           </Button>
                           <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                            <Button variant="outline" className="flex items-center justify-center space-x-2 w-full">
+                            <Button variant="outline" className="flex items-center justify-center space-x-2 w-full" onClick={handleResendEmail}>
                               <Mail className="h-4 w-4" />
                               <span className="text-sm">Renvoyer email</span>
                             </Button>
-                            <Button variant="destructive" className="flex items-center justify-center space-x-2 w-full">
+                            <Button variant="destructive" className="flex items-center justify-center space-x-2 w-full" onClick={handleRevokeEmail}>
                               <XCircle className="h-4 w-4" />
                               <span className="text-sm">Révoquer</span>
                             </Button>
@@ -377,6 +426,24 @@ export default function UserDetail() {
         currentPlan="Premium"
         currentEndDate="2024-12-15"
       />
+
+      {/* Delete Confirmation Dialog */}
+      <AlertDialog open={isDeleteDialogOpen} onOpenChange={setIsDeleteDialogOpen}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Confirmer la suppression</AlertDialogTitle>
+            <AlertDialogDescription>
+              Êtes-vous sûr de vouloir supprimer cet utilisateur ? Cette action est irréversible.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>Annuler</AlertDialogCancel>
+            <AlertDialogAction onClick={confirmDeleteUser} className="bg-destructive text-destructive-foreground hover:bg-destructive/90">
+              Supprimer
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </AdminLayout>
   );
 }
