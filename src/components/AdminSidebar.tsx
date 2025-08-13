@@ -24,7 +24,7 @@ import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 
 const adminMenuItems = [
-  { title: "Tableau de bord", url: "/", icon: BarChart3 },
+  { title: "Tableau de bord", url: "/dashboard", icon: BarChart3 },
   { title: "Utilisateurs", url: "/users", icon: Users },
   { title: "Transactions", url: "/transactions", icon: Receipt },
   { title: "Gestion des abo", url: "/subscriptions", icon: CreditCard },
@@ -65,7 +65,7 @@ export function AdminSidebar({ isOpen, setIsOpen, isMobile }: AdminSidebarProps)
   const location = useLocation();
 
   const isActive = (path: string) => {
-    if (path === "/") return location.pathname === "/";
+    if (path === "/dashboard") return location.pathname === "/dashboard";
     return location.pathname.startsWith(path);
   };
 

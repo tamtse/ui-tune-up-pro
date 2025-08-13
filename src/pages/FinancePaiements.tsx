@@ -8,9 +8,7 @@ import { Badge } from "@/components/ui/badge";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { Label } from "@/components/ui/label";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
-import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
-import { Calendar as CalendarUI } from "@/components/ui/calendar";
-import { cn } from "@/lib/utils";
+import { DatePicker } from "@/components/ui/date-picker";
 import { format } from "date-fns";
 import { 
   Plus, 
@@ -276,36 +274,13 @@ export default function FinancePaiements() {
                 </div>
 
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                  <div className="flex flex-col">
+                  <div>
                     <Label>Date de paiement</Label>
-                    <Popover>
-                      <PopoverTrigger asChild>
-                        <Button
-                          variant={"outline"}
-                          className={cn(
-                            "w-full justify-start pl-3 text-left font-normal",
-                            !formData.date && "text-muted-foreground"
-                          )}
-                          type="button"
-                        >
-                          {formData.date ? (
-                            format(new Date(formData.date), "dd-MM-yyyy")
-                          ) : (
-                            <span>Choisir une date</span>
-                          )}
-                          <Calendar className="ml-auto h-4 w-4 opacity-50" />
-                        </Button>
-                      </PopoverTrigger>
-                      <PopoverContent className="w-auto p-0" align="start">
-                        <CalendarUI
-                          mode="single"
-                          selected={formData.date ? new Date(formData.date) : undefined}
-                          onSelect={(d) => setFormData({ ...formData, date: d ? format(d, "yyyy-MM-dd") : "" })}
-                          initialFocus
-                          className={cn("p-3 pointer-events-auto")}
-                        />
-                      </PopoverContent>
-                    </Popover>
+                    <DatePicker
+                      value={formData.date ? new Date(formData.date) : undefined}
+                      onChange={(date) => setFormData({ ...formData, date: date ? date.toISOString().split('T')[0] : "" })}
+                      placeholder="Choisir une date"
+                    />
                   </div>
                   <div>
                     <Label htmlFor="time">Heure de paiement</Label>
