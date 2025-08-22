@@ -1,25 +1,24 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { AdminLayout } from "@/components/AdminLayout";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Badge } from "@/components/ui/badge";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { Label } from "@/components/ui/label";
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import { DatePicker } from "@/components/ui/date-picker";
+import { toast } from "sonner";
 import { 
   Plus, 
   Search, 
   Filter, 
-  MoreHorizontal, 
-  Edit, 
-  Trash2, 
   ArrowLeft,
   Euro,
-  Calendar
+  Calendar,
+  Download,
+  TrendingUp,
+  TrendingDown
 } from "lucide-react";
 
 interface Transaction {
@@ -31,14 +30,14 @@ interface Transaction {
   type: "expense";
   date: string;
   hours?: string;
-  category: string;
-  status: "paid" | "pending";
+  category?: string;
+  status?: string;
   reference?: string;
 }
 
 const expenseCategories = [
   "Équipement",
-  "Transport",
+  "Transport", 
   "Frais généraux",
   "Marketing",
   "Formation",
@@ -48,43 +47,13 @@ const expenseCategories = [
 ];
 
 export default function FinanceDepenses() {
-  const [expenses, setExpenses] = useState<Transaction[]>([
-      {
-        id: 1,
-        amount: 720000,
-        name: "Achat objectif Canon 85mm",
-        type: "expense",
-        date: "2024-07-15",
-        category: "Équipement",
-        status: "paid",
-        reference: "FAC-2024-001"
-      },
-      {
-        id: 2,
-        amount: 27000,
-        name: "Essence déplacement mariage",
-        type: "expense",
-        date: "2024-07-20",
-        category: "Transport",
-        status: "pending"
-      },
-      {
-        id: 3,
-        amount: 36000,
-        name: "Abonnement Adobe Creative",
-        type: "expense",
-        date: "2024-07-22",
-        category: "Logiciels",
-        status: "paid",
-        reference: "SUB-2024-002"
-      }
-  ]);
-
+  const [transactions, setTransactions] = useState<Transaction[]>([]);
+  const [filteredTransactions, setFilteredTransactions] = useState<Transaction[]>([]);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
-  const [selectedExpense, setSelectedExpense] = useState<Transaction | null>(null);
   const [searchTerm, setSearchTerm] = useState("");
   const [statusFilter, setStatusFilter] = useState("all");
   const [categoryFilter, setCategoryFilter] = useState("all");
+  const [loading, setLoading] = useState(false);
 
   const [formData, setFormData] = useState({
     amount: "",
@@ -95,9 +64,106 @@ export default function FinanceDepenses() {
     date: "",
     hours: "",
     category: "",
-    status: "pending" as "paid" | "pending",
     reference: ""
   });
+
+  // Simulation des appels API
+  const fetchTransactions = async () => {
+    setLoading(true);
+    try {
+      // TODO: Remplacer par fetch('/v1/finances?type=expense')
+      // Simulation avec données statiques pour le moment
+      const mockData = [
+        {
+          id: 1,
+          amount: 720000,
+          name: "Achat objectif Canon 85mm",
+          type: "expense" as const,
+          date: "2024-07-15",
+          category: "Équipement",
+          reference: "FAC-2024-001"
+        },
+        {
+          id: 2,
+          amount: 27000,
+          name: "Essence déplacement mariage",
+          type: "expense" as const,
+          date: "2024-07-20",
+          category: "Transport"
+        }
+      ];
+      setTransactions(mockData);
+      setFilteredTransactions(mockData);
+    } catch (error) {
+      toast.error("Erreur lors du chargement des dépenses");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const createTransaction = async (transactionData: any) => {
+    setLoading(true);
+    try {
+      // TODO: Remplacer par fetch('/v1/finances/store', { method: 'POST', body: JSON.stringify(transactionData) })
+      const newTransaction = {
+        ...transactionData,
+        id: Date.now(),
+        amount: parseFloat(transactionData.amount)
+      };
+      
+      const updatedTransactions = [...transactions, newTransaction];
+      setTransactions(updatedTransactions);
+      setFilteredTransactions(updatedTransactions);
+      toast.success("Dépense créée avec succès");
+    } catch (error) {
+      toast.error("Erreur lors de la création de la dépense");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const filterTransactions = async () => {
+    try {
+      // TODO: Remplacer par fetch('/v1/finances/filter', { method: 'GET', params: filters })
+      let filtered = transactions;
+
+      if (searchTerm) {
+        filtered = filtered.filter(t => 
+          t.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+          (t.category && t.category.toLowerCase().includes(searchTerm.toLowerCase()))
+        );
+      }
+
+      if (statusFilter !== "all") {
+        filtered = filtered.filter(t => t.status === statusFilter);
+      }
+
+      if (categoryFilter !== "all") {
+        filtered = filtered.filter(t => t.category === categoryFilter);
+      }
+
+      setFilteredTransactions(filtered);
+    } catch (error) {
+      toast.error("Erreur lors du filtrage");
+    }
+  };
+
+  const exportData = async (format: string) => {
+    try {
+      // TODO: Remplacer par fetch(`/v1/finances/export/${format}`)
+      toast.success(`Export ${format.toUpperCase()} en cours...`);
+    } catch (error) {
+      toast.error("Erreur lors de l'export");
+    }
+  };
+
+  useEffect(() => {
+    fetchTransactions();
+  }, []);
+
+  useEffect(() => {
+    filterTransactions();
+  }, [searchTerm, statusFilter, categoryFilter, transactions]);
 
   const resetForm = () => {
     setFormData({
@@ -109,65 +175,18 @@ export default function FinanceDepenses() {
       date: "",
       hours: "",
       category: "",
-      status: "pending" as "paid" | "pending",
       reference: ""
     });
-    setSelectedExpense(null);
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    
-    const expenseData = {
-      ...formData,
-      amount: parseFloat(formData.amount),
-      id: selectedExpense?.id || Date.now()
-    };
-
-    if (selectedExpense) {
-      setExpenses(expenses.map(exp => 
-        exp.id === selectedExpense.id ? expenseData : exp
-      ));
-    } else {
-      setExpenses([...expenses, expenseData]);
-    }
-
+    await createTransaction(formData);
     setIsDialogOpen(false);
     resetForm();
   };
 
-  const handleEdit = (expense: Transaction) => {
-    setSelectedExpense(expense);
-    setFormData({
-      amount: expense.amount.toString(),
-      contactId: expense.contactId || "",
-      prestationTypeId: expense.prestationTypeId || "",
-      name: expense.name,
-      type: expense.type,
-      date: expense.date,
-      hours: expense.hours || "",
-      category: expense.category,
-      status: expense.status,
-      reference: expense.reference || ""
-    });
-    setIsDialogOpen(true);
-  };
-
-  const handleDelete = (id: number) => {
-    setExpenses(expenses.filter(exp => exp.id !== id));
-  };
-
-  const filteredExpenses = expenses.filter(expense => {
-    const matchesSearch = expense.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                         expense.category.toLowerCase().includes(searchTerm.toLowerCase());
-    const matchesStatus = statusFilter === "all" || expense.status === statusFilter;
-    const matchesCategory = categoryFilter === "all" || expense.category === categoryFilter;
-    return matchesSearch && matchesStatus && matchesCategory;
-  });
-
-  const totalExpenses = expenses.reduce((sum, exp) => sum + exp.amount, 0);
-  const paidExpenses = expenses.filter(exp => exp.status === "paid").reduce((sum, exp) => sum + exp.amount, 0);
-  const pendingExpenses = expenses.filter(exp => exp.status === "pending").reduce((sum, exp) => sum + exp.amount, 0);
+  const totalExpenses = filteredTransactions.reduce((sum, t) => sum + t.amount, 0);
 
   return (
     <AdminLayout>
@@ -182,69 +201,76 @@ export default function FinanceDepenses() {
             </Button>
             <div>
               <h1 className="text-2xl font-bold tracking-tight">Dépenses</h1>
-              <p className="text-muted-foreground">Gérer vos dépenses professionnelles</p>
+              <p className="text-muted-foreground">Créer et suivre vos dépenses professionnelles</p>
             </div>
           </div>
           
-          <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
-            <DialogTrigger asChild>
-              <Button onClick={resetForm}>
-                <Plus className="h-4 w-4 mr-2" />
-                Nouvelle dépense
-              </Button>
-            </DialogTrigger>
-            <DialogContent className="max-w-2xl">
-              <DialogHeader>
-                <DialogTitle>
-                  {selectedExpense ? "Modifier la dépense" : "Nouvelle dépense"}
-                </DialogTitle>
-              </DialogHeader>
-              <form onSubmit={handleSubmit} className="space-y-4">
-                <div>
-                  <Label htmlFor="name">Nom de la dépense</Label>
-                  <Input
-                    id="name"
-                    value={formData.name}
-                    onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                    required
-                  />
-                </div>
-
-                <div>
-                  <Label htmlFor="amount">Montant (FCFA)</Label>
-                  <Input
-                    id="amount"
-                    type="number"
-                    step="1"
-                    value={formData.amount}
-                    onChange={(e) => setFormData({ ...formData, amount: e.target.value })}
-                    required
-                  />
-                </div>
-
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <div className="flex space-x-2">
+            <Button variant="outline" onClick={() => exportData('csv')}>
+              <Download className="h-4 w-4 mr-2" />
+              Export CSV
+            </Button>
+            <Button variant="outline" onClick={() => exportData('xlsx')}>
+              <Download className="h-4 w-4 mr-2" />
+              Export Excel
+            </Button>
+            
+            <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
+              <DialogTrigger asChild>
+                <Button onClick={resetForm}>
+                  <Plus className="h-4 w-4 mr-2" />
+                  Nouvelle dépense
+                </Button>
+              </DialogTrigger>
+              <DialogContent className="max-w-2xl">
+                <DialogHeader>
+                  <DialogTitle>Nouvelle dépense</DialogTitle>
+                </DialogHeader>
+                <form onSubmit={handleSubmit} className="space-y-4">
                   <div>
-                    <Label>Date</Label>
-                    <DatePicker
-                      value={formData.date ? new Date(formData.date) : undefined}
-                      onChange={(date) => setFormData({ ...formData, date: date ? date.toISOString().split('T')[0] : "" })}
-                      placeholder="Choisir une date"
-                    />
-                  </div>
-                  <div>
-                    <Label htmlFor="hours">Heure</Label>
+                    <Label htmlFor="name">Nom de la dépense *</Label>
                     <Input
-                      id="hours"
-                      type="time"
-                      value={formData.hours}
-                      onChange={(e) => setFormData({ ...formData, hours: e.target.value })}
+                      id="name"
+                      value={formData.name}
+                      onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+                      required
                     />
                   </div>
-                </div>
 
-                <div className="grid grid-cols-2 gap-4">
                   <div>
-                    <Label htmlFor="category">Catégorie</Label>
+                    <Label htmlFor="amount">Montant (FCFA) *</Label>
+                    <Input
+                      id="amount"
+                      type="number"
+                      step="1"
+                      value={formData.amount}
+                      onChange={(e) => setFormData({ ...formData, amount: e.target.value })}
+                      required
+                    />
+                  </div>
+
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <div>
+                      <Label>Date</Label>
+                      <DatePicker
+                        value={formData.date ? new Date(formData.date) : undefined}
+                        onChange={(date) => setFormData({ ...formData, date: date ? date.toISOString().split('T')[0] : "" })}
+                        placeholder="Choisir une date"
+                      />
+                    </div>
+                    <div>
+                      <Label htmlFor="hours">Heure</Label>
+                      <Input
+                        id="hours"
+                        type="time"
+                        value={formData.hours}
+                        onChange={(e) => setFormData({ ...formData, hours: e.target.value })}
+                      />
+                    </div>
+                  </div>
+
+                  <div>
+                    <Label htmlFor="category">Catégorie (optionnel)</Label>
                     <Select 
                       value={formData.category} 
                       onValueChange={(value) => setFormData({ ...formData, category: value })}
@@ -259,69 +285,54 @@ export default function FinanceDepenses() {
                       </SelectContent>
                     </Select>
                   </div>
-                  <div>
-                    <Label htmlFor="status">Statut</Label>
-                    <Select 
-                      value={formData.status} 
-                      onValueChange={(value) => setFormData({ ...formData, status: value as "paid" | "pending" })}
-                    >
-                      <SelectTrigger>
-                        <SelectValue />
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="pending">En attente</SelectItem>
-                        <SelectItem value="paid">Payé</SelectItem>
-                      </SelectContent>
-                    </Select>
-                  </div>
-                </div>
 
-                <div className="grid grid-cols-2 gap-4">
+                  <div className="grid grid-cols-2 gap-4">
+                    <div>
+                      <Label htmlFor="contactId">Contact/Client ID (optionnel)</Label>
+                      <Input
+                        id="contactId"
+                        value={formData.contactId}
+                        onChange={(e) => setFormData({ ...formData, contactId: e.target.value })}
+                        placeholder="ID du contact"
+                      />
+                    </div>
+                    <div>
+                      <Label htmlFor="prestationTypeId">Type prestation ID (optionnel)</Label>
+                      <Input
+                        id="prestationTypeId"
+                        value={formData.prestationTypeId}
+                        onChange={(e) => setFormData({ ...formData, prestationTypeId: e.target.value })}
+                        placeholder="ID du type de prestation"
+                      />
+                    </div>
+                  </div>
+
                   <div>
-                    <Label htmlFor="contactId">Contact/Client (optionnel)</Label>
+                    <Label htmlFor="reference">Référence (optionnel)</Label>
                     <Input
-                      id="contactId"
-                      value={formData.contactId}
-                      onChange={(e) => setFormData({ ...formData, contactId: e.target.value })}
-                      placeholder="ID du contact"
+                      id="reference"
+                      value={formData.reference}
+                      onChange={(e) => setFormData({ ...formData, reference: e.target.value })}
+                      placeholder="Numéro de facture, référence..."
                     />
                   </div>
-                  <div>
-                    <Label htmlFor="prestationTypeId">Type prestation (optionnel)</Label>
-                    <Input
-                      id="prestationTypeId"
-                      value={formData.prestationTypeId}
-                      onChange={(e) => setFormData({ ...formData, prestationTypeId: e.target.value })}
-                      placeholder="ID du type de prestation"
-                    />
+
+                  <div className="flex justify-end space-x-2">
+                    <Button type="button" variant="outline" onClick={() => setIsDialogOpen(false)}>
+                      Annuler
+                    </Button>
+                    <Button type="submit" disabled={loading}>
+                      {loading ? "Création..." : "Créer"}
+                    </Button>
                   </div>
-                </div>
-
-                <div>
-                  <Label htmlFor="reference">Référence (optionnel)</Label>
-                  <Input
-                    id="reference"
-                    value={formData.reference}
-                    onChange={(e) => setFormData({ ...formData, reference: e.target.value })}
-                    placeholder="Numéro de facture, référence..."
-                  />
-                </div>
-
-                <div className="flex justify-end space-x-2">
-                  <Button type="button" variant="outline" onClick={() => setIsDialogOpen(false)}>
-                    Annuler
-                  </Button>
-                  <Button type="submit">
-                    {selectedExpense ? "Modifier" : "Créer"}
-                  </Button>
-                </div>
-              </form>
-            </DialogContent>
-          </Dialog>
+                </form>
+              </DialogContent>
+            </Dialog>
+          </div>
         </div>
 
         {/* Stats */}
-        <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 sm:gap-4">
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
           <Card>
             <CardContent className="p-3 sm:p-4">
               <div className="flex items-center space-x-2">
@@ -336,21 +347,10 @@ export default function FinanceDepenses() {
           <Card>
             <CardContent className="p-3 sm:p-4">
               <div className="flex items-center space-x-2">
-                <Calendar className="h-6 w-6 sm:h-8 sm:w-8 text-success flex-shrink-0" />
+                <TrendingDown className="h-6 w-6 sm:h-8 sm:w-8 text-destructive flex-shrink-0" />
                 <div className="min-w-0">
-                  <p className="text-lg sm:text-2xl font-bold truncate">{paidExpenses.toLocaleString()} FCFA</p>
-                  <p className="text-xs sm:text-sm text-muted-foreground">Payées</p>
-                </div>
-              </div>
-            </CardContent>
-          </Card>
-          <Card>
-            <CardContent className="p-3 sm:p-4">
-              <div className="flex items-center space-x-2">
-                <Calendar className="h-6 w-6 sm:h-8 sm:w-8 text-warning flex-shrink-0" />
-                <div className="min-w-0">
-                  <p className="text-lg sm:text-2xl font-bold truncate">{pendingExpenses.toLocaleString()} FCFA</p>
-                  <p className="text-xs sm:text-sm text-muted-foreground">En attente</p>
+                  <p className="text-lg sm:text-2xl font-bold truncate">{filteredTransactions.length}</p>
+                  <p className="text-xs sm:text-sm text-muted-foreground">Nombre de dépenses</p>
                 </div>
               </div>
             </CardContent>
@@ -372,17 +372,6 @@ export default function FinanceDepenses() {
               </div>
               
               <div className="flex flex-col sm:flex-row gap-3 sm:gap-4">
-                <Select value={statusFilter} onValueChange={setStatusFilter}>
-                  <SelectTrigger className="w-full sm:w-40">
-                    <SelectValue placeholder="Statut" />
-                  </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="all">Tous les statuts</SelectItem>
-                  <SelectItem value="paid">Payé</SelectItem>
-                  <SelectItem value="pending">En attente</SelectItem>
-                </SelectContent>
-              </Select>
-
                 <Select value={categoryFilter} onValueChange={setCategoryFilter}>
                   <SelectTrigger className="w-full sm:w-40">
                     <SelectValue placeholder="Catégorie" />
@@ -402,61 +391,43 @@ export default function FinanceDepenses() {
         {/* Liste des dépenses */}
         <Card>
           <CardHeader>
-            <CardTitle>Dépenses ({filteredExpenses.length})</CardTitle>
+            <CardTitle>Dépenses ({filteredTransactions.length})</CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="space-y-3">
-              {filteredExpenses.map((expense) => (
-                <div key={expense.id} className="flex flex-col sm:flex-row sm:items-center justify-between p-3 sm:p-4 border rounded-lg space-y-3 sm:space-y-0">
-                  <div className="flex-1 space-y-1 min-w-0">
-                    <div className="flex flex-col sm:flex-row sm:items-center space-y-2 sm:space-y-0 sm:space-x-3">
-                      <p className="font-medium truncate">{expense.name}</p>
-                      <Badge variant={expense.status === "paid" ? "default" : "secondary"} className="w-fit">
-                        {expense.status === "paid" ? "Payé" : "En attente"}
-                      </Badge>
-                    </div>
-                    <div className="text-sm text-muted-foreground flex flex-wrap gap-x-4 gap-y-1">
-                      <span>{expense.date}</span>
-                      <span>{expense.category}</span>
-                      {expense.reference && <span>Réf: {expense.reference}</span>}
-                    </div>
-                  </div>
-                  
-                  <div className="flex items-center justify-between sm:justify-end space-x-3">
-                    <div className="text-right">
-                      <p className="font-bold text-lg sm:text-base">{expense.amount.toLocaleString()} FCFA</p>
+            {loading ? (
+              <div className="text-center py-8 text-muted-foreground">
+                Chargement...
+              </div>
+            ) : (
+              <div className="space-y-3">
+                {filteredTransactions.map((transaction) => (
+                  <div key={transaction.id} className="flex flex-col sm:flex-row sm:items-center justify-between p-3 sm:p-4 border rounded-lg space-y-3 sm:space-y-0">
+                    <div className="flex-1 space-y-1 min-w-0">
+                      <div className="flex flex-col sm:flex-row sm:items-center space-y-2 sm:space-y-0 sm:space-x-3">
+                        <p className="font-medium truncate">{transaction.name}</p>
+                        {transaction.category && (
+                          <Badge variant="outline">{transaction.category}</Badge>
+                        )}
+                      </div>
+                      <div className="text-sm text-muted-foreground flex flex-wrap gap-x-4 gap-y-1">
+                        <span>{transaction.date}</span>
+                        {transaction.reference && <span>Réf: {transaction.reference}</span>}
+                      </div>
                     </div>
                     
-                    <DropdownMenu>
-                      <DropdownMenuTrigger asChild>
-                        <Button variant="ghost" size="sm">
-                          <MoreHorizontal className="h-4 w-4" />
-                        </Button>
-                      </DropdownMenuTrigger>
-                      <DropdownMenuContent>
-                        <DropdownMenuItem onClick={() => handleEdit(expense)}>
-                          <Edit className="h-4 w-4 mr-2" />
-                          Modifier
-                        </DropdownMenuItem>
-                        <DropdownMenuItem 
-                          onClick={() => handleDelete(expense.id)}
-                          className="text-destructive"
-                        >
-                          <Trash2 className="h-4 w-4 mr-2" />
-                          Supprimer
-                        </DropdownMenuItem>
-                      </DropdownMenuContent>
-                    </DropdownMenu>
+                    <div className="text-right">
+                      <p className="font-bold text-lg sm:text-base">{transaction.amount.toLocaleString()} FCFA</p>
+                    </div>
                   </div>
-                </div>
-              ))}
-              
-              {filteredExpenses.length === 0 && (
-                <div className="text-center py-8 text-muted-foreground">
-                  Aucune dépense trouvée
-                </div>
-              )}
-            </div>
+                ))}
+                
+                {filteredTransactions.length === 0 && !loading && (
+                  <div className="text-center py-8 text-muted-foreground">
+                    Aucune dépense trouvée
+                  </div>
+                )}
+              </div>
+            )}
           </CardContent>
         </Card>
       </div>

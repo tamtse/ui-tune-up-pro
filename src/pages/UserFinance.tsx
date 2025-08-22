@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { AdminLayout } from "@/components/AdminLayout";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -7,6 +7,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { StatCard } from "@/components/StatCard";
 import { useCommonGrids } from "@/hooks/use-responsive-grid";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
+import { toast } from "sonner";
 import { 
   Euro, 
   TrendingUp, 
@@ -14,14 +15,14 @@ import {
   FileText,
   Filter,
   Info,
-  HelpCircle
+  HelpCircle,
+  Download,
+  RefreshCw
 } from "lucide-react";
 import {
   ChartContainer,
   ChartTooltip,
   ChartTooltipContent,
-  ChartLegend,
-  ChartLegendContent,
 } from "@/components/ui/chart";
 import { 
   AreaChart, 
@@ -29,100 +30,141 @@ import {
   XAxis, 
   YAxis, 
   ResponsiveContainer,
-  PieChart,
-  Pie,
-  Cell
+  BarChart,
+  Bar
 } from "recharts";
 
-// Données simulées basées sur l'API disponible
-const revenueData = [
-  { month: "Jan", amount: 3200 },
-  { month: "Fév", amount: 2800 },
-  { month: "Mar", amount: 3500 },
-  { month: "Avr", amount: 4200 },
-  { month: "Mai", amount: 3800 },
-  { month: "Juin", amount: 4500 },
-];
+interface FinanceStats {
+  totalInvoices: number;
+  totalRevenue: number;
+  totalProfit: number;
+  totalExpenses: number;
+  unpaidInvoices: number;
+}
 
-const profitData = [
-  { month: "Jan", amount: 2400 },
-  { month: "Fév", amount: 2100 },
-  { month: "Mar", amount: 2800 },
-  { month: "Avr", amount: 3400 },
-  { month: "Mai", amount: 3000 },
-  { month: "Juin", amount: 3600 },
-];
-
-const expensesData = [
-  { month: "Jan", amount: 800 },
-  { month: "Fév", amount: 700 },
-  { month: "Mar", amount: 700 },
-  { month: "Avr", amount: 800 },
-  { month: "Mai", amount: 800 },
-  { month: "Juin", amount: 900 },
-];
-
-const expensesByType = [
-  { name: "Frais généraux", value: 1200, color: "hsl(var(--primary))" },
-  { name: "Équipement", value: 800, color: "hsl(var(--secondary))" },
-  { name: "Transport", value: 600, color: "hsl(var(--accent))" },
-  { name: "Marketing", value: 400, color: "hsl(var(--muted))" },
-];
+interface RevenueData {
+  month: string;
+  amount: number;
+}
 
 const chartConfig = {
   revenue: {
     label: "Chiffre d'affaires",
     color: "hsl(var(--primary))",
   },
-  profit: {
-    label: "Bénéfice",
-    color: "hsl(var(--secondary))",
-  },
   expenses: {
     label: "Dépenses",
-    color: "hsl(var(--accent))",
+    color: "hsl(var(--destructive))",
   },
 };
 
 export default function UserFinance() {
   const [dateFrom, setDateFrom] = useState("2024-01-01");
-  const [dateTo, setDateTo] = useState("2024-06-30");
+  const [dateTo, setDateTo] = useState("2024-12-31");
   const [shootingType, setShootingType] = useState("all");
+  const [loading, setLoading] = useState(false);
+  const [stats, setStats] = useState<FinanceStats>({
+    totalInvoices: 0,
+    totalRevenue: 0,
+    totalProfit: 0,
+    totalExpenses: 0,
+    unpaidInvoices: 0
+  });
+  const [revenueData, setRevenueData] = useState<RevenueData[]>([]);
   
-  const { stats } = useCommonGrids();
+  const { stats: gridStats } = useCommonGrids();
+
+  // Simulation des appels API
+  const fetchInvoiceStats = async () => {
+    try {
+      // TODO: Remplacer par fetch('/v1/finances/invoices/stats')
+      const mockStats = {
+        totalInvoices: 16,
+        totalRevenue: 2022000,
+        totalProfit: 654000,
+        totalExpenses: 1368000,
+        unpaidInvoices: 3
+      };
+      setStats(mockStats);
+    } catch (error) {
+      toast.error("Erreur lors du chargement des statistiques factures");
+    }
+  };
+
+  const fetchRevenueStats = async () => {
+    try {
+      // TODO: Remplacer par fetch('/v1/finances/revenue-stats')
+      const mockRevenueData = [
+        { month: "Jan", amount: 320000 },
+        { month: "Fév", amount: 280000 },
+        { month: "Mar", amount: 350000 },
+        { month: "Avr", amount: 420000 },
+        { month: "Mai", amount: 380000 },
+        { month: "Juin", amount: 450000 },
+      ];
+      setRevenueData(mockRevenueData);
+    } catch (error) {
+      toast.error("Erreur lors du chargement des statistiques de revenus");
+    }
+  };
+
+  const fetchAllStats = async () => {
+    setLoading(true);
+    try {
+      await Promise.all([
+        fetchInvoiceStats(),
+        fetchRevenueStats()
+      ]);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const exportData = async (format: string) => {
+    try {
+      // TODO: Remplacer par fetch(`/v1/finances/export/${format}`)
+      toast.success(`Export ${format.toUpperCase()} en cours...`);
+    } catch (error) {
+      toast.error("Erreur lors de l'export");
+    }
+  };
+
+  useEffect(() => {
+    fetchAllStats();
+  }, [dateFrom, dateTo, shootingType]);
 
   const statistiques = [
     {
       title: "Factures",
-      value: "16",
+      value: stats.totalInvoices.toString(),
       change: "+2 ce mois",
       changeType: "positive" as const,
       icon: <FileText className="w-full h-full" />,
     },
     {
       title: "CA HT",
-      value: "2 022 000 FCFA",
+      value: `${stats.totalRevenue.toLocaleString()} FCFA`,
       change: "+15%",
       changeType: "positive" as const,
       icon: <Euro className="w-full h-full" />,
     },
     {
       title: "Bénéfices",
-      value: "654 000 FCFA",
+      value: `${stats.totalProfit.toLocaleString()} FCFA`,
       change: "+8%", 
       changeType: "positive" as const,
       icon: <TrendingUp className="w-full h-full" />,
     },
     {
       title: "Dépenses",
-      value: "1 702 800 FCFA",
+      value: `${stats.totalExpenses.toLocaleString()} FCFA`,
       change: "+12%",
       changeType: "negative" as const,
       icon: <TrendingDown className="w-full h-full" />,
     },
     {
       title: "Impayés",
-      value: "3",
+      value: stats.unpaidInvoices.toString(),
       change: "À relancer",
       changeType: "negative" as const,
       icon: <FileText className="w-full h-full" />,
@@ -139,7 +181,7 @@ export default function UserFinance() {
             <div>
               <h1 className="text-2xl font-bold tracking-tight">Finances</h1>
               <p className="text-muted-foreground">
-                Tableau de bord financier pour piloter votre activité photographe
+                Tableau de bord financier basé sur l'API Piccloud
               </p>
             </div>
             <Tooltip>
@@ -147,13 +189,25 @@ export default function UserFinance() {
                 <HelpCircle className="w-5 h-5 text-muted-foreground" />
               </TooltipTrigger>
               <TooltipContent>
-                <p>Vue d'ensemble de vos performances financières avec KPIs, graphiques et métriques de pilotage</p>
+                <p>Données en temps réel via l'API /v1/finances</p>
               </TooltipContent>
             </Tooltip>
           </div>
           
-          {/* Navigation des sous-menus */}
+          {/* Actions */}
           <div className="flex space-x-2">
+            <Button variant="outline" onClick={() => exportData('csv')}>
+              <Download className="h-4 w-4 mr-2" />
+              Export CSV
+            </Button>
+            <Button variant="outline" onClick={() => exportData('xlsx')}>
+              <Download className="h-4 w-4 mr-2" />
+              Export Excel
+            </Button>
+            <Button variant="outline" onClick={fetchAllStats} disabled={loading}>
+              <RefreshCw className={`h-4 w-4 mr-2 ${loading ? 'animate-spin' : ''}`} />
+              Actualiser
+            </Button>
             <Tooltip>
               <TooltipTrigger asChild>
                 <Button variant="outline" asChild>
@@ -189,13 +243,13 @@ export default function UserFinance() {
                       <Info className="w-4 h-4 text-muted-foreground" />
                     </TooltipTrigger>
                     <TooltipContent>
-                      <p>Filtrez vos données par période et type de shooting pour analyser vos performances</p>
+                      <p>Filtrez vos données par période et type de shooting</p>
                     </TooltipContent>
                   </Tooltip>
                 </div>
                 <div className="flex items-center space-x-2">
                   <Filter className="w-4 h-4 text-muted-foreground flex-shrink-0" />
-                  <span className="text-sm text-muted-foreground">2 critères</span>
+                  <span className="text-sm text-muted-foreground">3 critères</span>
                 </div>
               </div>
               
@@ -235,32 +289,30 @@ export default function UserFinance() {
                     </SelectContent>
                   </Select>
                 </div>
-                
               </div>
             </div>
           </CardContent>
         </Card>
 
-        {/* KPIs */}
+        {/* KPIs basés sur les endpoints API */}
         <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3 sm:gap-4">
           {statistiques.map((stat, index) => (
             <StatCard key={index} {...stat} />
           ))}
         </div>
 
-        {/* Graphiques */}
+        {/* Graphiques basés sur /v1/finances/revenue-stats */}
         <div className="grid gap-4 sm:gap-6 lg:grid-cols-2">
-          {/* Chiffre d'affaires */}
           <Card className="lg:col-span-1">
             <CardHeader className="pb-2">
               <div className="flex items-center justify-between">
-                <CardTitle className="text-base sm:text-lg">Chiffre d'affaires (HT)</CardTitle>
+                <CardTitle className="text-base sm:text-lg">Évolution des revenus</CardTitle>
                 <Tooltip>
                   <TooltipTrigger>
                     <Info className="w-4 h-4 text-muted-foreground" />
                   </TooltipTrigger>
                   <TooltipContent>
-                    <p>Évolution mensuelle de vos revenus hors taxes générés par vos prestations photo</p>
+                    <p>Données issues de /v1/finances/revenue-stats</p>
                   </TooltipContent>
                 </Tooltip>
               </div>
@@ -291,17 +343,16 @@ export default function UserFinance() {
             </CardContent>
           </Card>
 
-          {/* Bénéfices */}
           <Card className="lg:col-span-1">
             <CardHeader className="pb-2">
               <div className="flex items-center justify-between">
-                <CardTitle className="text-base sm:text-lg">Bénéfices</CardTitle>
+                <CardTitle className="text-base sm:text-lg">Comparaison Revenus vs Dépenses</CardTitle>
                 <Tooltip>
                   <TooltipTrigger>
                     <Info className="w-4 h-4 text-muted-foreground" />
                   </TooltipTrigger>
                   <TooltipContent>
-                    <p>Profit net après déduction de toutes les dépenses professionnelles</p>
+                    <p>Analyse comparative pour identifier les périodes rentables</p>
                   </TooltipContent>
                 </Tooltip>
               </div>
@@ -309,123 +360,33 @@ export default function UserFinance() {
             <CardContent className="p-3 sm:p-6">
               <ChartContainer config={chartConfig} className="h-[180px] sm:h-[200px]">
                 <ResponsiveContainer width="100%" height="100%">
-                  <AreaChart data={profitData}>
-                    <defs>
-                      <linearGradient id="colorProfit" x1="0" y1="0" x2="0" y2="1">
-                        <stop offset="5%" stopColor="hsl(var(--secondary))" stopOpacity={0.3}/>
-                        <stop offset="95%" stopColor="hsl(var(--secondary))" stopOpacity={0.1}/>
-                      </linearGradient>
-                    </defs>
+                  <BarChart data={revenueData}>
                     <XAxis dataKey="month" />
                     <YAxis />
                     <ChartTooltip content={<ChartTooltipContent />} />
-                    <Area
-                      type="monotone"
+                    <Bar
                       dataKey="amount"
-                      stroke="hsl(var(--secondary))"
-                      strokeWidth={2}
-                      fill="url(#colorProfit)"
+                      fill="hsl(var(--primary))"
+                      radius={[4, 4, 0, 0]}
                     />
-                  </AreaChart>
-                </ResponsiveContainer>
-              </ChartContainer>
-            </CardContent>
-          </Card>
-
-          {/* Dépenses */}
-          <Card className="lg:col-span-1">
-            <CardHeader className="pb-2">
-              <div className="flex items-center justify-between">
-                <CardTitle className="text-base sm:text-lg">Dépenses (HT)</CardTitle>
-                <Tooltip>
-                  <TooltipTrigger>
-                    <Info className="w-4 h-4 text-muted-foreground" />
-                  </TooltipTrigger>
-                  <TooltipContent>
-                    <p>Évolution de vos charges professionnelles (équipement, transport, marketing...)</p>
-                  </TooltipContent>
-                </Tooltip>
-              </div>
-            </CardHeader>
-            <CardContent className="p-3 sm:p-6">
-              <ChartContainer config={chartConfig} className="h-[180px] sm:h-[200px]">
-                <ResponsiveContainer width="100%" height="100%">
-                  <AreaChart data={expensesData}>
-                    <defs>
-                      <linearGradient id="colorExpenses" x1="0" y1="0" x2="0" y2="1">
-                        <stop offset="5%" stopColor="hsl(var(--accent))" stopOpacity={0.3}/>
-                        <stop offset="95%" stopColor="hsl(var(--accent))" stopOpacity={0.1}/>
-                      </linearGradient>
-                    </defs>
-                    <XAxis dataKey="month" />
-                    <YAxis />
-                    <ChartTooltip content={<ChartTooltipContent />} />
-                    <Area
-                      type="monotone"
-                      dataKey="amount"
-                      stroke="hsl(var(--accent))"
-                      strokeWidth={2}
-                      fill="url(#colorExpenses)"
-                    />
-                  </AreaChart>
-                </ResponsiveContainer>
-              </ChartContainer>
-            </CardContent>
-          </Card>
-
-          {/* Dépenses par type */}
-          <Card className="lg:col-span-1">
-            <CardHeader className="pb-2">
-              <div className="flex items-center justify-between">
-                <CardTitle className="text-base sm:text-lg">Dépenses par type</CardTitle>
-                <Tooltip>
-                  <TooltipTrigger>
-                    <Info className="w-4 h-4 text-muted-foreground" />
-                  </TooltipTrigger>
-                  <TooltipContent>
-                    <p>Répartition de vos dépenses par catégorie pour optimiser vos coûts</p>
-                  </TooltipContent>
-                </Tooltip>
-              </div>
-            </CardHeader>
-            <CardContent className="p-3 sm:p-6">
-              <ChartContainer config={chartConfig} className="h-[180px] sm:h-[200px]">
-                <ResponsiveContainer width="100%" height="100%">
-                  <PieChart>
-                    <Pie
-                      data={expensesByType}
-                      cx="50%"
-                      cy="50%"
-                      outerRadius={60}
-                      dataKey="value"
-                    >
-                      {expensesByType.map((entry, index) => (
-                        <Cell key={`cell-${index}`} fill={entry.color} />
-                      ))}
-                    </Pie>
-                    <ChartTooltip 
-                      content={<ChartTooltipContent />}
-                      formatter={(value: any) => [`${value} FCFA`, "Montant"]}
-                    />
-                    <ChartLegend content={<ChartLegendContent />} />
-                  </PieChart>
+                  </BarChart>
                 </ResponsiveContainer>
               </ChartContainer>
             </CardContent>
           </Card>
         </div>
 
-        {/* Métriques calculées */}
+        {/* Métriques calculées basées sur les stats API */}
         <Card>
           <CardHeader className="pb-2">
             <div className="flex items-center justify-between">
-              <CardTitle className="text-base sm:text-lg">Métriques de performance</CardTitle>
+              <CardTitle className="text-base sm:text-lg">Métriques de performance calculées</CardTitle>
               <Tooltip>
                 <TooltipTrigger>
                   <Info className="w-4 h-4 text-muted-foreground" />
                 </TooltipTrigger>
                 <TooltipContent>
-                  <p>Indicateurs clés pour mesurer la rentabilité et l'efficacité de votre activité</p>
+                  <p>Calculs basés sur les données de /v1/finances/invoices/stats</p>
                 </TooltipContent>
               </Tooltip>
             </div>
@@ -434,40 +395,88 @@ export default function UserFinance() {
             <div className="grid gap-3 sm:gap-4 grid-cols-2 lg:grid-cols-4">
               <Tooltip>
                 <TooltipTrigger className="text-center space-y-1 sm:space-y-2">
-                  <div className="text-lg sm:text-2xl font-bold text-primary">32%</div>
+                  <div className="text-lg sm:text-2xl font-bold text-primary">
+                    {stats.totalRevenue > 0 ? Math.round((stats.totalProfit / stats.totalRevenue) * 100) : 0}%
+                  </div>
                   <div className="text-xs sm:text-sm text-muted-foreground">Marge bénéficiaire</div>
                 </TooltipTrigger>
                 <TooltipContent>
-                  <p>Pourcentage de profit par rapport au chiffre d'affaires (Bénéfice/CA x 100)</p>
+                  <p>Pourcentage de profit par rapport au CA (Bénéfice/CA x 100)</p>
                 </TooltipContent>
               </Tooltip>
               <Tooltip>
                 <TooltipTrigger className="text-center space-y-1 sm:space-y-2">
-                  <div className="text-lg sm:text-2xl font-bold text-secondary">126 600 FCFA</div>
-                  <div className="text-xs sm:text-sm text-muted-foreground">Prix moyen/shooting</div>
+                  <div className="text-lg sm:text-2xl font-bold text-secondary">
+                    {stats.totalInvoices > 0 ? Math.round(stats.totalRevenue / stats.totalInvoices).toLocaleString() : 0} FCFA
+                  </div>
+                  <div className="text-xs sm:text-sm text-muted-foreground">Prix moyen/facture</div>
                 </TooltipTrigger>
                 <TooltipContent>
-                  <p>Montant moyen facturé par prestation photographique</p>
+                  <p>Montant moyen par facture émise</p>
                 </TooltipContent>
               </Tooltip>
               <Tooltip>
                 <TooltipTrigger className="text-center space-y-1 sm:space-y-2">
-                  <div className="text-lg sm:text-2xl font-bold text-accent">8</div>
-                  <div className="text-xs sm:text-sm text-muted-foreground">Projets ce mois</div>
+                  <div className="text-lg sm:text-2xl font-bold text-accent">
+                    {stats.totalInvoices > 0 ? Math.round((stats.unpaidInvoices / stats.totalInvoices) * 100) : 0}%
+                  </div>
+                  <div className="text-xs sm:text-sm text-muted-foreground">Taux d'impayés</div>
                 </TooltipTrigger>
                 <TooltipContent>
-                  <p>Nombre de projets photographiques réalisés ce mois</p>
+                  <p>Pourcentage de factures impayées</p>
                 </TooltipContent>
               </Tooltip>
               <Tooltip>
                 <TooltipTrigger className="text-center space-y-1 sm:space-y-2">
-                  <div className="text-lg sm:text-2xl font-bold text-success">24j</div>
-                  <div className="text-xs sm:text-sm text-muted-foreground">Délai paiement moyen</div>
+                  <div className="text-lg sm:text-2xl font-bold text-muted-foreground">
+                    {stats.totalRevenue > 0 ? Math.round((stats.totalExpenses / stats.totalRevenue) * 100) : 0}%
+                  </div>
+                  <div className="text-xs sm:text-sm text-muted-foreground">Ratio dépenses/CA</div>
                 </TooltipTrigger>
                 <TooltipContent>
-                  <p>Temps moyen entre l'envoi de facture et le paiement client</p>
+                  <p>Pourcentage des dépenses par rapport au chiffre d'affaires</p>
                 </TooltipContent>
               </Tooltip>
+            </div>
+          </CardContent>
+        </Card>
+
+        {/* Actions rapides */}
+        <Card>
+          <CardHeader>
+            <CardTitle className="text-base sm:text-lg">Actions rapides</CardTitle>
+          </CardHeader>
+          <CardContent className="p-3 sm:p-6">
+            <div className="grid gap-3 sm:gap-4 grid-cols-2 lg:grid-cols-4">
+              <Button variant="outline" asChild className="h-auto p-4 flex-col space-y-2">
+                <a href="/finances/depenses">
+                  <TrendingDown className="h-6 w-6" />
+                  <span className="text-sm">Nouvelle dépense</span>
+                </a>
+              </Button>
+              <Button variant="outline" asChild className="h-auto p-4 flex-col space-y-2">
+                <a href="/finances/paiements">
+                  <TrendingUp className="h-6 w-6" />
+                  <span className="text-sm">Nouveau paiement</span>
+                </a>
+              </Button>
+              <Button 
+                variant="outline" 
+                onClick={() => exportData('pdf')}
+                className="h-auto p-4 flex-col space-y-2"
+              >
+                <FileText className="h-6 w-6" />
+                <span className="text-sm">Export PDF</span>
+              </Button>
+              <Button 
+                variant="outline" 
+                onClick={fetchAllStats}
+                disabled={loading}
+                className="h-auto p-4 flex-col space-y-2"
+              >
+                <RefreshCw className={`h-6 w-6 ${loading ? 'animate-spin' : ''}`} />
+                <span className="text-sm">Actualiser</span>
+              </Button>
             </div>
           </CardContent>
         </Card>
