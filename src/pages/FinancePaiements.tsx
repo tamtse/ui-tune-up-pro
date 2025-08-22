@@ -23,13 +23,17 @@ import {
   CheckCircle
 } from "lucide-react";
 
-interface Payment {
+interface Transaction {
   id: number;
-  date: string;
-  description: string;
-  client: string;
   amount: number;
-  type: "invoice" | "quote" | "deposit" | "other";
+  contactId?: string;
+  prestationTypeId?: string;
+  name: string;
+  type: "income";
+  date: string;
+  hours?: string;
+  client: string;
+  paymentType: "invoice" | "quote" | "deposit" | "other";
   status: "received" | "pending" | "partial";
   reference?: string;
   method: "cash" | "bank_transfer" | "check" | "card";
@@ -58,71 +62,80 @@ const prestationOptions = [
 ];
 
 export default function FinancePaiements() {
-  const [payments, setPayments] = useState<Payment[]>([
-    {
-      id: 1,
-      date: "2024-07-15",
-      description: "Séance portrait en studio",
-      client: "Marie Dubois",
-      amount: 210000,
-      type: "invoice",
-      status: "received",
-      reference: "FAC-2024-015",
-      method: "bank_transfer"
-    },
-    {
-      id: 2,
-      date: "2024-07-18",
-      description: "Shooting mariage - Acompte",
-      client: "Pierre & Julie Martin",
-      amount: 480000,
-      type: "deposit",
-      status: "received",
-      reference: "DEP-2024-003",
-      method: "check"
-    },
-    {
-      id: 3,
-      date: "2024-07-22",
-      description: "Photos corporate entreprise",
-      client: "Tech Solutions SARL",
-      amount: 720000,
-      type: "invoice",
-      status: "pending",
-      reference: "FAC-2024-018",
-      method: "bank_transfer"
-    }
+  const [payments, setPayments] = useState<Transaction[]>([
+      {
+        id: 1,
+        amount: 210000,
+        name: "Séance portrait en studio",
+        type: "income",
+        date: "2024-07-15",
+        client: "Marie Dubois",
+        paymentType: "invoice",
+        status: "received",
+        reference: "FAC-2024-015",
+        method: "bank_transfer"
+      },
+      {
+        id: 2,
+        amount: 480000,
+        name: "Shooting mariage - Acompte",
+        type: "income",
+        date: "2024-07-18",
+        client: "Pierre & Julie Martin",
+        paymentType: "deposit",
+        status: "received",
+        reference: "DEP-2024-003",
+        method: "check"
+      },
+      {
+        id: 3,
+        amount: 720000,
+        name: "Photos corporate entreprise",
+        type: "income",
+        date: "2024-07-22",
+        client: "Tech Solutions SARL",
+        paymentType: "invoice",
+        status: "pending",
+        reference: "FAC-2024-018",
+        method: "bank_transfer"
+      }
   ]);
 
   const [isDialogOpen, setIsDialogOpen] = useState(false);
-  const [selectedPayment, setSelectedPayment] = useState<Payment | null>(null);
+  const [selectedPayment, setSelectedPayment] = useState<Transaction | null>(null);
   const [searchTerm, setSearchTerm] = useState("");
   const [statusFilter, setStatusFilter] = useState("all");
   const [typeFilter, setTypeFilter] = useState("all");
 
   const [formData, setFormData] = useState({
-    date: "",
-    description: "",
-    client: "",
     amount: "",
-    type: "invoice" as "invoice" | "quote" | "deposit" | "other",
+    contactId: "",
+    prestationTypeId: "",
+    name: "",
+    type: "income" as const,
+    date: "",
+    hours: "",
+    client: "",
+    paymentType: "invoice" as "invoice" | "quote" | "deposit" | "other",
     status: "pending" as "received" | "pending" | "partial",
     reference: "",
-    method: "bank_transfer" as "cash" | "bank_transfer" | "check" | "card",
-    time: ""
+    method: "bank_transfer" as "cash" | "bank_transfer" | "check" | "card"
   });
 
   const resetForm = () => {
     setFormData({
-      date: "",
-      description: "",
-      client: "",
       amount: "",
-      type: "invoice" as "invoice" | "quote" | "deposit" | "other",
+      contactId: "",
+      prestationTypeId: "",
+      name: "",
+      type: "income" as const,
+      date: "",
+      hours: "",
+      client: "",
+      paymentType: "invoice" as "invoice" | "quote" | "deposit" | "other",
       status: "pending" as "received" | "pending" | "partial",
       reference: "",
-      method: "bank_transfer" as "cash" | "bank_transfer" | "check" | "card",
-      time: ""
+      method: "bank_transfer" as "cash" | "bank_transfer" | "check" | "card"
     });
     setSelectedPayment(null);
   };
@@ -148,18 +161,21 @@ export default function FinancePaiements() {
     resetForm();
   };
 
-  const handleEdit = (payment: Payment) => {
+  const handleEdit = (payment: Transaction) => {
     setSelectedPayment(payment);
     setFormData({
-      date: payment.date,
-      description: payment.description,
-      client: payment.client,
       amount: payment.amount.toString(),
+      contactId: payment.contactId || "",
+      prestationTypeId: payment.prestationTypeId || "",
+      name: payment.name,
       type: payment.type,
+      date: payment.date,
+      hours: payment.hours || "",
+      client: payment.client,
+      paymentType: payment.paymentType,
       status: payment.status,
       reference: payment.reference || "",
-      method: payment.method,
-      time: ""
+      method: payment.method
     });
     setIsDialogOpen(true);
   };
@@ -169,10 +185,10 @@ export default function FinancePaiements() {
   };
 
   const filteredPayments = payments.filter(payment => {
-    const matchesSearch = payment.description.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    const matchesSearch = payment.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
                          payment.client.toLowerCase().includes(searchTerm.toLowerCase());
     const matchesStatus = statusFilter === "all" || payment.status === statusFilter;
-    const matchesType = typeFilter === "all" || payment.type === typeFilter;
+    const matchesType = typeFilter === "all" || payment.paymentType === typeFilter;
     return matchesSearch && matchesStatus && matchesType;
   });
 
@@ -193,9 +209,9 @@ export default function FinancePaiements() {
     }
   };
 
-  const getTypeBadge = (type: string) => {
-    const typeObj = paymentTypes.find(t => t.value === type);
-    return <Badge variant="outline">{typeObj?.label || type}</Badge>;
+  const getTypeBadge = (paymentType: string) => {
+    const typeObj = paymentTypes.find(t => t.value === paymentType);
+    return <Badge variant="outline">{typeObj?.label || paymentType}</Badge>;
   };
 
   const getMethodLabel = (method: string) => {
@@ -245,20 +261,35 @@ export default function FinancePaiements() {
                 </div>
 
                 <div>
-                  <Label htmlFor="prestation">Prestation (Sélectionner le projet)</Label>
-                  <Select 
-                    value={(prestationOptions.includes(formData.description) ? formData.description : undefined) as any}
-                    onValueChange={(value) => setFormData({ ...formData, description: value })}
-                  >
-                    <SelectTrigger>
-                      <SelectValue placeholder="Sélectionner" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      {prestationOptions.map((opt) => (
-                        <SelectItem key={opt} value={opt}>{opt}</SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
+                  <Label htmlFor="name">Nom du paiement/prestation</Label>
+                  <Input
+                    id="name"
+                    value={formData.name}
+                    onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+                    placeholder="Nom de la prestation"
+                    required
+                  />
+                </div>
+
+                <div className="grid grid-cols-2 gap-4">
+                  <div>
+                    <Label htmlFor="contactId">Contact ID (optionnel)</Label>
+                    <Input
+                      id="contactId"
+                      value={formData.contactId}
+                      onChange={(e) => setFormData({ ...formData, contactId: e.target.value })}
+                      placeholder="ID du contact"
+                    />
+                  </div>
+                  <div>
+                    <Label htmlFor="prestationTypeId">Type prestation ID (optionnel)</Label>
+                    <Input
+                      id="prestationTypeId"
+                      value={formData.prestationTypeId}
+                      onChange={(e) => setFormData({ ...formData, prestationTypeId: e.target.value })}
+                      placeholder="ID du type de prestation"
+                    />
+                  </div>
                 </div>
 
                 <div>
@@ -283,22 +314,22 @@ export default function FinancePaiements() {
                     />
                   </div>
                   <div>
-                    <Label htmlFor="time">Heure de paiement</Label>
+                    <Label htmlFor="hours">Heure de paiement</Label>
                     <Input
-                      id="time"
+                      id="hours"
                       type="time"
-                      value={formData.time}
-                      onChange={(e) => setFormData({ ...formData, time: e.target.value })}
+                      value={formData.hours}
+                      onChange={(e) => setFormData({ ...formData, hours: e.target.value })}
                     />
                   </div>
                 </div>
 
                 <div className="grid grid-cols-2 gap-4">
                   <div>
-                    <Label htmlFor="type">Type</Label>
+                    <Label htmlFor="paymentType">Type</Label>
                     <Select 
-                      value={formData.type} 
-                      onValueChange={(value) => setFormData({ ...formData, type: value as any })}
+                      value={formData.paymentType} 
+                      onValueChange={(value) => setFormData({ ...formData, paymentType: value as any })}
                     >
                       <SelectTrigger>
                         <SelectValue />
@@ -460,10 +491,10 @@ export default function FinancePaiements() {
                 <div key={payment.id} className="flex flex-col sm:flex-row sm:items-center justify-between p-3 sm:p-4 border rounded-lg space-y-3 sm:space-y-0">
                   <div className="flex-1 space-y-1 min-w-0">
                     <div className="flex flex-col sm:flex-row sm:items-center space-y-2 sm:space-y-0 sm:space-x-3">
-                      <p className="font-medium truncate">{payment.description}</p>
+                      <p className="font-medium truncate">{payment.name}</p>
                       <div className="flex flex-wrap gap-2">
                         {getStatusBadge(payment.status)}
-                        {getTypeBadge(payment.type)}
+                        {getTypeBadge(payment.paymentType)}
                       </div>
                     </div>
                     <div className="text-sm text-muted-foreground flex flex-wrap gap-x-4 gap-y-1">

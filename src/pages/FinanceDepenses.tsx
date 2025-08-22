@@ -22,12 +22,16 @@ import {
   Calendar
 } from "lucide-react";
 
-interface Expense {
+interface Transaction {
   id: number;
-  date: string;
-  description: string;
-  category: string;
   amount: number;
+  contactId?: string;
+  prestationTypeId?: string;
+  name: string;
+  type: "expense";
+  date: string;
+  hours?: string;
+  category: string;
   status: "paid" | "pending";
   reference?: string;
 }
@@ -44,58 +48,67 @@ const expenseCategories = [
 ];
 
 export default function FinanceDepenses() {
-  const [expenses, setExpenses] = useState<Expense[]>([
-    {
-      id: 1,
-      date: "2024-07-15",
-      description: "Achat objectif Canon 85mm",
-      category: "Équipement",
-      amount: 720000,
-      status: "paid",
-      reference: "FAC-2024-001"
-    },
-    {
-      id: 2,
-      date: "2024-07-20",
-      description: "Essence déplacement mariage",
-      category: "Transport",
-      amount: 27000,
-      status: "pending"
-    },
-    {
-      id: 3,
-      date: "2024-07-22",
-      description: "Abonnement Adobe Creative",
-      category: "Logiciels",
-      amount: 36000,
-      status: "paid",
-      reference: "SUB-2024-002"
-    }
+  const [expenses, setExpenses] = useState<Transaction[]>([
+      {
+        id: 1,
+        amount: 720000,
+        name: "Achat objectif Canon 85mm",
+        type: "expense",
+        date: "2024-07-15",
+        category: "Équipement",
+        status: "paid",
+        reference: "FAC-2024-001"
+      },
+      {
+        id: 2,
+        amount: 27000,
+        name: "Essence déplacement mariage",
+        type: "expense",
+        date: "2024-07-20",
+        category: "Transport",
+        status: "pending"
+      },
+      {
+        id: 3,
+        amount: 36000,
+        name: "Abonnement Adobe Creative",
+        type: "expense",
+        date: "2024-07-22",
+        category: "Logiciels",
+        status: "paid",
+        reference: "SUB-2024-002"
+      }
   ]);
 
   const [isDialogOpen, setIsDialogOpen] = useState(false);
-  const [selectedExpense, setSelectedExpense] = useState<Expense | null>(null);
+  const [selectedExpense, setSelectedExpense] = useState<Transaction | null>(null);
   const [searchTerm, setSearchTerm] = useState("");
   const [statusFilter, setStatusFilter] = useState("all");
   const [categoryFilter, setCategoryFilter] = useState("all");
 
   const [formData, setFormData] = useState({
-    date: "",
-    description: "",
-    category: "",
     amount: "",
-    time: "",
+    contactId: "",
+    prestationTypeId: "",
+    name: "",
+    type: "expense" as const,
+    date: "",
+    hours: "",
+    category: "",
     status: "pending" as "paid" | "pending",
     reference: ""
   });
 
   const resetForm = () => {
     setFormData({
-      date: "",
-      description: "",
-      category: "",
       amount: "",
-      time: "",
+      contactId: "",
+      prestationTypeId: "",
+      name: "",
+      type: "expense" as const,
+      date: "",
+      hours: "",
+      category: "",
       status: "pending" as "paid" | "pending",
       reference: ""
     });
@@ -123,14 +136,17 @@ export default function FinanceDepenses() {
     resetForm();
   };
 
-  const handleEdit = (expense: Expense) => {
+  const handleEdit = (expense: Transaction) => {
     setSelectedExpense(expense);
     setFormData({
-      date: expense.date,
-      description: expense.description,
-      category: expense.category,
       amount: expense.amount.toString(),
-      time: "",
+      contactId: expense.contactId || "",
+      prestationTypeId: expense.prestationTypeId || "",
+      name: expense.name,
+      type: expense.type,
+      date: expense.date,
+      hours: expense.hours || "",
+      category: expense.category,
       status: expense.status,
       reference: expense.reference || ""
     });
@@ -142,7 +158,7 @@ export default function FinanceDepenses() {
   };
 
   const filteredExpenses = expenses.filter(expense => {
-    const matchesSearch = expense.description.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    const matchesSearch = expense.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
                          expense.category.toLowerCase().includes(searchTerm.toLowerCase());
     const matchesStatus = statusFilter === "all" || expense.status === statusFilter;
     const matchesCategory = categoryFilter === "all" || expense.category === categoryFilter;
@@ -185,11 +201,11 @@ export default function FinanceDepenses() {
               </DialogHeader>
               <form onSubmit={handleSubmit} className="space-y-4">
                 <div>
-                  <Label htmlFor="description">Nom de la dépense</Label>
+                  <Label htmlFor="name">Nom de la dépense</Label>
                   <Input
-                    id="description"
-                    value={formData.description}
-                    onChange={(e) => setFormData({ ...formData, description: e.target.value })}
+                    id="name"
+                    value={formData.name}
+                    onChange={(e) => setFormData({ ...formData, name: e.target.value })}
                     required
                   />
                 </div>
@@ -216,12 +232,12 @@ export default function FinanceDepenses() {
                     />
                   </div>
                   <div>
-                    <Label htmlFor="time">Heure</Label>
+                    <Label htmlFor="hours">Heure</Label>
                     <Input
-                      id="time"
+                      id="hours"
                       type="time"
-                      value={formData.time}
-                      onChange={(e) => setFormData({ ...formData, time: e.target.value })}
+                      value={formData.hours}
+                      onChange={(e) => setFormData({ ...formData, hours: e.target.value })}
                     />
                   </div>
                 </div>
@@ -257,6 +273,27 @@ export default function FinanceDepenses() {
                         <SelectItem value="paid">Payé</SelectItem>
                       </SelectContent>
                     </Select>
+                  </div>
+                </div>
+
+                <div className="grid grid-cols-2 gap-4">
+                  <div>
+                    <Label htmlFor="contactId">Contact/Client (optionnel)</Label>
+                    <Input
+                      id="contactId"
+                      value={formData.contactId}
+                      onChange={(e) => setFormData({ ...formData, contactId: e.target.value })}
+                      placeholder="ID du contact"
+                    />
+                  </div>
+                  <div>
+                    <Label htmlFor="prestationTypeId">Type prestation (optionnel)</Label>
+                    <Input
+                      id="prestationTypeId"
+                      value={formData.prestationTypeId}
+                      onChange={(e) => setFormData({ ...formData, prestationTypeId: e.target.value })}
+                      placeholder="ID du type de prestation"
+                    />
                   </div>
                 </div>
 
@@ -373,7 +410,7 @@ export default function FinanceDepenses() {
                 <div key={expense.id} className="flex flex-col sm:flex-row sm:items-center justify-between p-3 sm:p-4 border rounded-lg space-y-3 sm:space-y-0">
                   <div className="flex-1 space-y-1 min-w-0">
                     <div className="flex flex-col sm:flex-row sm:items-center space-y-2 sm:space-y-0 sm:space-x-3">
-                      <p className="font-medium truncate">{expense.description}</p>
+                      <p className="font-medium truncate">{expense.name}</p>
                       <Badge variant={expense.status === "paid" ? "default" : "secondary"} className="w-fit">
                         {expense.status === "paid" ? "Payé" : "En attente"}
                       </Badge>
