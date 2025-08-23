@@ -30,29 +30,15 @@ interface Transaction {
   type: "expense";
   date: string;
   hours?: string;
-  category?: string;
-  status?: string;
-  reference?: string;
 }
 
-const expenseCategories = [
-  "Équipement",
-  "Transport", 
-  "Frais généraux",
-  "Marketing",
-  "Formation",
-  "Logiciels",
-  "Matériel",
-  "Autre"
-];
 
 export default function FinanceDepenses() {
   const [transactions, setTransactions] = useState<Transaction[]>([]);
   const [filteredTransactions, setFilteredTransactions] = useState<Transaction[]>([]);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [searchTerm, setSearchTerm] = useState("");
-  const [statusFilter, setStatusFilter] = useState("all");
-  const [categoryFilter, setCategoryFilter] = useState("all");
+  const [exportFormat, setExportFormat] = useState("");
   const [loading, setLoading] = useState(false);
 
   const [formData, setFormData] = useState({
@@ -62,9 +48,7 @@ export default function FinanceDepenses() {
     name: "",
     type: "expense" as const,
     date: "",
-    hours: "",
-    category: "",
-    reference: ""
+    hours: ""
   });
 
   // Simulation des appels API
@@ -80,8 +64,8 @@ export default function FinanceDepenses() {
           name: "Achat objectif Canon 85mm",
           type: "expense" as const,
           date: "2024-07-15",
-          category: "Équipement",
-          reference: "FAC-2024-001"
+          contactId: "client_001",
+          prestationTypeId: "photo_equipment"
         },
         {
           id: 2,
@@ -89,7 +73,7 @@ export default function FinanceDepenses() {
           name: "Essence déplacement mariage",
           type: "expense" as const,
           date: "2024-07-20",
-          category: "Transport"
+          hours: "14:30"
         }
       ];
       setTransactions(mockData);
@@ -129,17 +113,8 @@ export default function FinanceDepenses() {
 
       if (searchTerm) {
         filtered = filtered.filter(t => 
-          t.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-          (t.category && t.category.toLowerCase().includes(searchTerm.toLowerCase()))
+          t.name.toLowerCase().includes(searchTerm.toLowerCase())
         );
-      }
-
-      if (statusFilter !== "all") {
-        filtered = filtered.filter(t => t.status === statusFilter);
-      }
-
-      if (categoryFilter !== "all") {
-        filtered = filtered.filter(t => t.category === categoryFilter);
       }
 
       setFilteredTransactions(filtered);
@@ -163,7 +138,7 @@ export default function FinanceDepenses() {
 
   useEffect(() => {
     filterTransactions();
-  }, [searchTerm, statusFilter, categoryFilter, transactions]);
+  }, [searchTerm, transactions]);
 
   const resetForm = () => {
     setFormData({
@@ -173,9 +148,7 @@ export default function FinanceDepenses() {
       name: "",
       type: "expense" as const,
       date: "",
-      hours: "",
-      category: "",
-      reference: ""
+      hours: ""
     });
   };
 
@@ -206,14 +179,19 @@ export default function FinanceDepenses() {
           </div>
           
           <div className="flex space-x-2">
-            <Button variant="outline" onClick={() => exportData('csv')}>
-              <Download className="h-4 w-4 mr-2" />
-              Export CSV
-            </Button>
-            <Button variant="outline" onClick={() => exportData('xlsx')}>
-              <Download className="h-4 w-4 mr-2" />
-              Export Excel
-            </Button>
+            <Select value={exportFormat} onValueChange={(value) => {
+              setExportFormat(value);
+              if (value) exportData(value);
+            }}>
+              <SelectTrigger className="w-40">
+                <SelectValue placeholder="Exporter" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="csv">CSV</SelectItem>
+                <SelectItem value="xlsx">Excel</SelectItem>
+                <SelectItem value="pdf">PDF</SelectItem>
+              </SelectContent>
+            </Select>
             
             <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
               <DialogTrigger asChild>
@@ -269,23 +247,6 @@ export default function FinanceDepenses() {
                     </div>
                   </div>
 
-                  <div>
-                    <Label htmlFor="category">Catégorie (optionnel)</Label>
-                    <Select 
-                      value={formData.category} 
-                      onValueChange={(value) => setFormData({ ...formData, category: value })}
-                    >
-                      <SelectTrigger>
-                        <SelectValue placeholder="Sélectionner une catégorie" />
-                      </SelectTrigger>
-                      <SelectContent>
-                        {expenseCategories.map(cat => (
-                          <SelectItem key={cat} value={cat}>{cat}</SelectItem>
-                        ))}
-                      </SelectContent>
-                    </Select>
-                  </div>
-
                   <div className="grid grid-cols-2 gap-4">
                     <div>
                       <Label htmlFor="contactId">Contact/Client ID (optionnel)</Label>
@@ -305,16 +266,6 @@ export default function FinanceDepenses() {
                         placeholder="ID du type de prestation"
                       />
                     </div>
-                  </div>
-
-                  <div>
-                    <Label htmlFor="reference">Référence (optionnel)</Label>
-                    <Input
-                      id="reference"
-                      value={formData.reference}
-                      onChange={(e) => setFormData({ ...formData, reference: e.target.value })}
-                      placeholder="Numéro de facture, référence..."
-                    />
                   </div>
 
                   <div className="flex justify-end space-x-2">
@@ -360,30 +311,14 @@ export default function FinanceDepenses() {
         {/* Filtres */}
         <Card>
           <CardContent className="p-3 sm:p-4">
-            <div className="flex flex-col sm:flex-row flex-wrap gap-3 sm:gap-4">
-              <div className="flex items-center space-x-2 flex-1 min-w-0">
-                <Search className="w-4 h-4 text-muted-foreground flex-shrink-0" />
-                <Input
-                  placeholder="Rechercher..."
-                  value={searchTerm}
-                  onChange={(e) => setSearchTerm(e.target.value)}
-                  className="min-w-0 flex-1"
-                />
-              </div>
-              
-              <div className="flex flex-col sm:flex-row gap-3 sm:gap-4">
-                <Select value={categoryFilter} onValueChange={setCategoryFilter}>
-                  <SelectTrigger className="w-full sm:w-40">
-                    <SelectValue placeholder="Catégorie" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="all">Toutes catégories</SelectItem>
-                    {expenseCategories.map(cat => (
-                      <SelectItem key={cat} value={cat}>{cat}</SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-              </div>
+            <div className="flex items-center space-x-2">
+              <Search className="w-4 h-4 text-muted-foreground flex-shrink-0" />
+              <Input
+                placeholder="Rechercher par nom..."
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+                className="flex-1"
+              />
             </div>
           </CardContent>
         </Card>
@@ -405,13 +340,11 @@ export default function FinanceDepenses() {
                     <div className="flex-1 space-y-1 min-w-0">
                       <div className="flex flex-col sm:flex-row sm:items-center space-y-2 sm:space-y-0 sm:space-x-3">
                         <p className="font-medium truncate">{transaction.name}</p>
-                        {transaction.category && (
-                          <Badge variant="outline">{transaction.category}</Badge>
-                        )}
                       </div>
                       <div className="text-sm text-muted-foreground flex flex-wrap gap-x-4 gap-y-1">
                         <span>{transaction.date}</span>
-                        {transaction.reference && <span>Réf: {transaction.reference}</span>}
+                        {transaction.hours && <span>{transaction.hours}</span>}
+                        {transaction.contactId && <span>Contact: {transaction.contactId}</span>}
                       </div>
                     </div>
                     

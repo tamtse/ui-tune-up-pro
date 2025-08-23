@@ -28,34 +28,15 @@ interface Transaction {
   type: "income";
   date: string;
   hours?: string;
-  client?: string;
-  paymentType?: string;
-  status?: string;
-  reference?: string;
-  method?: string;
 }
 
-const paymentTypes = [
-  { value: "invoice", label: "Facture" },
-  { value: "quote", label: "Devis" },
-  { value: "deposit", label: "Acompte" },
-  { value: "other", label: "Autre" }
-];
-
-const paymentMethods = [
-  { value: "cash", label: "Espèces" },
-  { value: "bank_transfer", label: "Virement" },
-  { value: "check", label: "Chèque" },
-  { value: "card", label: "Carte bancaire" }
-];
 
 export default function FinancePaiements() {
   const [transactions, setTransactions] = useState<Transaction[]>([]);
   const [filteredTransactions, setFilteredTransactions] = useState<Transaction[]>([]);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [searchTerm, setSearchTerm] = useState("");
-  const [statusFilter, setStatusFilter] = useState("all");
-  const [typeFilter, setTypeFilter] = useState("all");
+  const [exportFormat, setExportFormat] = useState("");
   const [loading, setLoading] = useState(false);
 
   const [formData, setFormData] = useState({
@@ -65,12 +46,7 @@ export default function FinancePaiements() {
     name: "",
     type: "income" as const,
     date: "",
-    hours: "",
-    client: "",
-    paymentType: "invoice",
-    status: "pending",
-    reference: "",
-    method: "bank_transfer"
+    hours: ""
   });
 
   // Simulation des appels API
@@ -85,23 +61,16 @@ export default function FinancePaiements() {
           name: "Séance portrait en studio",
           type: "income" as const,
           date: "2024-07-15",
-          client: "Marie Dubois",
-          paymentType: "invoice",
-          status: "received",
-          reference: "FAC-2024-015",
-          method: "bank_transfer"
+          contactId: "client_001",
+          prestationTypeId: "photo_portrait"
         },
         {
           id: 2,
           amount: 480000,
-          name: "Shooting mariage - Acompte",
+          name: "Shooting mariage",
           type: "income" as const,
           date: "2024-07-18",
-          client: "Pierre & Julie Martin",
-          paymentType: "deposit",
-          status: "received",
-          reference: "DEP-2024-003",
-          method: "check"
+          hours: "10:00"
         }
       ];
       setTransactions(mockData);
@@ -141,17 +110,8 @@ export default function FinancePaiements() {
 
       if (searchTerm) {
         filtered = filtered.filter(t => 
-          t.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-          (t.client && t.client.toLowerCase().includes(searchTerm.toLowerCase()))
+          t.name.toLowerCase().includes(searchTerm.toLowerCase())
         );
-      }
-
-      if (statusFilter !== "all") {
-        filtered = filtered.filter(t => t.status === statusFilter);
-      }
-
-      if (typeFilter !== "all") {
-        filtered = filtered.filter(t => t.paymentType === typeFilter);
       }
 
       setFilteredTransactions(filtered);
@@ -175,7 +135,7 @@ export default function FinancePaiements() {
 
   useEffect(() => {
     filterTransactions();
-  }, [searchTerm, statusFilter, typeFilter, transactions]);
+  }, [searchTerm, transactions]);
 
   const resetForm = () => {
     setFormData({
@@ -185,12 +145,7 @@ export default function FinancePaiements() {
       name: "",
       type: "income" as const,
       date: "",
-      hours: "",
-      client: "",
-      paymentType: "invoice",
-      status: "pending",
-      reference: "",
-      method: "bank_transfer"
+      hours: ""
     });
   };
 
@@ -202,25 +157,6 @@ export default function FinancePaiements() {
   };
 
   const totalPayments = filteredTransactions.reduce((sum, t) => sum + t.amount, 0);
-  const receivedPayments = filteredTransactions.filter(t => t.status === "received").reduce((sum, t) => sum + t.amount, 0);
-
-  const getStatusBadge = (status: string) => {
-    switch (status) {
-      case "received":
-        return <Badge className="bg-green-100 text-green-800">Reçu</Badge>;
-      case "pending":
-        return <Badge variant="secondary">En attente</Badge>;
-      case "partial":
-        return <Badge className="bg-orange-100 text-orange-800">Partiel</Badge>;
-      default:
-        return <Badge variant="outline">{status}</Badge>;
-    }
-  };
-
-  const getTypeBadge = (paymentType: string) => {
-    const typeObj = paymentTypes.find(t => t.value === paymentType);
-    return <Badge variant="outline">{typeObj?.label || paymentType}</Badge>;
-  };
 
   return (
     <AdminLayout>
@@ -240,14 +176,19 @@ export default function FinancePaiements() {
           </div>
           
           <div className="flex space-x-2">
-            <Button variant="outline" onClick={() => exportData('csv')}>
-              <Download className="h-4 w-4 mr-2" />
-              Export CSV
-            </Button>
-            <Button variant="outline" onClick={() => exportData('xlsx')}>
-              <Download className="h-4 w-4 mr-2" />
-              Export Excel
-            </Button>
+            <Select value={exportFormat} onValueChange={(value) => {
+              setExportFormat(value);
+              if (value) exportData(value);
+            }}>
+              <SelectTrigger className="w-40">
+                <SelectValue placeholder="Exporter" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="csv">CSV</SelectItem>
+                <SelectItem value="xlsx">Excel</SelectItem>
+                <SelectItem value="pdf">PDF</SelectItem>
+              </SelectContent>
+            </Select>
             
             <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
               <DialogTrigger asChild>
@@ -268,16 +209,6 @@ export default function FinancePaiements() {
                       value={formData.name}
                       onChange={(e) => setFormData({ ...formData, name: e.target.value })}
                       placeholder="Nom de la prestation"
-                      required
-                    />
-                  </div>
-
-                  <div>
-                    <Label htmlFor="client">Client *</Label>
-                    <Input
-                      id="client"
-                      value={formData.client}
-                      onChange={(e) => setFormData({ ...formData, client: e.target.value })}
                       required
                     />
                   </div>
@@ -316,41 +247,6 @@ export default function FinancePaiements() {
 
                   <div className="grid grid-cols-2 gap-4">
                     <div>
-                      <Label htmlFor="paymentType">Type</Label>
-                      <Select 
-                        value={formData.paymentType} 
-                        onValueChange={(value) => setFormData({ ...formData, paymentType: value })}
-                      >
-                        <SelectTrigger>
-                          <SelectValue />
-                        </SelectTrigger>
-                        <SelectContent>
-                          {paymentTypes.map(type => (
-                            <SelectItem key={type.value} value={type.value}>{type.label}</SelectItem>
-                          ))}
-                        </SelectContent>
-                      </Select>
-                    </div>
-                    <div>
-                      <Label htmlFor="method">Méthode de paiement</Label>
-                      <Select 
-                        value={formData.method} 
-                        onValueChange={(value) => setFormData({ ...formData, method: value })}
-                      >
-                        <SelectTrigger>
-                          <SelectValue />
-                        </SelectTrigger>
-                        <SelectContent>
-                          {paymentMethods.map(method => (
-                            <SelectItem key={method.value} value={method.value}>{method.label}</SelectItem>
-                          ))}
-                        </SelectContent>
-                      </Select>
-                    </div>
-                  </div>
-
-                  <div className="grid grid-cols-2 gap-4">
-                    <div>
                       <Label htmlFor="contactId">Contact ID (optionnel)</Label>
                       <Input
                         id="contactId"
@@ -368,16 +264,6 @@ export default function FinancePaiements() {
                         placeholder="ID du type de prestation"
                       />
                     </div>
-                  </div>
-
-                  <div>
-                    <Label htmlFor="reference">Référence (optionnel)</Label>
-                    <Input
-                      id="reference"
-                      value={formData.reference}
-                      onChange={(e) => setFormData({ ...formData, reference: e.target.value })}
-                      placeholder="Numéro de facture, devis..."
-                    />
                   </div>
 
                   <div className="flex justify-end space-x-2">
@@ -410,10 +296,10 @@ export default function FinancePaiements() {
           <Card>
             <CardContent className="p-3 sm:p-4">
               <div className="flex items-center space-x-2">
-                <CheckCircle className="h-6 w-6 sm:h-8 sm:w-8 text-success flex-shrink-0" />
+                <TrendingUp className="h-6 w-6 sm:h-8 sm:w-8 text-green-600 flex-shrink-0" />
                 <div className="min-w-0">
-                  <p className="text-lg sm:text-2xl font-bold truncate">{receivedPayments.toLocaleString()} FCFA</p>
-                  <p className="text-xs sm:text-sm text-muted-foreground">Reçus</p>
+                  <p className="text-lg sm:text-2xl font-bold truncate">{filteredTransactions.length}</p>
+                  <p className="text-xs sm:text-sm text-muted-foreground">Nombre de paiements</p>
                 </div>
               </div>
             </CardContent>
@@ -423,30 +309,14 @@ export default function FinancePaiements() {
         {/* Filtres */}
         <Card>
           <CardContent className="p-3 sm:p-4">
-            <div className="flex flex-col sm:flex-row flex-wrap gap-3 sm:gap-4">
-              <div className="flex items-center space-x-2 flex-1 min-w-0">
-                <Search className="w-4 h-4 text-muted-foreground flex-shrink-0" />
-                <Input
-                  placeholder="Rechercher..."
-                  value={searchTerm}
-                  onChange={(e) => setSearchTerm(e.target.value)}
-                  className="min-w-0 flex-1"
-                />
-              </div>
-              
-              <div className="flex flex-col sm:flex-row gap-3 sm:gap-4">
-                <Select value={typeFilter} onValueChange={setTypeFilter}>
-                  <SelectTrigger className="w-full sm:w-40">
-                    <SelectValue placeholder="Type" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="all">Tous les types</SelectItem>
-                    {paymentTypes.map(type => (
-                      <SelectItem key={type.value} value={type.value}>{type.label}</SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-              </div>
+            <div className="flex items-center space-x-2">
+              <Search className="w-4 h-4 text-muted-foreground flex-shrink-0" />
+              <Input
+                placeholder="Rechercher par nom..."
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+                className="flex-1"
+              />
             </div>
           </CardContent>
         </Card>
@@ -468,20 +338,16 @@ export default function FinancePaiements() {
                     <div className="flex-1 space-y-1 min-w-0">
                       <div className="flex flex-col sm:flex-row sm:items-center space-y-2 sm:space-y-0 sm:space-x-3">
                         <p className="font-medium truncate">{transaction.name}</p>
-                        <div className="flex flex-wrap gap-2">
-                          {transaction.status && getStatusBadge(transaction.status)}
-                          {transaction.paymentType && getTypeBadge(transaction.paymentType)}
-                        </div>
                       </div>
                       <div className="text-sm text-muted-foreground flex flex-wrap gap-x-4 gap-y-1">
                         <span>{transaction.date}</span>
-                        {transaction.client && <span>Client: {transaction.client}</span>}
-                        {transaction.reference && <span>Réf: {transaction.reference}</span>}
+                        {transaction.hours && <span>{transaction.hours}</span>}
+                        {transaction.contactId && <span>Contact: {transaction.contactId}</span>}
                       </div>
                     </div>
                     
                     <div className="text-right">
-                      <p className="font-bold text-lg sm:text-base text-success">{transaction.amount.toLocaleString()} FCFA</p>
+                      <p className="font-bold text-lg sm:text-base">{transaction.amount.toLocaleString()} FCFA</p>
                     </div>
                   </div>
                 ))}
