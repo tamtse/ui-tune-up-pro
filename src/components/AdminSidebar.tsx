@@ -19,6 +19,7 @@ import {
   Calendar,
   DollarSign,
   Globe,
+  ClipboardList,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
@@ -34,6 +35,7 @@ const userMenuItems = [
   { title: "Tableau de bord", url: "/user-dashboard", icon: BarChart3 },
   { title: "Prestations", url: "/prestations", icon: Camera },
   { title: "Contacts", url: "/contacts", icon: Users },
+  { title: "Questionnaires", url: "/questionnaires", icon: ClipboardList },
   { title: "Calendrier", url: "/calendar", icon: Calendar },
   { title: "Finances", url: "/finances", icon: DollarSign },
   { title: "Site Web", url: "/site-web", icon: Globe },

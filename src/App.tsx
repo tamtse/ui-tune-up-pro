@@ -31,6 +31,11 @@ import ThemePreview from "./pages/ThemePreview";
 import Prestations from "./pages/Prestations";
 import PrestationNew from "./pages/PrestationNew";
 import PrestationEdit from "./pages/PrestationEdit";
+import Questionnaires from "./pages/Questionnaires";
+import QuestionnaireNew from "./pages/QuestionnaireNew";
+import QuestionnaireEdit from "./pages/QuestionnaireEdit";
+import QuestionnaireView from "./pages/QuestionnaireView";
+import QuestionnaireResponses from "./pages/QuestionnaireResponses";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -67,6 +72,11 @@ const App = () => (
           <Route path="/prestations" element={<Prestations />} />
           <Route path="/prestations/new" element={<PrestationNew />} />
           <Route path="/prestations/:id/edit" element={<PrestationEdit />} />
+          <Route path="/questionnaires" element={<Questionnaires />} />
+          <Route path="/questionnaires/new" element={<QuestionnaireNew />} />
+          <Route path="/questionnaires/:id/edit" element={<QuestionnaireEdit />} />
+          <Route path="/questionnaires/:id" element={<QuestionnaireView />} />
+          <Route path="/questionnaires/:id/responses" element={<QuestionnaireResponses />} />
           <Route path="/landing" element={<LandingPage />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
